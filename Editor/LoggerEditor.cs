@@ -2,9 +2,9 @@
 using System;
 using System.Collections;
 using UnityEditor;
-using Rotorz.ReorderableList;
+using ATP.ReorderableList;
 
-namespace OneDayGame.LoggingTools {
+namespace ATP.Logger {
 
 	[CustomEditor(typeof(Logger))]
 	public class LoggerEditor : GameComponentEditor {

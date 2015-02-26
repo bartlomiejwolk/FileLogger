@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace OneDayGame.LoggingTools {
+namespace ATP.Logger {
 
 	public class StackInfo {
 

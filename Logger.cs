@@ -7,9 +7,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using OneDayGame.LoggingTools;
 
 // TODO Remove MessageType class.
-namespace OneDayGame.LoggingTools {
+namespace ATP.Logger {
 
     /// Logs to a file function calls, return values or any string.
     ///
@@ -139,8 +140,7 @@ namespace OneDayGame.LoggingTools {
             get { return enableOnPlay; }
         }
 
-		public override void Awake() {
-			base.Awake();
+		private void Awake() {
 			if (instance == null) {
 				// If I am the first instance, make me the Singleton
 				instance = this;
@@ -158,29 +158,23 @@ namespace OneDayGame.LoggingTools {
             logCache.InitArraySize = initArraySize;
 		}
 
-        public override void Start() {
-            base.Start();
-
+        private void Start() {
             // Handle 'Enable On Play' inspector option.
             if (enableOnPlay) {
                 loggingEnabled = true;
             }
         }
 
-        public override void Update() {
-            base.Update();
-
+        private void Update() {
             // Handle "In-game Label" inspector option.
-            if (
-                    loggingEnabled == true
-                    && inGameLabel) {
-                Logger.Instance.DisplayLabel();
-            }
+            //if (
+            //        loggingEnabled == true
+            //        && inGameLabel) {
+            //    Logger.Instance.DisplayLabel();
+            //}
         }
 
-		public override void OnDestroy() {
-			base.OnDestroy();
-
+		private void OnDestroy() {
             // Don't write to file if 'logInRealTime' was selected.
             if (logInRealTime == true) {
                 return;
@@ -535,9 +529,9 @@ namespace OneDayGame.LoggingTools {
             return timestamp;
         }
 
-        private void DisplayLabel() {
-            MeasureIt.Set("Logs captured", logCache.LoggedMessages);
-        }
+        //private void DisplayLabel() {
+        //    MeasureIt.Set("Logs captured", logCache.LoggedMessages);
+        //}
 
 		private static bool ClassInFilter(string className) {
             if (Logger.Instance.classFilter.Count != 0) {

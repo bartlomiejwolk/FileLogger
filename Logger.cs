@@ -13,6 +13,8 @@ using UnityEngine;
 
 // TODO Remove MessageType class.
 
+// ReSharper disable once CheckNamespace
+
 namespace ATP.Logger {
 
     /// Logs to a file function calls, return values or any string.
@@ -55,7 +57,9 @@ namespace ATP.Logger {
 
         // TODO Add to inspector.
         [SerializeField]
+#pragma warning disable 169
         private bool enableLogList = true;
+#pragma warning restore 169
 
         [SerializeField]
         private bool enableLogResult = true;
@@ -69,8 +73,9 @@ namespace ATP.Logger {
 
         /// Enable logging when in play mode.
         [SerializeField]
-        private bool enableOnPlay;
-
+#pragma warning disable 649
+            private bool enableOnPlay;
+#pragma warning restore 649
         /// Output file name/path.
         [SerializeField]
         private string filePath = "log.txt";
@@ -83,8 +88,8 @@ namespace ATP.Logger {
         [SerializeField]
         private bool indentMessage = true;
 
-        [SerializeField]
-        private bool inGameLabel;
+        //[SerializeField]
+        //private bool inGameLabel;
 
         /// Initial size of the cache array.
         /// 
@@ -147,6 +152,7 @@ namespace ATP.Logger {
             get { return enableOnPlay; }
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void Awake() {
             if (instance == null) {
                 // If I am the first instance, make me the Singleton
@@ -165,6 +171,7 @@ namespace ATP.Logger {
             logCache.InitArraySize = initArraySize;
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void Start() {
             // Handle 'Enable On Play' inspector option.
             if (enableOnPlay) {
@@ -172,6 +179,7 @@ namespace ATP.Logger {
             }
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void Update() {
             // Handle "In-game Label" inspector option.
             //if (
@@ -181,6 +189,7 @@ namespace ATP.Logger {
             //}
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void OnDestroy() {
             // Don't write to file if 'logInRealTime' was selected.
             if (logInRealTime) {
@@ -195,9 +204,10 @@ namespace ATP.Logger {
 
         /// Start Logger.
         [Conditional("DEBUG")]
-        public static void Start(
+        public static void StartLogging(
             string filePath = "log.txt",
             bool append = false) {
+
             Instance.filePath = filePath;
             Instance.append = append;
             Instance.LoggingEnabled = true;
@@ -205,7 +215,7 @@ namespace ATP.Logger {
 
         /// Stop Logger.
         [Conditional("DEBUG")]
-        public static void Stop() {
+        public static void StopLogging() {
             Instance.LoggingEnabled = false;
             // Write single message to the file.
             Instance.logCache.WriteAll(
@@ -216,7 +226,7 @@ namespace ATP.Logger {
         [Conditional("DEBUG")]
         public static void LogCall() {
             Log(
-                stackInfo => { return stackInfo.MethodSignature; },
+                stackInfo => stackInfo.MethodSignature,
                 Instance.enableLogCall,
                 Instance.showTimestamp,
                 Instance.indentMessage,
@@ -232,7 +242,7 @@ namespace ATP.Logger {
 
             // Log message.
             Log(
-                stackInfo => { return message; },
+                stackInfo => message,
                 Instance.enableLogString,
                 Instance.showTimestamp,
                 Instance.indentMessage,
@@ -256,7 +266,7 @@ namespace ATP.Logger {
             }
 
             Log(
-                stackInfo => { return message.ToString(); },
+                stackInfo => message.ToString(),
                 Instance.enableLogStackTrace,
                 false,
                 false,
@@ -270,7 +280,7 @@ namespace ATP.Logger {
 
             // Log message.
             Log(
-                stackInfo => { return message; },
+                stackInfo => message,
                 Instance.enableLogResult,
                 Instance.showTimestamp,
                 Instance.indentMessage,
@@ -278,21 +288,8 @@ namespace ATP.Logger {
                 Instance.appendCallerClassName);
         }
 
-        public static void LogList<T>(List<T> list, string info) {
-            var endIndex = list.Count - 1;
-            DoLogList(list, 0, endIndex, info);
-        }
-
-        public static void LogList<T>(
-            List<T> list,
-            string info,
-            int beginningIndex,
-            int endIndex) {
-            DoLogList(list, beginningIndex, endIndex, info);
-        }
-
-        public static void LogDictionary<key, value>(
-            Dictionary<key, value> dict,
+        public static void LogDictionary<TKey, TValue>(
+            Dictionary<TKey, TValue> dict,
             string info) {
             var message = new StringBuilder();
 
@@ -309,124 +306,8 @@ namespace ATP.Logger {
 
             // Log message.
             Log(
-                stackInfo => { return message.ToString(); },
+                stackInfo => message.ToString(),
                 Instance.enableLogDictionary,
-                false,
-                false,
-                false,
-                false);
-        }
-
-        public static void LogPrimitive(string[] array, string info) {
-            var endIndex = array.Length - 1;
-            LogStringArray(array, 0, endIndex, info);
-        }
-
-        public static void LogPrimitive(
-            string[] array,
-            string info,
-            int beginningIndex,
-            int endIndex) {
-            LogStringArray(array, beginningIndex, endIndex, info);
-        }
-
-        public static void LogPrimitive(int[] array, string info) {
-            var endIndex = array.Length - 1;
-            LogIntArray(array, 0, endIndex, info);
-        }
-
-        public static void LogPrimitive(
-            int[] array,
-            string info,
-            int beginningIndex,
-            int endIndex) {
-            LogIntArray(array, beginningIndex, endIndex, info);
-        }
-
-        private static void DoLogList<T>(
-            List<T> list,
-            int beginningIndex,
-            int endIndex,
-            string info = "") {
-            var message = new StringBuilder();
-
-            if (info.Length != 0) {
-                message.Append(info);
-                message.Append("\n");
-            }
-
-            for (var i = 0; i < list.Count; i++) {
-                message.Append(list[i]);
-                if (i == list.Count - 1) {
-                    break;
-                }
-                message.Append("\n");
-            }
-
-            // Log message.
-            Log(
-                stackInfo => { return message.ToString(); },
-                Instance.enableLogList,
-                false,
-                false,
-                false,
-                false);
-        }
-
-        private static void LogStringArray(
-            string[] array,
-            int beginningIndex,
-            int endIndex,
-            string info = "") {
-            var message = new StringBuilder();
-
-            if (info.Length != 0) {
-                message.Append(info);
-                message.Append("\n");
-            }
-
-            for (var i = beginningIndex; i <= endIndex; i++) {
-                message.Append(array[i]);
-                // Don't append new line after last message.
-                if (i != endIndex) {
-                    message.Append("\n");
-                }
-            }
-
-            // Log message.
-            Log(
-                stackInfo => { return message.ToString(); },
-                Instance.enableLogList,
-                false,
-                false,
-                false,
-                false);
-        }
-
-        private static void LogIntArray(
-            int[] array,
-            int beginningIndex,
-            int endIndex,
-            string info = "") {
-            var message = new StringBuilder();
-
-            if (info.Length != 0) {
-                message.Append(info);
-                message.Append("\n");
-            }
-
-            for (var i = beginningIndex; i <= endIndex; i++) {
-                message.Append(array[i]);
-                // Don't append new line after last message.
-                if (i != endIndex) {
-                    message.Append("\n");
-                }
-            }
-
-            // Log message.
-            Log(
-                stackInfo => { return message.ToString(); },
-                Instance.enableLogList,
                 false,
                 false,
                 false,

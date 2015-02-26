@@ -56,64 +56,48 @@ namespace ATP.Logger {
 			Logger script = (Logger)target;
 			serializedObject.Update();
 
+            // TODO Set longer label width.
+
             EditorGUILayout.PropertyField(
                     filePath,
                     new GUIContent(
                         "File Path",
                         "File path to save the generated log file."));
-            EditorGUILayout.PropertyField(
-                    initArraySize,
-                    new GUIContent(
-                        "Array Size",
-                        "Initial and expand size of the log cache array.")); 
+
+            EditorGUILayout.Space();
+
+            //EditorGUILayout.PropertyField(
+            //        initArraySize,
+            //        new GUIContent(
+            //            "Array Size",
+            //            "Initial and expand size of the log cache array.")); 
             EditorGUILayout.PropertyField(
                     enableOnPlay,
                     new GUIContent(
                         "Enable On Play",
                         "Start logger when entering play mode."));
-            EditorGUILayout.PropertyField(
-                    inGameLabel,
-                    new GUIContent(
-                        "In-game Label",
-                        "Display in-game label with current number of " +
-                        "cached logs."));
+            //EditorGUILayout.PropertyField(
+            //        inGameLabel,
+            //        new GUIContent(
+            //            "In-game Label",
+            //            "Display in-game label with current number of " +
+            //            "cached logs."));
             EditorGUILayout.PropertyField(
                     logInRealTime,
                     new GUIContent(
                         "Log In Real Time",
                         "Each log message will be written to the file " +
                         "in real time instead of when logging stops."));
-            EditorGUILayout.PropertyField(
-                    appendClassName,
-                    new GUIContent(
-                        "Append Class Name",
-                        "Append class name to every log message."));
-            EditorGUILayout.PropertyField(
-                    appendCallerClassName,
-                    new GUIContent(
-                        "Append Caller Name",
-                        "Append caller class name to every log message."));
-            EditorGUILayout.PropertyField(
-                    fullyQualifiedClassName,
-                    new GUIContent(
-                        "Qualified Class Name",
-                        "If enabled, class name will be fully qualified."));
-            EditorGUILayout.PropertyField(
-                    showTimestamp,
-                    new GUIContent(
-                        "Add Timestamp",
-                        ""));
-            EditorGUILayout.PropertyField(
-                    indentMessage,
-                    new GUIContent(
-                        "Indent On",
-                        ""));
+
             EditorGUILayout.PropertyField(
                     echoToConsole,
                     new GUIContent(
                         "Echo To Console",
                         "Echo logged messages also to the Unity's console. " +
                         "It can be really slow."));
+
+            EditorGUILayout.Space();
+
             EditorGUILayout.PropertyField(
                     enableLogCall,
                     new GUIContent(
@@ -129,6 +113,38 @@ namespace ATP.Logger {
                     new GUIContent(
                         "Enable LogString()",
                         ""));
+
+            EditorGUILayout.Space();
+
+
+            EditorGUILayout.PropertyField(
+                    indentMessage,
+                    new GUIContent(
+                        "Indent On",
+                        ""));
+            EditorGUILayout.PropertyField(
+                    showTimestamp,
+                    new GUIContent(
+                        "Add Timestamp",
+                        ""));
+            EditorGUILayout.PropertyField(
+                    appendClassName,
+                    new GUIContent(
+                        "Append Class Name",
+                        "Append class name to every log message."));
+            EditorGUILayout.PropertyField(
+                    appendCallerClassName,
+                    new GUIContent(
+                        "Append Caller Name",
+                        "Append caller class name to every log message."));
+            EditorGUILayout.PropertyField(
+                    fullyQualifiedClassName,
+                    new GUIContent(
+                        "Qualified Class Name",
+                        "If enabled, class name will be fully qualified."));
+
+            EditorGUILayout.Space();
+
 			EditorGUILayout.HelpBox(
 					"Example: MyClass",
 					UnityEditor.MessageType.Info);

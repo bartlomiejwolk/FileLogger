@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEditor;
 using System.Reflection;
 
-namespace ATP.Logger {
+namespace ATP.LoggingTools {
 
     [CustomEditor(typeof (GameComponent))]
     public class GameComponentEditor : Editor {

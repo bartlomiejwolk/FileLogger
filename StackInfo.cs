@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace ATP.Logger {
+namespace ATP.LoggingTools {
 
 	public class StackInfo {
 

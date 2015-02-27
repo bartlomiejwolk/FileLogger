@@ -1,7 +1,5 @@
 ﻿#define DEBUG
 
-#region
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,11 +7,9 @@ using System.Text;
 using OneDayGame.LoggingTools;
 using UnityEngine;
 
-#endregion
-
 // ReSharper disable once CheckNamespace
 
-namespace ATP.Logger {
+namespace ATP.LoggingTools {
 
     /// Logs to a file function calls, return values or any string.
     /// 
@@ -287,6 +283,7 @@ namespace ATP.Logger {
             return timestamp;
         }
 
+        // TODO Refactor.
         private static void Log(
             Func<StackInfo, string> composeMessage,
             bool enableLoggingForMethod,

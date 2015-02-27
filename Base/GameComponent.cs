@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ATP.Logger {
+namespace ATP.LoggingTools {
 
     public class GameComponent : MonoBehaviour {
 

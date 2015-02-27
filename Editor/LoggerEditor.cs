@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEditor;
 using ATP.ReorderableList;
 
-namespace ATP.Logger {
+namespace ATP.LoggingTools {
 
 	[CustomEditor(typeof(Logger))]
 	public class LoggerEditor : GameComponentEditor {

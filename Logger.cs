@@ -11,8 +11,6 @@ using UnityEngine;
 
 #endregion
 
-// TODO Remove MessageType class.
-
 // ReSharper disable once CheckNamespace
 
 namespace ATP.Logger {
@@ -58,9 +56,8 @@ namespace ATP.Logger {
         // TODO Add to inspector.
         [SerializeField]
 #pragma warning disable 169
-        private bool enableLogList = true;
+            private bool enableLogList = true;
 #pragma warning restore 169
-
         [SerializeField]
         private bool enableLogResult = true;
 
@@ -130,17 +127,21 @@ namespace ATP.Logger {
             }
         }
 
-        public Cache LogCache {
-            get { return logCache; }
+        public bool Append {
+            get { return append; }
+            set { append = value; }
+        }
+
+        public bool EnableOnPlay {
+            get { return enableOnPlay; }
         }
 
         public string FilePath {
             get { return filePath; }
         }
 
-        public bool Append {
-            get { return append; }
-            set { append = value; }
+        public Cache LogCache {
+            get { return logCache; }
         }
 
         public bool LoggingEnabled {
@@ -148,140 +149,11 @@ namespace ATP.Logger {
             set { loggingEnabled = value; }
         }
 
-        public bool EnableOnPlay {
-            get { return enableOnPlay; }
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private void Awake() {
-            if (instance == null) {
-                // If I am the first instance, make me the Singleton
-                instance = this;
-                DontDestroyOnLoad(this);
-            }
-            else {
-                // If a Singleton already exists and you find
-                // another reference in scene, destroy it!
-                if (this != instance) {
-                    Destroy(gameObject);
-                }
-            }
-
-            // Initialize 'cache' object.
-            logCache.InitArraySize = initArraySize;
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private void Start() {
-            // Handle 'Enable On Play' inspector option.
-            if (enableOnPlay) {
-                loggingEnabled = true;
-            }
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private void Update() {
-            // Handle "In-game Label" inspector option.
-            //if (
-            //        loggingEnabled == true
-            //        && inGameLabel) {
-            //    Logger.Instance.DisplayLabel();
-            //}
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private void OnDestroy() {
-            // Don't write to file if 'logInRealTime' was selected.
-            if (logInRealTime) {
-                return;
-            }
-            // Write log to file when 'enableOnPlay' was selected.
-            if (enableOnPlay) {
-                // Write single message to the file.
-                logCache.WriteAll(filePath, append);
-            }
-        }
-
-        /// Start Logger.
-        [Conditional("DEBUG")]
-        public static void StartLogging(
-            string filePath = "log.txt",
-            bool append = false) {
-
-            Instance.filePath = filePath;
-            Instance.append = append;
-            Instance.LoggingEnabled = true;
-        }
-
-        /// Stop Logger.
-        [Conditional("DEBUG")]
-        public static void StopLogging() {
-            Instance.LoggingEnabled = false;
-            // Write single message to the file.
-            Instance.logCache.WriteAll(
-                Instance.filePath,
-                Instance.append);
-        }
-
         [Conditional("DEBUG")]
         public static void LogCall() {
             Log(
                 stackInfo => stackInfo.MethodSignature,
                 Instance.enableLogCall,
-                Instance.showTimestamp,
-                Instance.indentMessage,
-                Instance.appendClassName,
-                Instance.appendCallerClassName);
-        }
-
-        public static void LogString(
-            string format,
-            params object[] paramList) {
-            // Compose log message.
-            var message = string.Format(format, paramList);
-
-            // Log message.
-            Log(
-                stackInfo => message,
-                Instance.enableLogString,
-                Instance.showTimestamp,
-                Instance.indentMessage,
-                Instance.appendClassName,
-                Instance.appendCallerClassName);
-        }
-
-        public static void LogStackTrace() {
-            var stackTrace = new StackTrace();
-            var message = new StringBuilder();
-            for (var i = 1; i < stackTrace.FrameCount; i++) {
-                var stackFrame = stackTrace.GetFrame(i);
-                for (var j = 0; j < i; j++) {
-                    message.Append("| ");
-                }
-                message.Append(stackFrame.GetMethod());
-                if (i == stackTrace.FrameCount - 1) {
-                    break;
-                }
-                message.Append("\n");
-            }
-
-            Log(
-                stackInfo => message.ToString(),
-                Instance.enableLogStackTrace,
-                false,
-                false,
-                false,
-                false);
-        }
-
-        public static void LogResult(object result) {
-            // Compose log message.
-            var message = string.Format("[RESULT: {0}]", result);
-
-            // Log message.
-            Log(
-                stackInfo => message,
-                Instance.enableLogResult,
                 Instance.showTimestamp,
                 Instance.indentMessage,
                 Instance.appendClassName,
@@ -312,6 +184,107 @@ namespace ATP.Logger {
                 false,
                 false,
                 false);
+        }
+
+        public static void LogResult(object result) {
+            // Compose log message.
+            var message = string.Format("[RESULT: {0}]", result);
+
+            // Log message.
+            Log(
+                stackInfo => message,
+                Instance.enableLogResult,
+                Instance.showTimestamp,
+                Instance.indentMessage,
+                Instance.appendClassName,
+                Instance.appendCallerClassName);
+        }
+
+        public static void LogStackTrace() {
+            var stackTrace = new StackTrace();
+            var message = new StringBuilder();
+            for (var i = 1; i < stackTrace.FrameCount; i++) {
+                var stackFrame = stackTrace.GetFrame(i);
+                for (var j = 0; j < i; j++) {
+                    message.Append("| ");
+                }
+                message.Append(stackFrame.GetMethod());
+                if (i == stackTrace.FrameCount - 1) {
+                    break;
+                }
+                message.Append("\n");
+            }
+
+            Log(
+                stackInfo => message.ToString(),
+                Instance.enableLogStackTrace,
+                false,
+                false,
+                false,
+                false);
+        }
+
+        public static void LogString(
+            string format,
+            params object[] paramList) {
+            // Compose log message.
+            var message = string.Format(format, paramList);
+
+            // Log message.
+            Log(
+                stackInfo => message,
+                Instance.enableLogString,
+                Instance.showTimestamp,
+                Instance.indentMessage,
+                Instance.appendClassName,
+                Instance.appendCallerClassName);
+        }
+
+        /// Start Logger.
+        [Conditional("DEBUG")]
+        public static void StartLogging(
+            string filePath = "log.txt",
+            bool append = false) {
+
+            Instance.filePath = filePath;
+            Instance.append = append;
+            Instance.LoggingEnabled = true;
+        }
+
+        /// Stop Logger.
+        [Conditional("DEBUG")]
+        public static void StopLogging() {
+            Instance.LoggingEnabled = false;
+            // Write single message to the file.
+            Instance.logCache.WriteAll(
+                Instance.filePath,
+                Instance.append);
+        }
+
+        private static bool ClassInFilter(string className) {
+            if (Instance.classFilter.Count != 0) {
+                // Return if class is not listed in the class filter.
+                // You can set class filter in the inspector.
+                if (Instance.classFilter.Contains(className)) {
+                    return true;
+                }
+                return false;
+            }
+            // Filtering is disabled so every class is treated as being
+            // in the filter.
+            return true;
+        }
+
+        /// Add timestamp to a single log message.
+        /// 
+        /// \return String with timestamp.
+        /// \todo Make it static and put in some utility class.
+        private static string GetCurrentTimestamp() {
+            var now = DateTime.Now;
+            var timestamp =
+                string.Format("[{0:H:mm:ss:fff}]", now);
+
+            return timestamp;
         }
 
         private static void Log(
@@ -406,36 +379,9 @@ namespace ATP.Logger {
             }
         }
 
-        /// Add timestamp to a single log message.
-        /// 
-        /// \return String with timestamp.
-        /// \todo Make it static and put in some utility class.
-        private static string GetCurrentTimestamp() {
-            var now = DateTime.Now;
-            var timestamp =
-                string.Format("[{0:H:mm:ss:fff}]", now);
-
-            return timestamp;
-        }
-
         //private void DisplayLabel() {
         //    MeasureIt.Set("Logs captured", logCache.LoggedMessages);
         //}
-
-        private static bool ClassInFilter(string className) {
-            if (Instance.classFilter.Count != 0) {
-                // Return if class is not listed in the class filter.
-                // You can set class filter in the inspector.
-                if (Instance.classFilter.Contains(className)) {
-                    return true;
-                }
-                return false;
-            }
-            // Filtering is disabled so every class is treated as being
-            // in the filter.
-            return true;
-        }
-
         private static bool MethodInFilter(string methodName) {
             if (Instance.methodFilter.Count != 0) {
                 // Return if method is not listed in the class filter.
@@ -446,6 +392,56 @@ namespace ATP.Logger {
                 return false;
             }
             return true;
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private void Awake() {
+            if (instance == null) {
+                // If I am the first instance, make me the Singleton
+                instance = this;
+                DontDestroyOnLoad(this);
+            }
+            else {
+                // If a Singleton already exists and you find
+                // another reference in scene, destroy it!
+                if (this != instance) {
+                    Destroy(gameObject);
+                }
+            }
+
+            // Initialize 'cache' object.
+            logCache.InitArraySize = initArraySize;
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private void OnDestroy() {
+            // Don't write to file if 'logInRealTime' was selected.
+            if (logInRealTime) {
+                return;
+            }
+            // Write log to file when 'enableOnPlay' was selected.
+            if (enableOnPlay) {
+                // Write single message to the file.
+                logCache.WriteAll(filePath, append);
+            }
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private void Start() {
+            // Handle 'Enable On Play' inspector option.
+            if (enableOnPlay) {
+                loggingEnabled = true;
+            }
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private void Update() {
+            // Handle "In-game Label" inspector option.
+            //if (
+            //        loggingEnabled == true
+            //        && inGameLabel) {
+            //    Logger.Instance.DisplayLabel();
+            //}
         }
 
     }

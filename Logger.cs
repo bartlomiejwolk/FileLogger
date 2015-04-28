@@ -23,6 +23,7 @@ namespace ATP.LoggingTools {
 
         private static Logger instance;
 
+        /// todo all class fields should be static.
         /// If append messages to the file or overwrite.
         private bool append;
 
@@ -116,10 +117,13 @@ namespace ATP.LoggingTools {
                 if (instance == null) {
                     instance = FindObjectOfType<Logger>();
                     if (instance == null) {
-                        return null;
+                        GameObject singleton = new GameObject();
+                        instance = singleton.AddComponent<Logger>();
+                        singleton.name = "(singleton) Logger";
+
+                        //Tell unity not to destroy this object when loading a new scene!
+                        DontDestroyOnLoad(instance.gameObject);
                     }
-                    //Tell unity not to destroy this object when loading a new scene!
-                    DontDestroyOnLoad(instance.gameObject);
                 }
                 return instance;
             }
@@ -225,6 +229,7 @@ namespace ATP.LoggingTools {
         public static void LogString(
             string format,
             params object[] paramList) {
+
             // Compose log message.
             var message = string.Format(format, paramList);
 

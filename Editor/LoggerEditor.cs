@@ -123,21 +123,7 @@ namespace ATP.LoggingTools {
                     new GUIContent(
                         "Indent On",
                         ""));
-            EditorGUILayout.PropertyField(
-                    showTimestamp,
-                    new GUIContent(
-                        "Add Timestamp",
-                        ""));
-            EditorGUILayout.PropertyField(
-                    appendClassName,
-                    new GUIContent(
-                        "Append Class Name",
-                        "Append class name to every log message."));
-            EditorGUILayout.PropertyField(
-                    appendCallerClassName,
-                    new GUIContent(
-                        "Append Caller Name",
-                        "Append caller class name to every log message."));
+            
             EditorGUILayout.PropertyField(
                     fullyQualifiedClassName,
                     new GUIContent(

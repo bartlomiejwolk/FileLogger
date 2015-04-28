@@ -3,11 +3,11 @@ using System.Collections;
 using System;
 using System.IO;
 
+// todo rename namespace
 namespace OneDayGame.LoggingTools {
 
-    // TODO Rename to LogCache.
     /// Holds and writes to file logged messages.
-    public class Cache {
+    public class LogWriter {
 
         /// Event called on file write.
         public delegate void WriteEventHandler(object sender, EventArgs e);
@@ -22,9 +22,9 @@ namespace OneDayGame.LoggingTools {
         /// This value is also used to resize the array when it's filled up.
         private int initArraySize = 1000000;
         /// 'logCacheArray' index for next log message.
-        private int logIdx = 0;
+        private int logIdx;
         /// Amount of messages logged during lifetime of the object.
-        private int loggedMessages = 0;
+        private int loggedMessages;
 
         public int InitArraySize {
             set { initArraySize = value; }

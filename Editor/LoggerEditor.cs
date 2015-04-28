@@ -140,7 +140,7 @@ namespace mlogger {
                 // If value was changed..
                 if (loggingEnabled.boolValue != Script.LoggingEnabled) {
                     loggingEnabled.boolValue = false;
-                    Script.LogCache.Add("[PAUSE]", true);
+                    Script.LogWriter.Add("[PAUSE]", true);
 
                     // Fire event.
                     Utilities.InvokeMethodWithReflection(
@@ -158,7 +158,7 @@ namespace mlogger {
                 // If value was changed..
                 if (loggingEnabled.boolValue != Script.LoggingEnabled) {
                     loggingEnabled.boolValue = false;
-                    Script.LogCache.WriteAll(Script.FilePath, false);
+                    Script.LogWriter.WriteAll(Script.FilePath, false);
 
                     // Fire event.
                     Utilities.InvokeMethodWithReflection(

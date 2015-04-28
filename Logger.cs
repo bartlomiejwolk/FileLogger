@@ -144,7 +144,7 @@ namespace mlogger {
         [SerializeField]
         private int initArraySize = 1000000;
 
-        private Cache logCache = new Cache();
+        private LogWriter logWriter = new LogWriter();
         // When false, no logging is done.
         [SerializeField]
         private bool loggingEnabled;
@@ -196,8 +196,8 @@ namespace mlogger {
             get { return filePath; }
         }
 
-        public Cache LogCache {
-            get { return logCache; }
+        public LogWriter LogWriter {
+            get { return logWriter; }
         }
 
         public bool LoggingEnabled {
@@ -224,7 +224,7 @@ namespace mlogger {
             }
 
             // Initialize 'cache' object.
-            logCache.InitArraySize = initArraySize;
+            logWriter.InitArraySize = initArraySize;
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -236,7 +236,7 @@ namespace mlogger {
             // Write log to file when 'enableOnPlay' was selected.
             if (enableOnPlay) {
                 // Write single message to the file.
-                logCache.WriteAll(filePath, append);
+                logWriter.WriteAll(filePath, append);
             }
         }
 
@@ -386,7 +386,7 @@ namespace mlogger {
         public static void StopLogging() {
             Instance.LoggingEnabled = false;
             // Write single message to the file.
-            Instance.logCache.WriteAll(
+            Instance.logWriter.WriteAll(
                 Instance.filePath,
                 Instance.append);
         }
@@ -466,13 +466,13 @@ namespace mlogger {
             }
 
             // Add log message to the cache.
-            Instance.logCache.Add(
+            Instance.logWriter.Add(
                 outputMessage.ToString(),
                 Instance.echoToConsole);
 
             // Append message to the log file.
             if (Instance.logInRealTime) {
-                Instance.logCache.WriteLast(Instance.filePath);
+                Instance.logWriter.WriteLast(Instance.filePath);
             }
         }
 

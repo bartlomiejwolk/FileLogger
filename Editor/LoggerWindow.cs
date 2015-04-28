@@ -52,7 +52,7 @@ namespace mlogger {
                     "Button");
 
                 if (!LoggerInstance.LoggingEnabled) {
-                    LoggerInstance.LogCache.Add("[PAUSE]", true);
+                    LoggerInstance.LogWriter.Add("[PAUSE]", true);
                 }
             }
             else if (Application.isPlaying
@@ -72,7 +72,7 @@ namespace mlogger {
                 "Button");
 
                 if (!LoggerInstance.LoggingEnabled) {
-                    LoggerInstance.LogCache.WriteAll(
+                    LoggerInstance.LogWriter.WriteAll(
                             LoggerInstance.FilePath,
                             false);
                 }

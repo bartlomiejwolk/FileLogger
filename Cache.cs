@@ -5,37 +5,37 @@ using System.IO;
 
 namespace OneDayGame.LoggingTools {
 
-	// TODO Rename to LogCache.
+    // TODO Rename to LogCache.
     /// Holds and writes to file logged messages.
-	public class Cache {
+    public class Cache {
 
         /// Event called on file write.
         public delegate void WriteEventHandler(object sender, EventArgs e);
         public static event WriteEventHandler WriteEvent;
 
-		///private bool prevLoggingEnabled = false;
-		private StreamWriter writer;
-		/// Log cache as a list. Each element is one log msg.
-		private string[] logCache;
+        ///private bool prevLoggingEnabled = false;
+        private StreamWriter writer;
+        /// Log cache as a list. Each element is one log msg.
+        private string[] logCache;
         /// Initial size of the cache array.
         ///
         /// This value is also used to resize the array when it's filled up.
         private int initArraySize = 1000000;
-		/// 'logCacheArray' index for next log message.
-		private int logIdx = 0;
-		/// Amount of messages logged during lifetime of the object.
-		private int loggedMessages = 0;
+        /// 'logCacheArray' index for next log message.
+        private int logIdx = 0;
+        /// Amount of messages logged during lifetime of the object.
+        private int loggedMessages = 0;
 
         public int InitArraySize {
             set { initArraySize = value; }
         }
-		public int LoggedMessages {
-			get { return loggedMessages; }
+        public int LoggedMessages {
+            get { return loggedMessages; }
             set { loggedMessages = value; }
-		}
+        }
 
-		/// Save log message to cache.
-		public void Add(string message, bool echoToConsole) {
+        /// Save log message to cache.
+        public void Add(string message, bool echoToConsole) {
             // Initialize array if not initialized already.
             if (
                     logCache == null ||
@@ -43,12 +43,12 @@ namespace OneDayGame.LoggingTools {
                 logCache = new string[initArraySize];
             }
             // Cache message.
-			logCache[logIdx] = message;
+            logCache[logIdx] = message;
             // Handle "Echo To Console" inspector option.
             if (echoToConsole) {
                 UnityEngine.Debug.Log(message);
             }
-			logIdx += 1;
+            logIdx += 1;
             loggedMessages += 1;
             // Resize array when needed.
             if (logIdx == logCache.Length) {
@@ -57,10 +57,10 @@ namespace OneDayGame.LoggingTools {
                         logCache.Length + initArraySize);
                 UnityEngine.Debug.Log("Array resized to: " + logCache.Length);
             }
-		}
+        }
 
         public void WriteAll(string filePath, bool append) {
-			// Create stream writer used to write log cache to file.
+            // Create stream writer used to write log cache to file.
             using (writer = new StreamWriter(filePath, append)) {
                 for (int i = 0; i < logIdx; i++) {
                     // write log to the file.
@@ -76,8 +76,8 @@ namespace OneDayGame.LoggingTools {
         }
 
         public void WriteLast(string filePath) {
-			// Create stream writer used to write log cache to file.
-			using (writer = new StreamWriter(filePath, true)) {
+            // Create stream writer used to write log cache to file.
+            using (writer = new StreamWriter(filePath, true)) {
                 int lastCachedMsgIdx = logIdx - 1;
                 // Write to file last cached message.
                 writer.WriteLine(logCache[lastCachedMsgIdx]);

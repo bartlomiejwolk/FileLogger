@@ -11,6 +11,7 @@ using UnityEngine;
 
 namespace ATP.LoggingTools {
 
+    [Flags]
     public enum AppendOptions {
 
         Timestamp = 1,
@@ -32,6 +33,11 @@ namespace ATP.LoggingTools {
         private static Logger instance;
 
         /// todo all class fields should be static.
+        //public AppendOptions AppendOptions = AppendOptions.Timestamp
+        //    | AppendOptions.ClassName | AppendOptions.CallerClassName;
+        [SerializeField]
+        public AppendOptions AppendOptions;
+
         /// If append messages to the file or overwrite.
         private bool append;
 

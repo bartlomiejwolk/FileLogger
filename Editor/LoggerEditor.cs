@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using UnityEditor;
 using ATP.ReorderableList;
+using SyntaxTree.VisualStudio.Unity.Messaging;
 
 namespace ATP.LoggingTools {
 
@@ -142,6 +143,12 @@ namespace ATP.LoggingTools {
                     new GUIContent(
                         "Qualified Class Name",
                         "If enabled, class name will be fully qualified."));
+
+            script.AppendOptions = (AppendOptions) EditorGUILayout.EnumMaskField(
+                new GUIContent(
+                    "Append",
+                    ""),
+                script.AppendOptions);
 
             EditorGUILayout.Space();
 

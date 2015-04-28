@@ -59,6 +59,7 @@ namespace OneDayGame.LoggingTools {
             }
         }
 
+        // todo move to Logger class
         public void WriteAll(string filePath, bool append) {
             // Create stream writer used to write log cache to file.
             using (writer = new StreamWriter(filePath, append)) {
@@ -75,6 +76,7 @@ namespace OneDayGame.LoggingTools {
             loggedMessages = 0;
         }
 
+        // todo move to Logger class
         public void WriteLast(string filePath) {
             // Create stream writer used to write log cache to file.
             using (writer = new StreamWriter(filePath, true)) {

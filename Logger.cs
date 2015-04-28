@@ -11,6 +11,14 @@ using UnityEngine;
 
 namespace ATP.LoggingTools {
 
+    public enum AppendOptions {
+
+        Timestamp = 1,
+        ClassName = 2,
+        CallerClassName = 4
+
+    }
+
     /// Logs to a file function calls, return values or any string.
     /// 
     /// Comment out the DEBUG directive to disable all calls to this class.

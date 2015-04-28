@@ -26,6 +26,7 @@ namespace ATP.LoggingTools {
 
     }
 
+    // todo move to separate file
     /// <summary>
     /// Options used to decide which Logger methods will be active, ie. will
     /// produce output.
@@ -45,17 +46,26 @@ namespace ATP.LoggingTools {
     /// For Editor classes you must define DEBUG directive explicitly.
     /// \todo Remove LogPrimitive() methods and use LogStringArray and
     /// LogIntArray() instead.
+    /// todo all class fields should be static.
     public sealed class Logger : GameComponent {
 
         public static event EventHandler StateChanged;
 
         private static Logger instance;
 
-        /// todo all class fields should be static.
-        //public AppendOptions AppendOptions = AppendOptions.Timestamp
-        //    | AppendOptions.ClassName | AppendOptions.CallerClassName;
+        /// <summary>
+        /// Allows specify what additional information will be included in
+        /// a single log line.
+        /// </summary>
         [SerializeField]
         public AppendOptions AppendOptions;
+
+        /// <summary>
+        /// Keeps info about Logger methods state (enabled/disabled).
+        /// Disabled methods won't produce output.
+        /// </summary>
+        [SerializeField]
+        public EnabledMethods EnabledMethods;
 
         /// If append messages to the file or overwrite.
         [SerializeField]

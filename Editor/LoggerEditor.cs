@@ -130,6 +130,14 @@ namespace ATP.LoggingTools {
                         "Qualified Class Name",
                         "If enabled, class name will be fully qualified."));
 
+            script.EnabledMethods = (EnabledMethods) EditorGUILayout.EnumMaskField(
+                new GUIContent(
+                    "Enabled Methods",
+                    "Select Logger methods that should be active. Inactive " +
+                    "methods won't product output."),
+                script.EnabledMethods);
+
+
             script.AppendOptions = (AppendOptions) EditorGUILayout.EnumMaskField(
                 new GUIContent(
                     "Append",

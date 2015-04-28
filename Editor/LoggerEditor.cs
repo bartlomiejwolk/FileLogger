@@ -101,7 +101,13 @@ namespace mlogger {
         #endregion
         #region INSPECTOR
         private void DrawClearLogFileButton() {
-            if (GUILayout.Button("Clear Log File")) {
+            // Don't allow reseting log file while logging.
+            if (Script.LoggingEnabled) return;
+
+            if (GUILayout.Button(
+                "Clear Log File",
+                GUILayout.Width(100))) {
+
                 Script.ClearLogFile();
             }
         }

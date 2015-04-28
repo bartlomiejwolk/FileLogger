@@ -89,8 +89,8 @@ namespace ATP.LoggingTools {
         [SerializeField]
         private bool echoToConsole;
 
-        [SerializeField]
-        private bool enableLogCall = true;
+        //[SerializeField]
+        //private bool enableLogCall = true;
 
         // TODO Add to inspector.
         [SerializeField]
@@ -101,15 +101,15 @@ namespace ATP.LoggingTools {
 #pragma warning disable 169
             private bool enableLogList = true;
 #pragma warning restore 169
-        [SerializeField]
-        private bool enableLogResult = true;
+        //[SerializeField]
+        //private bool enableLogResult = true;
 
         /// \todo Change to false.
         [SerializeField]
         private bool enableLogStackTrace = true;
 
-        [SerializeField]
-        private bool enableLogString = true;
+        //[SerializeField]
+        //private bool enableLogString = true;
 
         /// Enable logging when in play mode.
         [SerializeField]
@@ -199,7 +199,7 @@ namespace ATP.LoggingTools {
         public static void LogCall() {
             Log(
                 stackInfo => stackInfo.MethodSignature,
-                Instance.enableLogCall,
+                FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogCall),
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.Timestamp),
@@ -245,7 +245,7 @@ namespace ATP.LoggingTools {
             // Log message.
             Log(
                 stackInfo => message,
-                Instance.enableLogResult,
+                FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogResult),
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.Timestamp),
@@ -292,7 +292,7 @@ namespace ATP.LoggingTools {
             // Log message.
             Log(
                 stackInfo => message,
-                Instance.enableLogString,
+                FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogString),
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.Timestamp),

@@ -100,25 +100,6 @@ namespace ATP.LoggingTools {
             EditorGUILayout.Space();
 
             EditorGUILayout.PropertyField(
-                    enableLogCall,
-                    new GUIContent(
-                        "Enable LogCall()",
-                        ""));
-            EditorGUILayout.PropertyField(
-                    enableLogResult,
-                    new GUIContent(
-                        "Enable LogResult()",
-                        ""));
-            EditorGUILayout.PropertyField(
-                    enableLogString,
-                    new GUIContent(
-                        "Enable LogString()",
-                        ""));
-
-            EditorGUILayout.Space();
-
-
-            EditorGUILayout.PropertyField(
                     indentMessage,
                     new GUIContent(
                         "Indent On",

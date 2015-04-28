@@ -92,7 +92,7 @@ namespace mlogger {
             ReorderableListGUI.ListField(methodFilter);
 
             // todo remove param.
-            DrawStartStopButton(script);
+            HandleDrawingStartStopButton(script);
 
             // Save changes
             serializedObject.ApplyModifiedProperties();
@@ -100,7 +100,7 @@ namespace mlogger {
         #endregion
         #region INSPECTOR
 
-        private void DrawStartStopButton(Logger script) {
+        private void HandleDrawingStartStopButton(Logger script) {
             // todo add button to continue logging after pause
             // todo extract what's inside to DrawDrawStartStopButton()
             if (loggingEnabled.boolValue == false) {

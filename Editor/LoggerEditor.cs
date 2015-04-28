@@ -6,55 +6,55 @@ using ATP.ReorderableList;
 
 namespace ATP.LoggingTools {
 
-	[CustomEditor(typeof(Logger))]
-	public class LoggerEditor : GameComponentEditor {
+    [CustomEditor(typeof(Logger))]
+    public class LoggerEditor : GameComponentEditor {
 
-		private SerializedProperty filePath;
-		private SerializedProperty initArraySize;
-		private SerializedProperty inGameLabel;
-		private SerializedProperty logInRealTime;
-		private SerializedProperty echoToConsole;
-		private SerializedProperty enableLogCall;
-		private SerializedProperty enableLogResult;
-		private SerializedProperty enableLogString;
-		private SerializedProperty loggingEnabled;
-		private SerializedProperty enableOnPlay;
-		private SerializedProperty appendClassName;
-		private SerializedProperty appendCallerClassName;
-		private SerializedProperty fullyQualifiedClassName;
-		private SerializedProperty showTimestamp;
-		private SerializedProperty indentMessage;
-		private SerializedProperty classFilter;
-		private SerializedProperty methodFilter;
+        private SerializedProperty filePath;
+        private SerializedProperty initArraySize;
+        private SerializedProperty inGameLabel;
+        private SerializedProperty logInRealTime;
+        private SerializedProperty echoToConsole;
+        private SerializedProperty enableLogCall;
+        private SerializedProperty enableLogResult;
+        private SerializedProperty enableLogString;
+        private SerializedProperty loggingEnabled;
+        private SerializedProperty enableOnPlay;
+        private SerializedProperty appendClassName;
+        private SerializedProperty appendCallerClassName;
+        private SerializedProperty fullyQualifiedClassName;
+        private SerializedProperty showTimestamp;
+        private SerializedProperty indentMessage;
+        private SerializedProperty classFilter;
+        private SerializedProperty methodFilter;
 
-		public override void OnEnable() {
-			base.OnEnable();
+        public override void OnEnable() {
+            base.OnEnable();
 
-			filePath = serializedObject.FindProperty("filePath");
+            filePath = serializedObject.FindProperty("filePath");
             initArraySize = serializedObject.FindProperty("initArraySize");
             inGameLabel = serializedObject.FindProperty("inGameLabel");
             logInRealTime = serializedObject.FindProperty("logInRealTime");
-			echoToConsole = serializedObject.FindProperty("echoToConsole");
+            echoToConsole = serializedObject.FindProperty("echoToConsole");
             enableLogCall = serializedObject.FindProperty("enableLogCall");
             enableLogResult = serializedObject.FindProperty("enableLogResult");
             enableLogString = serializedObject.FindProperty("enableLogString");
-			loggingEnabled = serializedObject.FindProperty("loggingEnabled");
+            loggingEnabled = serializedObject.FindProperty("loggingEnabled");
             enableOnPlay = serializedObject.FindProperty("enableOnPlay");
             appendClassName = serializedObject.FindProperty("appendClassName");
-			appendCallerClassName =
-				serializedObject.FindProperty("appendCallerClassName");
+            appendCallerClassName =
+                serializedObject.FindProperty("appendCallerClassName");
             fullyQualifiedClassName =
                 serializedObject.FindProperty("fullyQualifiedClassName");
-			showTimestamp = serializedObject.FindProperty("showTimestamp");
-			indentMessage = serializedObject.FindProperty("indentMessage");
+            showTimestamp = serializedObject.FindProperty("showTimestamp");
+            indentMessage = serializedObject.FindProperty("indentMessage");
             classFilter = serializedObject.FindProperty("classFilter");
             methodFilter = serializedObject.FindProperty("methodFilter");
-		}
+        }
 
-		public override void OnInspectorGUI() {
-			base.OnInspectorGUI();
-			Logger script = (Logger)target;
-			serializedObject.Update();
+        public override void OnInspectorGUI() {
+            base.OnInspectorGUI();
+            Logger script = (Logger)target;
+            serializedObject.Update();
 
             // TODO Set longer label width.
 
@@ -145,40 +145,59 @@ namespace ATP.LoggingTools {
 
             EditorGUILayout.Space();
 
-			EditorGUILayout.HelpBox(
-					"Example: MyClass",
-					UnityEditor.MessageType.Info);
-			ReorderableListGUI.Title("Class Filter");
-			ReorderableListGUI.ListField(classFilter);
-			EditorGUILayout.HelpBox(
-					"Example: OnEnable",
-					UnityEditor.MessageType.Info);
-			ReorderableListGUI.Title("Method Filter");
-			ReorderableListGUI.ListField(methodFilter);
+            EditorGUILayout.HelpBox(
+                    "Example: MyClass",
+                    UnityEditor.MessageType.Info);
+            ReorderableListGUI.Title("Class Filter");
+            ReorderableListGUI.ListField(classFilter);
+            EditorGUILayout.HelpBox(
+                    "Example: OnEnable",
+                    UnityEditor.MessageType.Info);
+            ReorderableListGUI.Title("Method Filter");
+            ReorderableListGUI.ListField(methodFilter);
 
-			if (loggingEnabled.boolValue == false) {
+            // todo add button to continue logging after pause
+            if (loggingEnabled.boolValue == false) {
                 if (GUILayout.Button("Start Logging")) {
                     loggingEnabled.boolValue = true;
+
+                    // Fire event.
+                    Utilities.InvokeMethodWithReflection(
+                        script,
+                        "OnStateChanged",
+                        null);
                 }
-			}
+            }
             else if (Application.isPlaying && enableOnPlay.boolValue) {
                 if (GUILayout.Button("Pause Logging")) {
                     loggingEnabled.boolValue = false;
                     script.LogCache.Add("[PAUSE]", true);
+
+                    // Fire event.
+                    Utilities.InvokeMethodWithReflection(
+                        script,
+                        "OnStateChanged",
+                        null);
                 }
             }
-			else {
-				if (GUILayout.Button("Stop Logging")) {
-					loggingEnabled.boolValue = false;
+            else {
+                if (GUILayout.Button("Stop Logging")) {
+                    loggingEnabled.boolValue = false;
                     script.LogCache.WriteAll(script.FilePath, false);
-				}
-			}
 
-			// Save changes
-			serializedObject.ApplyModifiedProperties();
-			if (GUI.changed) {
-				EditorUtility.SetDirty(script);
-			}
-		}
-	}
+                    // Fire event.
+                    Utilities.InvokeMethodWithReflection(
+                        script,
+                        "OnStateChanged",
+                        null);
+                }
+            }
+
+            // Save changes
+            serializedObject.ApplyModifiedProperties();
+            if (GUI.changed) {
+                EditorUtility.SetDirty(script);
+            }
+        }
+    }
 }

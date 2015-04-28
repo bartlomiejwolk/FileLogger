@@ -12,6 +12,11 @@ using UnityEngine;
 
 namespace ATP.LoggingTools {
 
+    // todo move to separate file
+    /// <summary>
+    /// Options used to decide what info will be added to a single line in the
+    /// log output.
+    /// </summary>
     [Flags]
     public enum AppendOptions {
 
@@ -21,23 +26,46 @@ namespace ATP.LoggingTools {
 
     }
 
+    // todo move to separate file
+    /// <summary>
+    /// Options used to decide which Logger methods will be active, ie. will
+    /// produce output.
+    /// </summary>
+    [Flags]
+    public enum EnabledMethods {
+
+        LogCall = 1,
+        LogString = 2,
+        LogResult = 4
+
+    }
+
     /// Logs to a file function calls, return values or any string.
     /// 
     /// Comment out the DEBUG directive to disable all calls to this class.
     /// For Editor classes you must define DEBUG directive explicitly.
     /// \todo Remove LogPrimitive() methods and use LogStringArray and
     /// LogIntArray() instead.
+    /// todo all class fields should be static.
     public sealed class Logger : GameComponent {
 
         public static event EventHandler StateChanged;
 
         private static Logger instance;
 
-        /// todo all class fields should be static.
-        //public AppendOptions AppendOptions = AppendOptions.Timestamp
-        //    | AppendOptions.ClassName | AppendOptions.CallerClassName;
+        /// <summary>
+        /// Allows specify what additional information will be included in
+        /// a single log line.
+        /// </summary>
         [SerializeField]
         public AppendOptions AppendOptions;
+
+        /// <summary>
+        /// Keeps info about Logger methods state (enabled/disabled).
+        /// Disabled methods won't produce output.
+        /// </summary>
+        [SerializeField]
+        public EnabledMethods EnabledMethods;
 
         /// If append messages to the file or overwrite.
         [SerializeField]
@@ -59,10 +87,10 @@ namespace ATP.LoggingTools {
         private List<string> classFilter = new List<string>();
 
         [SerializeField]
-        private bool echoToConsole = false;
+        private bool echoToConsole;
 
-        [SerializeField]
-        private bool enableLogCall = true;
+        //[SerializeField]
+        //private bool enableLogCall = true;
 
         // TODO Add to inspector.
         [SerializeField]
@@ -73,15 +101,15 @@ namespace ATP.LoggingTools {
 #pragma warning disable 169
             private bool enableLogList = true;
 #pragma warning restore 169
-        [SerializeField]
-        private bool enableLogResult = true;
+        //[SerializeField]
+        //private bool enableLogResult = true;
 
         /// \todo Change to false.
         [SerializeField]
         private bool enableLogStackTrace = true;
 
-        [SerializeField]
-        private bool enableLogString = true;
+        //[SerializeField]
+        //private bool enableLogString = true;
 
         /// Enable logging when in play mode.
         [SerializeField]
@@ -115,7 +143,7 @@ namespace ATP.LoggingTools {
         private bool loggingEnabled;
 
         [SerializeField]
-        private bool logInRealTime = false;
+        private bool logInRealTime;
 
         /// Method filter.
         /// 
@@ -171,7 +199,7 @@ namespace ATP.LoggingTools {
         public static void LogCall() {
             Log(
                 stackInfo => stackInfo.MethodSignature,
-                Instance.enableLogCall,
+                FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogCall),
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.Timestamp),
@@ -217,7 +245,7 @@ namespace ATP.LoggingTools {
             // Log message.
             Log(
                 stackInfo => message,
-                Instance.enableLogResult,
+                FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogResult),
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.Timestamp),
@@ -264,7 +292,7 @@ namespace ATP.LoggingTools {
             // Log message.
             Log(
                 stackInfo => message,
-                Instance.enableLogString,
+                FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogString),
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.Timestamp),

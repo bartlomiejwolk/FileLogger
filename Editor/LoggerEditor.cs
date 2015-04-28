@@ -100,25 +100,6 @@ namespace ATP.LoggingTools {
             EditorGUILayout.Space();
 
             EditorGUILayout.PropertyField(
-                    enableLogCall,
-                    new GUIContent(
-                        "Enable LogCall()",
-                        ""));
-            EditorGUILayout.PropertyField(
-                    enableLogResult,
-                    new GUIContent(
-                        "Enable LogResult()",
-                        ""));
-            EditorGUILayout.PropertyField(
-                    enableLogString,
-                    new GUIContent(
-                        "Enable LogString()",
-                        ""));
-
-            EditorGUILayout.Space();
-
-
-            EditorGUILayout.PropertyField(
                     indentMessage,
                     new GUIContent(
                         "Indent On",
@@ -129,6 +110,14 @@ namespace ATP.LoggingTools {
                     new GUIContent(
                         "Qualified Class Name",
                         "If enabled, class name will be fully qualified."));
+
+            script.EnabledMethods = (EnabledMethods) EditorGUILayout.EnumMaskField(
+                new GUIContent(
+                    "Enabled Methods",
+                    "Select Logger methods that should be active. Inactive " +
+                    "methods won't product output."),
+                script.EnabledMethods);
+
 
             script.AppendOptions = (AppendOptions) EditorGUILayout.EnumMaskField(
                 new GUIContent(

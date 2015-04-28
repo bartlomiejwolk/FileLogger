@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace ATP.LoggingTools {
+namespace mlogger {
 
     public class StackInfo {
         #region FIELDS

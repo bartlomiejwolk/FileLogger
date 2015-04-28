@@ -10,7 +10,7 @@ using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 
-namespace ATP.LoggingTools {
+namespace mlogger {
 
     // todo move to separate file
     /// <summary>

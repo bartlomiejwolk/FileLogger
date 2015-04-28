@@ -3,7 +3,7 @@ using UnityEditor;
 using System;
 using System.Collections;
 
-namespace ATP.LoggingTools {
+namespace mlogger {
 
     public class LoggerWindow : EditorWindow {
 

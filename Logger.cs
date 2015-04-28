@@ -299,6 +299,7 @@ namespace mlogger {
                     AppendOptions.CallerClassName));
         }
 
+        // todo add caller method name
         public static void LogResult(object result) {
             // Compose log message.
             var message = string.Format("[RESULT: {0}]", result);
@@ -319,6 +320,9 @@ namespace mlogger {
                     AppendOptions.CallerClassName));
         }
 
+        /// <summary>
+        /// Logs stack trace.
+        /// </summary>
         public static void LogStackTrace() {
             var stackTrace = new StackTrace();
             var message = new StringBuilder();
@@ -413,40 +417,24 @@ namespace mlogger {
             return timestamp;
         }
 
-        // TODO Refactor.
         private static void Log(
             Func<StackInfo, string> composeMessage,
-            bool enableLoggingForMethod,
+            bool loggingEnabled,
             bool showTimestamp,
             bool indentMessage,
             bool appendClassName,
             bool appendCallerClassName) {
-            if (enableLoggingForMethod == false) {
-                return;
-            }
 
-            // Return if Logger instance does not exists.
-            if (Instance == null) {
-                return;
-            }
-
-            // Return if user stopped logging from the inspector.
-            if (Instance.LoggingEnabled == false) {
-                return;
-            }
+            if (loggingEnabled == false) return;
+            if (Instance.LoggingEnabled == false) return;
 
             // Get info from call stack.
             var stackInfo = new StackInfo(3);
 
             // Filter by class name.
-            if (ClassInFilter(stackInfo.ClassName) == false) {
-                return;
-            }
-
+            if (!ClassInFilter(stackInfo.ClassName)) return;
             // Filter by method name.
-            if (MethodInFilter(stackInfo.MethodName) == false) {
-                return;
-            }
+            if (!MethodInFilter(stackInfo.MethodName)) return;
 
             // Log message to write.
             var outputMessage = new StringBuilder();
@@ -467,33 +455,14 @@ namespace mlogger {
             // Add message if not empty.
             outputMessage.Append(composeMessage(stackInfo));
 
-            // Apend class name if enabled in the inspector.
+            // Apend class name.
             if (appendClassName) {
-                if (Instance.fullyQualifiedClassName) {
-                    // Append fully qualified class name.
-                    outputMessage.Append(
-                        ", @ " + stackInfo.QualifiedClassName + "");
-                }
-                else {
-                    // Append class name.
-                    outputMessage.Append(", @ " + stackInfo.ClassName + "");
-                }
+                AppendClassName(outputMessage, stackInfo);
             }
 
-            // Apend caller class name if enabled in the inspector.
+            // Apend caller class name.
             if (appendCallerClassName) {
-                // Get info from call stack.
-                var callerStackInfo = new StackInfo(4);
-
-                if (Instance.fullyQualifiedClassName) {
-                    // Append fully qualified caller class name.
-                    outputMessage.Append(
-                        ", <- " + callerStackInfo.QualifiedClassName + "");
-                }
-                else {
-                    outputMessage.Append(
-                        ", <- " + callerStackInfo.ClassName + "");
-                }
+                AppendCallerClassName(outputMessage);
             }
 
             // Add log message to the cache.
@@ -501,14 +470,53 @@ namespace mlogger {
                 outputMessage.ToString(),
                 Instance.echoToConsole);
 
+            // Append message to the log file.
             if (Instance.logInRealTime) {
                 Instance.logCache.WriteLast(Instance.filePath);
             }
         }
 
-        //private void DisplayLabel() {
-        //    MeasureIt.Set("Logs captured", logCache.LoggedMessages);
-        //}
+        /// <summary>
+        /// Helper method.
+        /// Appends caller class name to the output message.
+        /// </summary>
+        /// <param name="outputMessage"></param>
+        private static void AppendCallerClassName(StringBuilder outputMessage) {
+            // Get info from call stack.
+            var callerStackInfo = new StackInfo(4);
+
+            if (Instance.fullyQualifiedClassName) {
+                // Append fully qualified caller class name.
+                outputMessage.Append(
+                    ", <- " + callerStackInfo.QualifiedClassName + "");
+            }
+            else {
+                outputMessage.Append(
+                    ", <- " + callerStackInfo.ClassName + "");
+            }
+        }
+
+        /// <summary>
+        /// Helper method.
+        /// Appends class name to the output message.
+        /// </summary>
+        /// <param name="outputMessage"></param>
+        /// <param name="stackInfo"></param>
+        private static void AppendClassName(
+            StringBuilder outputMessage,
+            StackInfo stackInfo) {
+
+            if (Instance.fullyQualifiedClassName) {
+                // Append fully qualified class name.
+                outputMessage.Append(
+                    ", @ " + stackInfo.QualifiedClassName + "");
+            }
+            else {
+                // Append class name.
+                outputMessage.Append(", @ " + stackInfo.ClassName + "");
+            }
+        }
+
         private static bool MethodInFilter(string methodName) {
             if (Instance.methodFilter.Count != 0) {
                 // Return if method is not listed in the class filter.

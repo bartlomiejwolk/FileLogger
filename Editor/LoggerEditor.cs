@@ -10,6 +10,7 @@ namespace ATP.LoggingTools {
     [CustomEditor(typeof(Logger))]
     public class LoggerEditor : GameComponentEditor {
 
+        #region SERIALIZED PROPERTIES
         private SerializedProperty filePath;
         private SerializedProperty initArraySize;
         private SerializedProperty inGameLabel;
@@ -27,7 +28,9 @@ namespace ATP.LoggingTools {
         private SerializedProperty indentMessage;
         private SerializedProperty classFilter;
         private SerializedProperty methodFilter;
+        #endregion
 
+        #region UNITY MESSAGES
         public override void OnEnable() {
             base.OnEnable();
 
@@ -94,6 +97,8 @@ namespace ATP.LoggingTools {
             // Save changes
             serializedObject.ApplyModifiedProperties();
         }
+        #endregion
+        #region INSPECTOR
 
         private void DrawStartStopButton(Logger script) {
             // todo add button to continue logging after pause
@@ -223,6 +228,7 @@ namespace ATP.LoggingTools {
                     "File Path",
                     "File path to save the generated log file."));
         }
+        #endregion
 
     }
 }

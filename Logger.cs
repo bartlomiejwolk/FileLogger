@@ -12,12 +12,30 @@ using UnityEngine;
 
 namespace ATP.LoggingTools {
 
+    // todo move to separate file
+    /// <summary>
+    /// Options used to decide what info will be added to a single line in the
+    /// log output.
+    /// </summary>
     [Flags]
     public enum AppendOptions {
 
         Timestamp = 1,
         ClassName = 2,
         CallerClassName = 4
+
+    }
+
+    /// <summary>
+    /// Options used to decide which Logger methods will be active, ie. will
+    /// produce output.
+    /// </summary>
+    [Flags]
+    public enum EnabledMethods {
+
+        LogCall = 1,
+        LogString = 2,
+        LogResult = 4
 
     }
 
@@ -59,7 +77,7 @@ namespace ATP.LoggingTools {
         private List<string> classFilter = new List<string>();
 
         [SerializeField]
-        private bool echoToConsole = false;
+        private bool echoToConsole;
 
         [SerializeField]
         private bool enableLogCall = true;
@@ -115,7 +133,7 @@ namespace ATP.LoggingTools {
         private bool loggingEnabled;
 
         [SerializeField]
-        private bool logInRealTime = false;
+        private bool logInRealTime;
 
         /// Method filter.
         /// 

@@ -13,34 +13,6 @@ using UnityEngine;
 
 namespace mLogger {
 
-    // todo move to separate file
-    /// <summary>
-    /// Options used to decide what info will be added to a single line in the
-    /// log output.
-    /// </summary>
-    [Flags]
-    public enum AppendOptions {
-
-        Timestamp = 1,
-        ClassName = 2,
-        CallerClassName = 4
-
-    }
-
-    // todo move to separate file
-    /// <summary>
-    /// Options used to decide which Logger methods will be active, ie. will
-    /// produce output.
-    /// </summary>
-    [Flags]
-    public enum EnabledMethods {
-
-        LogCall = 1,
-        LogString = 2,
-        LogResult = 4
-
-    }
-
     /// Logs to a file function calls, return values or any string.
     /// 
     /// Comment out the DEBUG directive to disable all calls to this class.

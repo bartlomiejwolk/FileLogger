@@ -8,7 +8,7 @@ using SyntaxTree.VisualStudio.Unity.Messaging;
 namespace ATP.LoggingTools {
 
     [CustomEditor(typeof(Logger))]
-    public class LoggerEditor : GameComponentEditor {
+    public class LoggerEditor : Editor {
 
         #region SERIALIZED PROPERTIES
         private SerializedProperty filePath;
@@ -31,9 +31,7 @@ namespace ATP.LoggingTools {
         #endregion
 
         #region UNITY MESSAGES
-        public override void OnEnable() {
-            base.OnEnable();
-
+        private void OnEnable() {
             filePath = serializedObject.FindProperty("filePath");
             initArraySize = serializedObject.FindProperty("initArraySize");
             inGameLabel = serializedObject.FindProperty("inGameLabel");

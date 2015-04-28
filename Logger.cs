@@ -47,7 +47,7 @@ namespace ATP.LoggingTools {
     /// \todo Remove LogPrimitive() methods and use LogStringArray and
     /// LogIntArray() instead.
     /// todo all class fields should be static.
-    public sealed class Logger : GameComponent {
+    public sealed class Logger : MonoBehaviour {
 
         #region EVENTS
         public static event EventHandler StateChanged;

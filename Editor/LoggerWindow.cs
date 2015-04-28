@@ -32,18 +32,6 @@ namespace mlogger {
             window.minSize = new Vector2(100f, 60f);
         }
 
-        private void OnEnable() {
-            Logger.StateChanged += Logger_StateChanged;
-        }
-
-        private void OnDisable() {
-            Logger.StateChanged -= Logger_StateChanged;
-        }
-
-        void Logger_StateChanged(object sender, EventArgs e) {
-            Repaint();
-        }
-
         private void OnGUI() {
             EditorGUILayout.BeginHorizontal();
             if (!LoggerInstance.LoggingEnabled) {

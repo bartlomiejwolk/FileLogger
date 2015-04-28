@@ -50,6 +50,9 @@ namespace mlogger {
     public sealed class Logger : MonoBehaviour {
 
         #region EVENTS
+        /// <summary>
+        /// Event called when logger is started, stopped, paused or reasumed.
+        /// </summary>
         public static event EventHandler StateChanged;
         #endregion
 

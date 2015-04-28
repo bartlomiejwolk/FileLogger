@@ -299,32 +299,6 @@ namespace mlogger {
                     AppendOptions.CallerClassName));
         }
 
-        public static void LogDictionary<TKey, TValue>(
-            Dictionary<TKey, TValue> dict,
-            string info) {
-            var message = new StringBuilder();
-
-            if (info.Length != 0) {
-                message.Append(info);
-                message.Append("\n");
-            }
-
-            foreach (var entry in dict) {
-                message.Append(entry.Key + ": " + entry.Value);
-                // TODO Don't append new line after last dict. element.
-                message.Append("\n");
-            }
-
-            // Log message.
-            Log(
-                stackInfo => message.ToString(),
-                Instance.enableLogDictionary,
-                false,
-                false,
-                false,
-                false);
-        }
-
         public static void LogResult(object result) {
             // Compose log message.
             var message = string.Format("[RESULT: {0}]", result);

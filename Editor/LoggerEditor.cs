@@ -10,6 +10,8 @@ namespace mlogger {
     [CustomEditor(typeof(Logger))]
     public class LoggerEditor : Editor {
 
+        private Logger Script { get; set; }
+
         #region SERIALIZED PROPERTIES
         private SerializedProperty filePath;
         private SerializedProperty initArraySize;
@@ -32,6 +34,8 @@ namespace mlogger {
 
         #region UNITY MESSAGES
         private void OnEnable() {
+            Script = (Logger) target;
+
             filePath = serializedObject.FindProperty("filePath");
             initArraySize = serializedObject.FindProperty("initArraySize");
             inGameLabel = serializedObject.FindProperty("inGameLabel");
@@ -54,9 +58,6 @@ namespace mlogger {
         }
 
         public override void OnInspectorGUI() {
-            // todo create Script property
-            Logger script = (Logger)target;
-
             serializedObject.Update();
 
             // TODO Set longer label width.
@@ -76,10 +77,8 @@ namespace mlogger {
 
             EditorGUILayout.Space();
 
-            // todo remove param.
-            DrawEnabledMethodsDropdown(script);
-            // todo remove param.
-            DrawAppendDropdown(script);
+            DrawEnabledMethodsDropdown();
+            DrawAppendDropdown();
 
             EditorGUILayout.Space();
 
@@ -91,16 +90,30 @@ namespace mlogger {
             ReorderableListGUI.Title("Method Filter");
             ReorderableListGUI.ListField(methodFilter);
 
-            // todo remove param.
-            HandleDrawingStartStopButton(script);
+            EditorGUILayout.BeginHorizontal();
+            HandleDrawingStartStopButton();
+            DrawClearLogFileButton();
+            EditorGUILayout.EndHorizontal();
 
             // Save changes
             serializedObject.ApplyModifiedProperties();
         }
         #endregion
         #region INSPECTOR
+        private void DrawClearLogFileButton() {
+            // Don't allow reseting log file while logging.
+            if (Script.LoggingEnabled) return;
 
-        private void HandleDrawingStartStopButton(Logger script) {
+            if (GUILayout.Button(
+                "Clear Log File",
+                GUILayout.Width(100))) {
+
+                Script.ClearLogFile();
+            }
+        }
+
+
+        private void HandleDrawingStartStopButton() {
             // todo add button to continue logging after pause
             // todo extract what's inside to DrawDrawStartStopButton()
             if (loggingEnabled.boolValue == false) {
@@ -110,10 +123,10 @@ namespace mlogger {
                     "Button");
 
                 // If value was changed..
-                if (loggingEnabled.boolValue != script.LoggingEnabled) {
+                if (loggingEnabled.boolValue != Script.LoggingEnabled) {
                     // Fire event.
                     Utilities.InvokeMethodWithReflection(
-                        script,
+                        Script,
                         "OnStateChanged",
                         null);
                 }
@@ -125,13 +138,13 @@ namespace mlogger {
                     "Button");
 
                 // If value was changed..
-                if (loggingEnabled.boolValue != script.LoggingEnabled) {
+                if (loggingEnabled.boolValue != Script.LoggingEnabled) {
                     loggingEnabled.boolValue = false;
-                    script.LogCache.Add("[PAUSE]", true);
+                    Script.LogCache.Add("[PAUSE]", true);
 
                     // Fire event.
                     Utilities.InvokeMethodWithReflection(
-                        script,
+                        Script,
                         "OnStateChanged",
                         null);
                 }
@@ -143,50 +156,47 @@ namespace mlogger {
                     "Button");
 
                 // If value was changed..
-                if (loggingEnabled.boolValue != script.LoggingEnabled) {
+                if (loggingEnabled.boolValue != Script.LoggingEnabled) {
                     loggingEnabled.boolValue = false;
-                    script.LogCache.WriteAll(script.FilePath, false);
+                    Script.LogCache.WriteAll(Script.FilePath, false);
 
                     // Fire event.
                     Utilities.InvokeMethodWithReflection(
-                        script,
+                        Script,
                         "OnStateChanged",
                         null);
                 }
             }
         }
 
-        private static void DrawOnEnableHelpBox() {
-
+        private void DrawOnEnableHelpBox() {
             EditorGUILayout.HelpBox(
                 "Example: OnEnable",
                 UnityEditor.MessageType.Info);
         }
 
-        private static void DrawMyClassHelpBox() {
+        private void DrawMyClassHelpBox() {
 
             EditorGUILayout.HelpBox(
                 "Example: MyClass",
                 UnityEditor.MessageType.Info);
         }
 
-        private static void DrawAppendDropdown(Logger script) {
-
-            script.AppendOptions = (AppendOptions) EditorGUILayout.EnumMaskField(
+        private void DrawAppendDropdown() {
+            Script.AppendOptions = (AppendOptions) EditorGUILayout.EnumMaskField(
                 new GUIContent(
                     "Append",
                     ""),
-                script.AppendOptions);
+                Script.AppendOptions);
         }
 
-        private static void DrawEnabledMethodsDropdown(Logger script) {
-
-            script.EnabledMethods = (EnabledMethods) EditorGUILayout.EnumMaskField(
+        private void DrawEnabledMethodsDropdown() {
+            Script.EnabledMethods = (EnabledMethods) EditorGUILayout.EnumMaskField(
                 new GUIContent(
                     "Enabled Methods",
                     "Select Logger methods that should be active. Inactive " +
                     "methods won't product output."),
-                script.EnabledMethods);
+                Script.EnabledMethods);
         }
 
         private void DrawFullyQualifiedNameToggle() {

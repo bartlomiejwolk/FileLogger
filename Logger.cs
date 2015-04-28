@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using AnimationPathAnimator;
 using OneDayGame.LoggingTools;
@@ -270,6 +271,16 @@ namespace mlogger {
         #endregion
 
         #region METHODS
+        public void ClearLogFile() {
+            StreamWriter writer;
+            // Create stream writer used to write log cache to file.
+            using (writer = new StreamWriter(filePath, append)) {
+                writer.WriteLine("");
+            }
+
+            UnityEngine.Debug.Log("Log file cleared!");
+        }
+
 
         [Conditional("DEBUG")]
         public static void LogCall() {

@@ -17,7 +17,9 @@ namespace ATP.LoggingTools {
     /// For Editor classes you must define DEBUG directive explicitly.
     /// \todo Remove LogPrimitive() methods and use LogStringArray and
     /// LogIntArray() instead.
-    public class Logger : GameComponent {
+    public sealed class Logger : GameComponent {
+
+        public static event EventHandler StateChanged;
 
         private static Logger instance;
 
@@ -428,6 +430,8 @@ namespace ATP.LoggingTools {
             // Handle 'Enable On Play' inspector option.
             if (enableOnPlay) {
                 loggingEnabled = true;
+
+                OnStateChanged();
             }
         }
 
@@ -439,6 +443,12 @@ namespace ATP.LoggingTools {
             //        && inGameLabel) {
             //    Logger.Instance.DisplayLabel();
             //}
+        }
+
+        // todo move to region
+        private void OnStateChanged() {
+            var handler = StateChanged;
+            if (handler != null) handler(this, EventArgs.Empty);
         }
 
     }

@@ -54,7 +54,6 @@ namespace mlogger {
         }
 
         public override void OnInspectorGUI() {
-            base.OnInspectorGUI();
             // todo create Script property
             Logger script = (Logger)target;
 
@@ -77,7 +76,9 @@ namespace mlogger {
 
             EditorGUILayout.Space();
 
+            // todo remove param.
             DrawEnabledMethodsDropdown(script);
+            // todo remove param.
             DrawAppendDropdown(script);
 
             EditorGUILayout.Space();
@@ -90,6 +91,7 @@ namespace mlogger {
             ReorderableListGUI.Title("Method Filter");
             ReorderableListGUI.ListField(methodFilter);
 
+            // todo remove param.
             DrawStartStopButton(script);
 
             // Save changes
@@ -100,10 +102,15 @@ namespace mlogger {
 
         private void DrawStartStopButton(Logger script) {
             // todo add button to continue logging after pause
+            // todo extract what's inside to DrawDrawStartStopButton()
             if (loggingEnabled.boolValue == false) {
-                if (GUILayout.Button("Start Logging")) {
-                    loggingEnabled.boolValue = true;
+                loggingEnabled.boolValue = GUILayout.Toggle(
+                    loggingEnabled.boolValue,
+                    "Start Logging",
+                    "Button");
 
+                // If value was changed..
+                if (loggingEnabled.boolValue != script.LoggingEnabled) {
                     // Fire event.
                     Utilities.InvokeMethodWithReflection(
                         script,
@@ -112,7 +119,13 @@ namespace mlogger {
                 }
             }
             else if (Application.isPlaying && enableOnPlay.boolValue) {
-                if (GUILayout.Button("Pause Logging")) {
+                loggingEnabled.boolValue = GUILayout.Toggle(
+                    loggingEnabled.boolValue,
+                    "Pause Logging",
+                    "Button");
+
+                // If value was changed..
+                if (loggingEnabled.boolValue != script.LoggingEnabled) {
                     loggingEnabled.boolValue = false;
                     script.LogCache.Add("[PAUSE]", true);
 
@@ -124,7 +137,13 @@ namespace mlogger {
                 }
             }
             else {
-                if (GUILayout.Button("Stop Logging")) {
+                loggingEnabled.boolValue = GUILayout.Toggle(
+                    loggingEnabled.boolValue,
+                    "Stop Logging",
+                    "Button");
+
+                // If value was changed..
+                if (loggingEnabled.boolValue != script.LoggingEnabled) {
                     loggingEnabled.boolValue = false;
                     script.LogCache.WriteAll(script.FilePath, false);
 

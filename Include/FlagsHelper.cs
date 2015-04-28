@@ -1,4 +1,4 @@
-﻿namespace mlogger {
+﻿namespace mLogger {
 
     /// <summary>
     ///     Helper class for logical bitwise combination setting of Enums with the Flag attribute.

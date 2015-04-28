@@ -3,7 +3,7 @@ using UnityEditor;
 using System;
 using System.Collections;
 
-namespace mlogger {
+namespace mLogger {
 
     public class LoggerWindow : EditorWindow {
 

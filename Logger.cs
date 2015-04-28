@@ -6,12 +6,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using AnimationPathAnimator;
-using OneDayGame.LoggingTools;
+using mLogger;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 
-namespace mlogger {
+namespace mLogger {
 
     // todo move to separate file
     /// <summary>

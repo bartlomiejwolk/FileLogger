@@ -1,6 +1,6 @@
 using System;
 
-namespace OneDayGame.LoggingTools {
+namespace mLogger {
 
 	public enum MessageType { Call, Result, String }
 }

@@ -4,7 +4,7 @@ using System;
 using System.IO;
 
 // todo rename namespace
-namespace OneDayGame.LoggingTools {
+namespace mLogger {
 
     /// Holds and writes to file logged messages.
     public class LogWriter {

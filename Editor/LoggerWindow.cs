@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace ATP.LoggingTools {
 
-	public class LoggerWindow : EditorWindow {
+    public class LoggerWindow : EditorWindow {
 
         private Logger loggerInstance;
 
@@ -33,39 +33,39 @@ namespace ATP.LoggingTools {
         }
 
         private void OnGUI() {
-			EditorGUILayout.BeginHorizontal();
-			if (LoggerInstance.LoggingEnabled == false) {
+            EditorGUILayout.BeginHorizontal();
+            if (!LoggerInstance.LoggingEnabled) {
                 if (GUILayout.Button("Start Logging")) {
                     LoggerInstance.LoggingEnabled = true;
                 }
-			}
-            else if (Application.isPlaying == true
-                    && LoggerInstance.EnableOnPlay == true) {
+            }
+            else if (Application.isPlaying && LoggerInstance.EnableOnPlay) {
                 if (GUILayout.Button("Pause Logging")) {
                     LoggerInstance.LoggingEnabled = false;
                     LoggerInstance.LogCache.Add("[PAUSE]", true);
                 }
             }
-            else if (Application.isPlaying == true
-                    && LoggerInstance.EnableOnPlay == true
-                    && LoggerInstance.LoggingEnabled == false) {
+            else if (Application.isPlaying
+                    && LoggerInstance.EnableOnPlay
+                    && !LoggerInstance.LoggingEnabled) {
+
                 if (GUILayout.Button("Continue Logging")) {
                     LoggerInstance.LoggingEnabled = true;
                 }
             }
-			else {
-				if (GUILayout.Button("Stop Logging")) {
-					LoggerInstance.LoggingEnabled = false;
+            else {
+                if (GUILayout.Button("Stop Logging")) {
+                    LoggerInstance.LoggingEnabled = false;
                     LoggerInstance.LogCache.WriteAll(
                             LoggerInstance.FilePath,
                             false);
-				}
-			}
-			if (GUILayout.Button("->", GUILayout.Width(30))) {
-				EditorGUIUtility.PingObject(LoggerInstance);
-				Selection.activeGameObject = LoggerInstance.gameObject;
-			}
-			EditorGUILayout.EndHorizontal();
+                }
+            }
+            if (GUILayout.Button("->", GUILayout.Width(30))) {
+                EditorGUIUtility.PingObject(LoggerInstance);
+                Selection.activeGameObject = LoggerInstance.gameObject;
+            }
+            EditorGUILayout.EndHorizontal();
         }
-	}
+    }
 }

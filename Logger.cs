@@ -270,6 +270,10 @@ namespace mlogger {
         #endregion
 
         #region METHODS
+        public void ClearLogFile() {
+            throw new NotImplementedException();
+        }
+
 
         [Conditional("DEBUG")]
         public static void LogCall() {

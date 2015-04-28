@@ -32,28 +32,26 @@ namespace mlogger {
             window.minSize = new Vector2(100f, 60f);
         }
 
-        private void OnEnable() {
-            Logger.StateChanged += Logger_StateChanged;
-        }
-
-        private void OnDisable() {
-            Logger.StateChanged -= Logger_StateChanged;
-        }
-
-        void Logger_StateChanged(object sender, EventArgs e) {
-            Repaint();
-        }
-
         private void OnGUI() {
             EditorGUILayout.BeginHorizontal();
             if (!LoggerInstance.LoggingEnabled) {
-                if (GUILayout.Button("Start Logging")) {
-                    LoggerInstance.LoggingEnabled = true;
-                }
+                // todo extract to DrawStartStopToggle()
+                LoggerInstance.LoggingEnabled = GUILayout.Toggle(
+                    LoggerInstance.LoggingEnabled,
+                    "Start Logging",
+                    "Button");
+
             }
-            else if (Application.isPlaying && LoggerInstance.EnableOnPlay) {
-                if (GUILayout.Button("Pause Logging")) {
-                    LoggerInstance.LoggingEnabled = false;
+            else if (Application.isPlaying
+                && LoggerInstance.EnableOnPlay
+                && LoggerInstance.LoggingEnabled) {
+
+                LoggerInstance.LoggingEnabled = GUILayout.Toggle(
+                    LoggerInstance.LoggingEnabled,
+                    "Pause Logging",
+                    "Button");
+
+                if (!LoggerInstance.LoggingEnabled) {
                     LoggerInstance.LogCache.Add("[PAUSE]", true);
                 }
             }
@@ -61,23 +59,34 @@ namespace mlogger {
                     && LoggerInstance.EnableOnPlay
                     && !LoggerInstance.LoggingEnabled) {
 
-                if (GUILayout.Button("Continue Logging")) {
-                    LoggerInstance.LoggingEnabled = true;
-                }
+                    LoggerInstance.LoggingEnabled = GUILayout.Toggle(
+                    LoggerInstance.LoggingEnabled,
+                    "Continue Logging",
+                    "Button");
+
             }
             else {
-                if (GUILayout.Button("Stop Logging")) {
-                    LoggerInstance.LoggingEnabled = false;
+                LoggerInstance.LoggingEnabled = GUILayout.Toggle(
+                LoggerInstance.LoggingEnabled,
+                "Stop Logging",
+                "Button");
+
+                if (!LoggerInstance.LoggingEnabled) {
                     LoggerInstance.LogCache.WriteAll(
                             LoggerInstance.FilePath,
                             false);
                 }
+
             }
+
             if (GUILayout.Button("->", GUILayout.Width(30))) {
                 EditorGUIUtility.PingObject(LoggerInstance);
                 Selection.activeGameObject = LoggerInstance.gameObject;
             }
+
             EditorGUILayout.EndHorizontal();
+
+            Repaint();
         }
     }
 }

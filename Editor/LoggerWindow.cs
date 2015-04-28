@@ -97,6 +97,8 @@ namespace mlogger {
             }
 
             EditorGUILayout.EndHorizontal();
+
+            Repaint();
         }
     }
 }

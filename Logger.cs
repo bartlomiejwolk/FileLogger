@@ -49,8 +49,11 @@ namespace ATP.LoggingTools {
     /// todo all class fields should be static.
     public sealed class Logger : GameComponent {
 
+        #region EVENTS
         public static event EventHandler StateChanged;
+        #endregion
 
+        #region FIELDS
         private static Logger instance;
 
         /// <summary>
@@ -152,10 +155,13 @@ namespace ATP.LoggingTools {
         [SerializeField]
         private List<string> methodFilter = new List<string>();
 
+        #endregion
+
         /// \todo Rename to addTimestamp.
         //[SerializeField]
         //private bool showTimestamp = true;
 
+        #region PROPERTIES
         public static Logger Instance {
             get {
                 if (instance == null) {
@@ -194,6 +200,73 @@ namespace ATP.LoggingTools {
             get { return loggingEnabled; }
             set { loggingEnabled = value; }
         }
+        #endregion
+
+        #region UNITY MESSAGES
+
+        // ReSharper disable once UnusedMember.Local
+        private void Awake() {
+            if (instance == null) {
+                // If I am the first instance, make me the Singleton
+                instance = this;
+                DontDestroyOnLoad(this);
+            }
+            else {
+                // If a Singleton already exists and you find
+                // another reference in scene, destroy it!
+                if (this != instance) {
+                    Destroy(gameObject);
+                }
+            }
+
+            // Initialize 'cache' object.
+            logCache.InitArraySize = initArraySize;
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private void OnDestroy() {
+            // Don't write to file if 'logInRealTime' was selected.
+            if (logInRealTime) {
+                return;
+            }
+            // Write log to file when 'enableOnPlay' was selected.
+            if (enableOnPlay) {
+                // Write single message to the file.
+                logCache.WriteAll(filePath, append);
+            }
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private void Start() {
+            // Handle 'Enable On Play' inspector option.
+            if (enableOnPlay) {
+                loggingEnabled = true;
+
+                OnStateChanged();
+            }
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private void Update() {
+            // Handle "In-game Label" inspector option.
+            //if (
+            //        loggingEnabled == true
+            //        && inGameLabel) {
+            //    Logger.Instance.DisplayLabel();
+            //}
+        }
+        #endregion
+
+        #region EVENT INVOCATORS
+        // todo move to region
+        private void OnStateChanged() {
+            var handler = StateChanged;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        #endregion
+
+        #region METHODS
 
         [Conditional("DEBUG")]
         public static void LogCall() {
@@ -459,65 +532,7 @@ namespace ATP.LoggingTools {
             }
             return true;
         }
-
-        // ReSharper disable once UnusedMember.Local
-        private void Awake() {
-            if (instance == null) {
-                // If I am the first instance, make me the Singleton
-                instance = this;
-                DontDestroyOnLoad(this);
-            }
-            else {
-                // If a Singleton already exists and you find
-                // another reference in scene, destroy it!
-                if (this != instance) {
-                    Destroy(gameObject);
-                }
-            }
-
-            // Initialize 'cache' object.
-            logCache.InitArraySize = initArraySize;
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private void OnDestroy() {
-            // Don't write to file if 'logInRealTime' was selected.
-            if (logInRealTime) {
-                return;
-            }
-            // Write log to file when 'enableOnPlay' was selected.
-            if (enableOnPlay) {
-                // Write single message to the file.
-                logCache.WriteAll(filePath, append);
-            }
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private void Start() {
-            // Handle 'Enable On Play' inspector option.
-            if (enableOnPlay) {
-                loggingEnabled = true;
-
-                OnStateChanged();
-            }
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private void Update() {
-            // Handle "In-game Label" inspector option.
-            //if (
-            //        loggingEnabled == true
-            //        && inGameLabel) {
-            //    Logger.Instance.DisplayLabel();
-            //}
-        }
-
-        // todo move to region
-        private void OnStateChanged() {
-            var handler = StateChanged;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
+#endregion
     }
 
 }

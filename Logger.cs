@@ -4,12 +4,22 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using AnimationPathAnimator;
 using OneDayGame.LoggingTools;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 
 namespace ATP.LoggingTools {
+
+    [Flags]
+    public enum AppendOptions {
+
+        Timestamp = 1,
+        ClassName = 2,
+        CallerClassName = 4
+
+    }
 
     /// Logs to a file function calls, return values or any string.
     /// 
@@ -24,16 +34,22 @@ namespace ATP.LoggingTools {
         private static Logger instance;
 
         /// todo all class fields should be static.
+        //public AppendOptions AppendOptions = AppendOptions.Timestamp
+        //    | AppendOptions.ClassName | AppendOptions.CallerClassName;
+        [SerializeField]
+        public AppendOptions AppendOptions;
+
         /// If append messages to the file or overwrite.
+        [SerializeField]
         private bool append;
 
         /// If append caller class name to every log message.
-        [SerializeField]
-        private bool appendCallerClassName = true;
+        //[SerializeField]
+        //private bool appendCallerClassName = true;
 
         /// If append class name to every log message.
-        [SerializeField]
-        private bool appendClassName = true;
+        //[SerializeField]
+        //private bool appendClassName = true;
 
         /// Class filter.
         /// 
@@ -109,8 +125,8 @@ namespace ATP.LoggingTools {
         private List<string> methodFilter = new List<string>();
 
         /// \todo Rename to addTimestamp.
-        [SerializeField]
-        private bool showTimestamp = true;
+        //[SerializeField]
+        //private bool showTimestamp = true;
 
         public static Logger Instance {
             get {
@@ -156,10 +172,16 @@ namespace ATP.LoggingTools {
             Log(
                 stackInfo => stackInfo.MethodSignature,
                 Instance.enableLogCall,
-                Instance.showTimestamp,
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.Timestamp),
                 Instance.indentMessage,
-                Instance.appendClassName,
-                Instance.appendCallerClassName);
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.ClassName),
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.CallerClassName));
         }
 
         public static void LogDictionary<TKey, TValue>(
@@ -196,10 +218,16 @@ namespace ATP.LoggingTools {
             Log(
                 stackInfo => message,
                 Instance.enableLogResult,
-                Instance.showTimestamp,
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.Timestamp),
                 Instance.indentMessage,
-                Instance.appendClassName,
-                Instance.appendCallerClassName);
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.ClassName),
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.CallerClassName));
         }
 
         public static void LogStackTrace() {
@@ -237,10 +265,16 @@ namespace ATP.LoggingTools {
             Log(
                 stackInfo => message,
                 Instance.enableLogString,
-                Instance.showTimestamp,
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.Timestamp),
                 Instance.indentMessage,
-                Instance.appendClassName,
-                Instance.appendCallerClassName);
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.ClassName),
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.CallerClassName));
         }
 
         /// Start Logger.

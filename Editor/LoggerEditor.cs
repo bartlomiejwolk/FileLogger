@@ -25,7 +25,7 @@ namespace mLogger {
         private SerializedProperty enableOnPlay;
         private SerializedProperty appendClassName;
         private SerializedProperty appendCallerClassName;
-        private SerializedProperty fullyQualifiedClassName;
+        private SerializedProperty qualifiedClassName;
         private SerializedProperty showTimestamp;
         private SerializedProperty indentMessage;
         private SerializedProperty classFilter;
@@ -49,8 +49,8 @@ namespace mLogger {
             appendClassName = serializedObject.FindProperty("appendClassName");
             appendCallerClassName =
                 serializedObject.FindProperty("appendCallerClassName");
-            fullyQualifiedClassName =
-                serializedObject.FindProperty("fullyQualifiedClassName");
+            qualifiedClassName =
+                serializedObject.FindProperty("qualifiedClassName");
             showTimestamp = serializedObject.FindProperty("showTimestamp");
             indentMessage = serializedObject.FindProperty("indentMessage");
             classFilter = serializedObject.FindProperty("classFilter");
@@ -202,7 +202,7 @@ namespace mLogger {
         private void DrawFullyQualifiedNameToggle() {
 
             EditorGUILayout.PropertyField(
-                fullyQualifiedClassName,
+                qualifiedClassName,
                 new GUIContent(
                     "Qualified Class Name",
                     "If enabled, class name will be fully qualified."));

@@ -71,9 +71,8 @@ namespace mLogger {
         private string filePath = "log.txt";
 
         /// If true, display fully qualified class name.
-        /// \todo Rename to qualifiedClassName.
         [SerializeField]
-        private bool fullyQualifiedClassName = true;
+        private bool qualifiedClassName = true;
 
         [SerializeField]
         private bool indentMessage = true;
@@ -425,7 +424,7 @@ namespace mLogger {
             // Get info from call stack.
             var callerStackInfo = new StackInfo(4);
 
-            if (Instance.fullyQualifiedClassName) {
+            if (Instance.qualifiedClassName) {
                 // Append fully qualified caller class name.
                 outputMessage.Append(
                     ", <- " + callerStackInfo.QualifiedClassName + "");
@@ -446,7 +445,7 @@ namespace mLogger {
             StringBuilder outputMessage,
             StackInfo stackInfo) {
 
-            if (Instance.fullyQualifiedClassName) {
+            if (Instance.qualifiedClassName) {
                 // Append fully qualified class name.
                 outputMessage.Append(
                     ", @ " + stackInfo.QualifiedClassName + "");

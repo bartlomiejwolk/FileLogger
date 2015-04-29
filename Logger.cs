@@ -13,13 +13,11 @@ using UnityEngine;
 
 namespace mLogger {
 
-    /// Logs to a file function calls, return values or any string.
-    /// 
-    /// Comment out the DEBUG directive to disable all calls to this class.
-    /// For Editor classes you must define DEBUG directive explicitly.
-    /// \todo Remove LogPrimitive() methods and use LogStringArray and
-    /// LogIntArray() instead.
-    /// todo all class fields should be static.
+    /// <summary>
+    /// Allows logging custom messages to a file.
+    /// </summary>
+    /// <remarks>Comment out the DEBUG directive to disable all calls to this class.
+    /// For Editor classes you must define DEBUG directive explicitly.</remarks>
     public sealed class Logger : MonoBehaviour {
 
         #region EVENTS

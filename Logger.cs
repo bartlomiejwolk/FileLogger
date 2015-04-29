@@ -75,7 +75,7 @@ namespace mLogger {
         private bool qualifiedClassName = true;
 
         [SerializeField]
-        private bool indentMessage = true;
+        private bool indentLine = true;
 
         /// Initial size of the cache array.
         /// 
@@ -228,7 +228,7 @@ namespace mLogger {
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.Timestamp),
-                Instance.indentMessage,
+                Instance.indentLine,
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.ClassName),
@@ -248,7 +248,7 @@ namespace mLogger {
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.Timestamp),
-                Instance.indentMessage,
+                Instance.indentLine,
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.ClassName),
@@ -298,7 +298,7 @@ namespace mLogger {
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.Timestamp),
-                Instance.indentMessage,
+                Instance.indentLine,
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
                     AppendOptions.ClassName),

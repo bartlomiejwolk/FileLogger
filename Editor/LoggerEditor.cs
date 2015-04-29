@@ -27,7 +27,7 @@ namespace mLogger {
         private SerializedProperty appendCallerClassName;
         private SerializedProperty qualifiedClassName;
         private SerializedProperty showTimestamp;
-        private SerializedProperty indentMessage;
+        private SerializedProperty indentLine;
         private SerializedProperty classFilter;
         private SerializedProperty methodFilter;
         #endregion
@@ -52,7 +52,7 @@ namespace mLogger {
             qualifiedClassName =
                 serializedObject.FindProperty("qualifiedClassName");
             showTimestamp = serializedObject.FindProperty("showTimestamp");
-            indentMessage = serializedObject.FindProperty("indentMessage");
+            indentLine = serializedObject.FindProperty("indentLine");
             classFilter = serializedObject.FindProperty("classFilter");
             methodFilter = serializedObject.FindProperty("methodFilter");
         }
@@ -163,8 +163,7 @@ namespace mLogger {
         private void DrawIndentLineToggle() {
 
             EditorGUILayout.PropertyField(
-                // todo rename to indentLine
-                indentMessage,
+                indentLine,
                 new GUIContent(
                     "Indent On",
                     ""));

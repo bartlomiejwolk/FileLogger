@@ -34,51 +34,19 @@ namespace mLogger {
 
         private void OnGUI() {
             EditorGUILayout.BeginHorizontal();
-            if (!LoggerInstance.LoggingEnabled) {
-                // todo extract to DrawStartStopToggle()
-                LoggerInstance.LoggingEnabled = GUILayout.Toggle(
+
+            // Draw Start/Stop button.
+            LoggerInstance.LoggingEnabled =
+                InspectorControls.DrawStartStopButton(
                     LoggerInstance.LoggingEnabled,
-                    "Start Logging",
-                    "Button");
+                    LoggerInstance.EnableOnPlay,
+                    null,
+                    () => LoggerInstance.LogWriter.Add("[PAUSE]", true),
+                    () => LoggerInstance.LogWriter.WriteAll(
+                        LoggerInstance.FilePath,
+                        false));
 
-            }
-            else if (Application.isPlaying
-                && LoggerInstance.EnableOnPlay
-                && LoggerInstance.LoggingEnabled) {
-
-                LoggerInstance.LoggingEnabled = GUILayout.Toggle(
-                    LoggerInstance.LoggingEnabled,
-                    "Pause Logging",
-                    "Button");
-
-                if (!LoggerInstance.LoggingEnabled) {
-                    LoggerInstance.LogWriter.Add("[PAUSE]", true);
-                }
-            }
-            else if (Application.isPlaying
-                    && LoggerInstance.EnableOnPlay
-                    && !LoggerInstance.LoggingEnabled) {
-
-                    LoggerInstance.LoggingEnabled = GUILayout.Toggle(
-                    LoggerInstance.LoggingEnabled,
-                    "Continue Logging",
-                    "Button");
-
-            }
-            else {
-                LoggerInstance.LoggingEnabled = GUILayout.Toggle(
-                LoggerInstance.LoggingEnabled,
-                "Stop Logging",
-                "Button");
-
-                if (!LoggerInstance.LoggingEnabled) {
-                    LoggerInstance.LogWriter.WriteAll(
-                            LoggerInstance.FilePath,
-                            false);
-                }
-
-            }
-
+            // Draw -> button.
             if (GUILayout.Button("->", GUILayout.Width(30))) {
                 EditorGUIUtility.PingObject(LoggerInstance);
                 Selection.activeGameObject = LoggerInstance.gameObject;

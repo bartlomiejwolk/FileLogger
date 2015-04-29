@@ -112,82 +112,21 @@ namespace mLogger {
 
 
         private void HandleDrawingStartStopButton() {
-            // todo add button to continue logging after pause
-            // todo extract what's inside to DrawStartStopButton()
-            // Editor mode, logging disabled.
-            if (loggingEnabled.boolValue == false
-                && !Application.isPlaying) {
-
-                loggingEnabled.boolValue = GUILayout.Toggle(
+            loggingEnabled.boolValue =
+                InspectorControls.DrawStartStopButton(
                     loggingEnabled.boolValue,
-                    "Logging Disabled",
-                    "Button");
+                    enableOnPlay.boolValue,
+                    FireOnStateChangedEvent,
+                    () => Script.LogWriter.Add("[PAUSE]", true),
+                    () => Script.LogWriter.WriteAll(Script.FilePath, false));
+        }
 
-                // If value was changed..
-                if (loggingEnabled.boolValue != Script.LoggingEnabled) {
-                    // Fire event.
-                    Utilities.InvokeMethodWithReflection(
-                        Script,
-                        "OnStateChanged",
-                        null);
-                }
-            }
-            else if (Application.isPlaying
-                && enableOnPlay.boolValue
-                && loggingEnabled.boolValue) {
-
-                loggingEnabled.boolValue = GUILayout.Toggle(
-                    loggingEnabled.boolValue,
-                    "Logging Enabled",
-                    "Button");
-
-                // If value was changed..
-                if (loggingEnabled.boolValue != Script.LoggingEnabled) {
-                    Script.LogWriter.Add("[PAUSE]", true);
-
-                    // Fire event.
-                    Utilities.InvokeMethodWithReflection(
-                        Script,
-                        "OnStateChanged",
-                        null);
-                }
-            }
-            // Play mode, logging disabled.
-            else if (Application.isPlaying
-                && enableOnPlay.boolValue
-                && !loggingEnabled.boolValue) {
-
-                loggingEnabled.boolValue = GUILayout.Toggle(
-                    loggingEnabled.boolValue,
-                    "Logging Paused",
-                    "Button");
-
-                // If value was changed..
-                if (loggingEnabled.boolValue != Script.LoggingEnabled) {
-                    // Fire event.
-                    Utilities.InvokeMethodWithReflection(
-                        Script,
-                        "OnStateChanged",
-                        null);
-                }
-            }
-            else {
-                loggingEnabled.boolValue = GUILayout.Toggle(
-                    loggingEnabled.boolValue,
-                    "Logging Enabled",
-                    "Button");
-
-                // If value was changed..
-                if (loggingEnabled.boolValue != Script.LoggingEnabled) {
-                    Script.LogWriter.WriteAll(Script.FilePath, false);
-
-                    // Fire event.
-                    Utilities.InvokeMethodWithReflection(
-                        Script,
-                        "OnStateChanged",
-                        null);
-                }
-            }
+        // todo move to region
+        private void FireOnStateChangedEvent() {
+            Utilities.InvokeMethodWithReflection(
+                Script,
+                "OnStateChanged",
+                null);
         }
 
         private void DrawOnEnableHelpBox() {

@@ -121,14 +121,6 @@ namespace mLogger {
                     () => Script.LogWriter.WriteAll(Script.FilePath, false));
         }
 
-        // todo move to region
-        private void FireOnStateChangedEvent() {
-            Utilities.InvokeMethodWithReflection(
-                Script,
-                "OnStateChanged",
-                null);
-        }
-
         private void DrawOnEnableHelpBox() {
             EditorGUILayout.HelpBox(
                 "Example: OnEnable",
@@ -214,6 +206,15 @@ namespace mLogger {
                 new GUIContent(
                     "File Path",
                     "File path to save the generated log file."));
+        }
+        #endregion
+
+        #region METHODS
+        private void FireOnStateChangedEvent() {
+            Utilities.InvokeMethodWithReflection(
+                Script,
+                "OnStateChanged",
+                null);
         }
         #endregion
 

@@ -201,7 +201,6 @@ namespace mLogger {
         #endregion
 
         #region EVENT INVOCATORS
-        // todo move to region
         private void OnStateChanged() {
             var handler = StateChanged;
             if (handler != null) handler(this, EventArgs.Empty);
@@ -238,7 +237,6 @@ namespace mLogger {
                     AppendOptions.CallerClassName));
         }
 
-        // todo add caller method name
         public static void LogResult(object result) {
             // Compose log message.
             var message = string.Format("[RESULT: {0}]", result);

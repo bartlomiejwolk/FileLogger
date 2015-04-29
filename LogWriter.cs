@@ -3,7 +3,6 @@ using System.Collections;
 using System;
 using System.IO;
 
-// todo rename namespace
 namespace mLogger {
 
     /// Holds and writes to file logged messages.
@@ -59,7 +58,6 @@ namespace mLogger {
             }
         }
 
-        // todo move to Logger class
         public void WriteAll(string filePath, bool append) {
             // Create stream writer used to write log cache to file.
             using (writer = new StreamWriter(filePath, append)) {
@@ -76,7 +74,6 @@ namespace mLogger {
             loggedMessages = 0;
         }
 
-        // todo move to Logger class
         public void WriteLast(string filePath) {
             // Create stream writer used to write log cache to file.
             using (writer = new StreamWriter(filePath, true)) {

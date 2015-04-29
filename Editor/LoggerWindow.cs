@@ -15,7 +15,6 @@ namespace mLogger {
                     loggerInstance = FindObjectOfType<Logger>();
                     if (loggerInstance == null) {
                         GameObject loggerGO = new GameObject();
-                        // TODO Name this new GO "Logger".
                         loggerGO.AddComponent<Logger>();
                         loggerInstance = loggerGO.GetComponent<Logger>();
                     }

@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace mLogger {
+namespace FileLogger {
 
     public static class Utilities {
 

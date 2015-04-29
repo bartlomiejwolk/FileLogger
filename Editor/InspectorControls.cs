@@ -6,7 +6,7 @@
 using System;
 using UnityEngine;
 
-namespace mLogger {
+namespace FileLogger {
 
     public static class InspectorControls {
 

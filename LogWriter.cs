@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 using System.IO;
 
-namespace mLogger {
+namespace FileLogger {
 
     /// Holds and writes to file logged messages.
     public class LogWriter {

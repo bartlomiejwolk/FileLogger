@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace mLogger {
+namespace FileLogger {
 
     public class StackInfo {
         #region FIELDS

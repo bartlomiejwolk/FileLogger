@@ -6,12 +6,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using AnimationPathAnimator;
-using mLogger;
+using FileLogger;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
 
-namespace mLogger {
+namespace FileLogger {
 
     /// <summary>
     /// Allows logging custom messages to a file.

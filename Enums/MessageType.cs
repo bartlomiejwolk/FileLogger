@@ -1,6 +1,6 @@
 using System;
 
-namespace mLogger {
+namespace FileLogger {
 
 	public enum MessageType { Call, Result, String }
 }

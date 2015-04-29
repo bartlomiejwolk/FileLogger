@@ -1,6 +1,6 @@
 using System;
 
-namespace mLogger {
+namespace FileLogger {
 
     /// <summary>
     /// Options used to decide which Logger methods will be active, ie. will

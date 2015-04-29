@@ -5,7 +5,7 @@ using UnityEditor;
 using ATP.ReorderableList;
 using SyntaxTree.VisualStudio.Unity.Messaging;
 
-namespace mLogger {
+namespace FileLogger {
 
     [CustomEditor(typeof(Logger))]
     public class LoggerEditor : Editor {

@@ -1,6 +1,6 @@
 using System;
 
-namespace mLogger {
+namespace FileLogger {
 
     /// <summary>
     /// Options used to decide what info will be added to a single line in the

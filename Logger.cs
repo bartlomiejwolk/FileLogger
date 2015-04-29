@@ -395,12 +395,12 @@ namespace FileLogger {
             // Add message if not empty.
             outputMessage.Append(composeMessage(stackInfo));
 
-            // Apend class name.
+            // Append class name.
             if (appendClassName) {
                 AppendClassName(outputMessage, stackInfo);
             }
 
-            // Apend caller class name.
+            // Append caller class name.
             if (appendCallerClassName) {
                 AppendCallerClassName(outputMessage);
             }

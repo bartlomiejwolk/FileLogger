@@ -4,6 +4,11 @@ using System.Diagnostics;
 
 namespace FileLogger {
 
+    /// <summary>
+    /// Gets info about selected StackTrace frame.
+    /// StackTrace is created at construction time.
+    /// </summary>
+    // todo rename to FrameInfo
     public class StackInfo {
         #region FIELDS
         private StackTrace stackTrace = new StackTrace();

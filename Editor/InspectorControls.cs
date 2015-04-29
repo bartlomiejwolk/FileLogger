@@ -37,7 +37,10 @@ namespace mLogger {
 
                 // If value was changed..
                 if (newLoggingEnabledValue != oldLoggingEnabledValue) {
-                    stateChangedCallback();
+                    // Execute callback.
+                    if (stateChangedCallback != null) {
+                        stateChangedCallback();
+                    }
                 }
             }
             else if (Application.isPlaying
@@ -51,8 +54,13 @@ namespace mLogger {
 
                 // If value was changed..
                 if (newLoggingEnabledValue != oldLoggingEnabledValue) {
-                    stateChangedCallback();
-                    pauseCallback();
+                    if (stateChangedCallback != null) {
+                        stateChangedCallback();
+                    }
+
+                    if (pauseCallback != null) {
+                        pauseCallback();
+                    }
                 }
             }
             // Play mode, logging disabled.
@@ -67,7 +75,9 @@ namespace mLogger {
 
                 // If value was changed..
                 if (newLoggingEnabledValue != oldLoggingEnabledValue) {
-                    stateChangedCallback();
+                    if (stateChangedCallback != null) {
+                        stateChangedCallback();
+                    }
                 }
             }
             else {
@@ -78,8 +88,13 @@ namespace mLogger {
 
                 // If value was changed..
                 if (newLoggingEnabledValue != oldLoggingEnabledValue) {
-                    disableLoggerCallback();
-                    stateChangedCallback();
+                    if (stateChangedCallback != null) {
+                        stateChangedCallback();
+                    }
+
+                    if (disableLoggerCallback != null) {
+                        disableLoggerCallback();
+                    }
                 }
             }
 

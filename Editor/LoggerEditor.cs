@@ -215,7 +215,7 @@ namespace FileLogger {
                 null);
         }
 
-        [MenuItem("Component/mLogger")]
+        [MenuItem("Component/FileLogger")]
         private static void AddLoggerComponent() {
             if (Selection.activeGameObject != null) {
                 Selection.activeGameObject.AddComponent(typeof(Logger));

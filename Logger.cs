@@ -1,4 +1,4 @@
-﻿#define DEBUG
+﻿#define DEBUG_LOGGER
 
 using System;
 using System.Collections.Generic;
@@ -220,7 +220,7 @@ namespace FileLogger {
         }
 
 
-        [Conditional("DEBUG")]
+        [Conditional("DEBUG_LOGGER")]
         public static void LogCall() {
             Log(
                 stackInfo => stackInfo.MethodSignature,
@@ -237,6 +237,7 @@ namespace FileLogger {
                     AppendOptions.CallerClassName));
         }
 
+        [Conditional("DEBUG_LOGGER")]
         public static void LogResult(object result) {
             // Compose log message.
             var message = string.Format("[RESULT: {0}]", result);
@@ -260,6 +261,7 @@ namespace FileLogger {
         /// <summary>
         /// Logs stack trace.
         /// </summary>
+        [Conditional("DEBUG_LOGGER")]
         public static void LogStackTrace() {
             var stackTrace = new StackTrace();
             var message = new StringBuilder();
@@ -284,6 +286,7 @@ namespace FileLogger {
                 false);
         }
 
+        [Conditional("DEBUG_LOGGER")]
         public static void LogString(
             string format,
             params object[] paramList) {
@@ -308,7 +311,7 @@ namespace FileLogger {
         }
 
         /// Start Logger.
-        [Conditional("DEBUG")]
+        [Conditional("DEBUG_LOGGER")]
         public static void StartLogging(
             string filePath = "log.txt",
             bool append = false) {
@@ -319,7 +322,7 @@ namespace FileLogger {
         }
 
         /// Stop Logger.
-        [Conditional("DEBUG")]
+        [Conditional("DEBUG_LOGGER")]
         public static void StopLogging() {
             Instance.LoggingEnabled = false;
             // Write single message to the file.

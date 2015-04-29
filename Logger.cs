@@ -423,7 +423,7 @@ namespace FileLogger {
         /// <param name="outputMessage"></param>
         private static void AppendCallerClassName(StringBuilder outputMessage) {
             // Get info from call stack.
-            var callerStackInfo = new StackInfo(4);
+            var callerStackInfo = new StackInfo(5);
 
             if (Instance.qualifiedClassName) {
                 // Append fully qualified caller class name.

@@ -110,12 +110,11 @@ namespace mLogger {
             }
         }
 
-
         private void HandleDrawingStartStopButton() {
             loggingEnabled.boolValue =
                 InspectorControls.DrawStartStopButton(
-                    loggingEnabled.boolValue,
-                    enableOnPlay.boolValue,
+                    Script.LoggingEnabled,
+                    Script.EnableOnPlay,
                     FireOnStateChangedEvent,
                     () => Script.LogWriter.Add("[PAUSE]", true),
                     () => Script.LogWriter.WriteAll(Script.FilePath, false));

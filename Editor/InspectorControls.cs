@@ -11,7 +11,7 @@ namespace mLogger {
     public static class InspectorControls {
 
         /// <summary>
-        /// 
+        /// Draws logger start/stop button. Button text depends on context.
         /// </summary>
         /// <param name="oldLoggingEnabledValue"></param>
         /// <param name="enableOnPlay"></param>
@@ -26,11 +26,9 @@ namespace mLogger {
             Action pauseCallback,
             Action disableLoggerCallback) {
 
-            bool newLoggingEnabledValue;
-
             // Editor mode, logging disabled.
-            if (!oldLoggingEnabledValue && !Application.isPlaying) {
-                newLoggingEnabledValue = GUILayout.Toggle(
+            if (!Application.isPlaying && !oldLoggingEnabledValue) {
+                var newLoggingEnabledValue = GUILayout.Toggle(
                     oldLoggingEnabledValue,
                     "Logging Disabled",
                     "Button");
@@ -42,12 +40,16 @@ namespace mLogger {
                         stateChangedCallback();
                     }
                 }
-            }
-            else if (Application.isPlaying
-                     && enableOnPlay
-                     && oldLoggingEnabledValue) {
 
-                newLoggingEnabledValue = GUILayout.Toggle(
+                return newLoggingEnabledValue;
+            }
+
+            // Play mode, logger enabled.
+            if (Application.isPlaying
+                && enableOnPlay
+                && oldLoggingEnabledValue) {
+
+                var newLoggingEnabledValue = GUILayout.Toggle(
                     oldLoggingEnabledValue,
                     "Logging Enabled",
                     "Button");
@@ -62,13 +64,16 @@ namespace mLogger {
                         pauseCallback();
                     }
                 }
-            }
-            // Play mode, logging disabled.
-            else if (Application.isPlaying
-                     && enableOnPlay
-                     && !oldLoggingEnabledValue) {
 
-                newLoggingEnabledValue = GUILayout.Toggle(
+                return newLoggingEnabledValue;
+            }
+
+            // Play mode, logging disabled.
+            if (Application.isPlaying
+                && enableOnPlay
+                && !oldLoggingEnabledValue) {
+
+                var newLoggingEnabledValue = GUILayout.Toggle(
                     oldLoggingEnabledValue,
                     "Logging Paused",
                     "Button");
@@ -79,9 +84,13 @@ namespace mLogger {
                         stateChangedCallback();
                     }
                 }
+
+                return newLoggingEnabledValue;
             }
-            else {
-                newLoggingEnabledValue = GUILayout.Toggle(
+
+            // Editor mode, logger enabled.
+            if (!Application.isPlaying && oldLoggingEnabledValue) {
+                var newLoggingEnabledValue = GUILayout.Toggle(
                     oldLoggingEnabledValue,
                     "Logging Enabled",
                     "Button");
@@ -96,9 +105,11 @@ namespace mLogger {
                         disableLoggerCallback();
                     }
                 }
+
+                return newLoggingEnabledValue;
             }
 
-            return newLoggingEnabledValue;
+            return oldLoggingEnabledValue;
         }
 
     }

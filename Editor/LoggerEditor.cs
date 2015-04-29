@@ -214,6 +214,14 @@ namespace mLogger {
                 "OnStateChanged",
                 null);
         }
+
+        [MenuItem("Component/mLogger")]
+        private static void AddLoggerComponent() {
+            if (Selection.activeGameObject != null) {
+                Selection.activeGameObject.AddComponent(typeof(Logger));
+            }
+        }
+
         #endregion
 
     }

@@ -48,14 +48,6 @@ namespace mLogger {
         [SerializeField]
         private bool append;
 
-        /// If append caller class name to every log message.
-        //[SerializeField]
-        //private bool appendCallerClassName = true;
-
-        /// If append class name to every log message.
-        //[SerializeField]
-        //private bool appendClassName = true;
-
         /// Class filter.
         /// 
         /// List of classes that will be logged.
@@ -66,27 +58,8 @@ namespace mLogger {
         [SerializeField]
         private bool echoToConsole;
 
-        //[SerializeField]
-        //private bool enableLogCall = true;
-
-        // TODO Add to inspector.
-        [SerializeField]
-        private bool enableLogDictionary = true;
-
-        // TODO Add to inspector.
-        [SerializeField]
-#pragma warning disable 169
-            private bool enableLogList = true;
-#pragma warning restore 169
-        //[SerializeField]
-        //private bool enableLogResult = true;
-
-        /// \todo Change to false.
         [SerializeField]
         private bool enableLogStackTrace = true;
-
-        //[SerializeField]
-        //private bool enableLogString = true;
 
         /// Enable logging when in play mode.
         [SerializeField]
@@ -104,9 +77,6 @@ namespace mLogger {
 
         [SerializeField]
         private bool indentMessage = true;
-
-        //[SerializeField]
-        //private bool inGameLabel;
 
         /// Initial size of the cache array.
         /// 

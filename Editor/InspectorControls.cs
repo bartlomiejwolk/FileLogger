@@ -11,13 +11,19 @@ namespace FileLogger {
     public static class InspectorControls {
 
         /// <summary>
-        /// Draws logger start/stop button. Button text depends on context.
+        ///     Draws logger start/stop button. Button text depends on context.
         /// </summary>
         /// <param name="oldLoggingEnabledValue"></param>
         /// <param name="enableOnPlay"></param>
-        /// <param name="stateChangedCallback">Callback executed on every state change.</param>
-        /// <param name="pauseCallback">Callback executed only in play mode, when on logger pause.</param>
-        /// <param name="disableLoggerCallback">Callback executed on logger disable.</param>
+        /// <param name="stateChangedCallback">
+        ///     Callback executed on every state change.
+        /// </param>
+        /// <param name="pauseCallback">
+        ///     Callback executed only in play mode, when on logger pause.
+        /// </param>
+        /// <param name="disableLoggerCallback">
+        ///     Callback executed on logger disable.
+        /// </param>
         /// <returns></returns>
         public static bool DrawStartStopButton(
             bool oldLoggingEnabledValue,

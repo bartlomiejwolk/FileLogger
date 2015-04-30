@@ -400,6 +400,7 @@ namespace FileLogger {
             return timestamp;
         }
 
+        // todo remove args. that can be read from class state
         private static void Log(
             Func<StackInfo, string> composeMessage,
             bool methodEnabled,
@@ -445,19 +446,10 @@ namespace FileLogger {
             }
 
             // Append object GUID.
-            // todo extract
-            if (objectReference != null) {
-                bool firstTime;
-                long objectID = Instance.ObjectIDGenerator.GetId(
-                    objectReference,
-                    out firstTime);
-                outputMessage.Append(string.Format(" (GUID: {0})", objectID));
-            }
+            HandleAppendGUID(objectReference, outputMessage);
 
             // Append caller class name.
-            if (appendCallerClassName) {
-                AppendCallerClassName(outputMessage);
-            }
+            HandleAppendCallerClassName(outputMessage);
 
             // Add log message to the cache.
             Instance.logWriter.Add(
@@ -470,12 +462,30 @@ namespace FileLogger {
             }
         }
 
+        private static void HandleAppendGUID(
+            object objectReference,
+            StringBuilder outputMessage) {
+
+            if (objectReference == null) return;
+
+            bool firstTime;
+            long objectID = Instance.ObjectIDGenerator.GetId(
+                objectReference,
+                out firstTime);
+
+            outputMessage.Append(string.Format(" (GUID: {0})", objectID));
+        }
+
         /// <summary>
         /// Helper method.
         /// Appends caller class name to the output message.
         /// </summary>
         /// <param name="outputMessage"></param>
-        private static void AppendCallerClassName(StringBuilder outputMessage) {
+        private static void HandleAppendCallerClassName(StringBuilder outputMessage) {
+            if (!FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.CallerClassName)) return;
+
             // Get info from call stack.
             var callerStackInfo = new StackInfo(5);
 

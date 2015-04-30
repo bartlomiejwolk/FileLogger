@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
 using AnimationPathAnimator;
 using FileLogger;
@@ -280,6 +281,22 @@ namespace FileLogger {
            Log(
                 stackInfo => stackInfo.MethodSignature,
                 FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogCall),
+                objectReference);
+        }
+
+        [Conditional("DEBUG_LOGGER")]
+        public static void LogIntVariable(int variable) {
+            LogIntVariable(variable, null);
+        }
+
+        [Conditional("DEBUG_LOGGER")]
+        public static void LogIntVariable(int variable, object objectReference) {
+            var variableName = new { variable }.GetVariableName();
+            var message = string.Format("{0}: {1}", variableName, variable);
+
+            Log(
+                stackInfo => message,
+                FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogIntVariable),
                 objectReference);
         }
 

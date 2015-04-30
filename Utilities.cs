@@ -80,17 +80,17 @@ namespace FileLogger {
             return result;
         }
 
-        /// <summary>
-        /// Returns variable name as string.
-        /// </summary>
-        /// <remarks>http://stackoverflow.com/a/729836/2964286</remarks>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="expression"></param>
-        /// <returns></returns>
-        static string GetVariableName<T>(Expression<Func<T>> expression) {
-            return ((MemberExpression)expression.Body).Member.Name;
-        }
+    }
 
+    public static class ObjectExtensions {
+        public static string GetVariableName<T>(this T obj) {
+            System.Reflection.PropertyInfo[] objGetTypeGetProperties = obj.GetType().GetProperties();
+
+            if (objGetTypeGetProperties.Length == 1)
+                return objGetTypeGetProperties[0].Name;
+            else
+                throw new ArgumentException("object must contain one property");
+        }
     }
 
 }

@@ -44,7 +44,7 @@ namespace FileLogger {
             logCache[logIdx] = message;
             // Handle "Echo To Console" inspector option.
             if (echoToConsole) {
-                UnityEngine.Debug.Log(message);
+                Debug.Log(message);
             }
             logIdx += 1;
             loggedMessages += 1;
@@ -53,7 +53,7 @@ namespace FileLogger {
                 Array.Resize(
                         ref logCache,
                         logCache.Length + initArraySize);
-                UnityEngine.Debug.Log("Array resized to: " + logCache.Length);
+                Debug.Log("Array resized to: " + logCache.Length);
             }
         }
 
@@ -67,7 +67,7 @@ namespace FileLogger {
             }
             // Inform that file has been saved.
             DateTime now = DateTime.Now;
-            UnityEngine.Debug.Log(string.Format("[{0:H:mm:ss}] Logs written: {1}.", now, loggedMessages));
+            Debug.Log(string.Format("[{0:H:mm:ss}] Logs written: {1}.", now, loggedMessages));
             // Next logs save again at the beginning of the 'logCacheArray' field.
             logIdx = 0;
             loggedMessages = 0;

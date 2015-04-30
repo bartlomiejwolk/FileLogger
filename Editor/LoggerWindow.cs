@@ -26,7 +26,7 @@ namespace FileLogger {
         [MenuItem("Window/FileLogger")]
         public static void Init() {
             LoggerWindow window =
-                (LoggerWindow)EditorWindow.GetWindow(typeof(LoggerWindow));
+                (LoggerWindow)GetWindow(typeof(LoggerWindow));
             window.title = "Logger";
             window.minSize = new Vector2(100f, 60f);
         }

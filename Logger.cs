@@ -164,7 +164,6 @@ namespace FileLogger {
                 objectIDGenerator = new ObjectIDGenerator();
                 return objectIDGenerator;
             }
-            set { objectIDGenerator = value; }
         }
 
         /// <summary>
@@ -246,8 +245,6 @@ namespace FileLogger {
             //}
         }
 
-        private void Reset() {
-        }
         #endregion
 
         #region EVENT INVOCATORS
@@ -266,7 +263,7 @@ namespace FileLogger {
                 writer.WriteLine("");
             }
 
-            UnityEngine.Debug.Log("Log file cleared!");
+            Debug.Log("Log file cleared!");
         }
 
         [Conditional("DEBUG_LOGGER")]
@@ -405,10 +402,6 @@ namespace FileLogger {
         /// </summary>
         /// <param name="composeMessage"></param>
         /// <param name="methodEnabled"></param>
-        /// <param name="showTimestamp"></param>
-        /// <param name="indentMessage"></param>
-        /// <param name="appendClassName"></param>
-        /// <param name="appendCallerClassName"></param>
         /// <param name="objectReference"></param>
         private static void Log(
             Func<FrameInfo, string> composeMessage,
@@ -474,7 +467,6 @@ namespace FileLogger {
         /// <summary>
         /// Adds timestamp to the log message.
         /// </summary>
-        /// <param name="showTimestamp"></param>
         /// <param name="outputMessage"></param>
         private static void HandleShowTimestamp(StringBuilder outputMessage) {
             if (!FlagsHelper.IsSet(
@@ -488,7 +480,6 @@ namespace FileLogger {
         /// <summary>
         /// Indents log message.
         /// </summary>
-        /// <param name="indentMessage"></param>
         /// <param name="frameInfo"></param>
         /// <param name="outputMessage"></param>
         private static void HandleIndentMessage(

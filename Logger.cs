@@ -346,6 +346,11 @@ namespace FileLogger {
         [Conditional("DEBUG_LOGGER")]
         public static void StopLogging() {
             Instance.LoggingEnabled = false;
+
+            // There's no need to write cached messages since logging was made
+            // in real time.
+            if (Instance.LogInRealTime) return;
+
             // Write single message to the file.
             Instance.logWriter.WriteAll(
                 Instance.filePath,

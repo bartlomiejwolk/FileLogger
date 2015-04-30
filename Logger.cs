@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Text;
 using AnimationPathAnimator;
 using FileLogger;
@@ -98,6 +99,8 @@ namespace FileLogger {
         [SerializeField]
         private List<string> methodFilter = new List<string>();
 
+        private ObjectIDGenerator objectIDGenerator;
+
         #endregion
 
         /// \todo Rename to addTimestamp.
@@ -143,6 +146,22 @@ namespace FileLogger {
             get { return loggingEnabled; }
             set { loggingEnabled = value; }
         }
+
+        /// <summary>
+        /// Generates and remembers GUID of all objects that call logger passing "this" param.
+        /// </summary>
+        private ObjectIDGenerator ObjectIDGenerator {
+            get {
+                if (objectIDGenerator != null) {
+                    return objectIDGenerator;
+                }
+
+                objectIDGenerator = new ObjectIDGenerator();
+                return objectIDGenerator;
+            }
+            set { objectIDGenerator = value; }
+        }
+
         #endregion
 
         #region UNITY MESSAGES
@@ -193,10 +212,13 @@ namespace FileLogger {
         private void Update() {
             // Handle "In-game Label" inspector option.
             //if (
-            //        loggingEnabled == true
+            //        methodEnabled == true
             //        && inGameLabel) {
             //    Logger.Instance.DisplayLabel();
             //}
+        }
+
+        private void Reset() {
         }
         #endregion
 
@@ -219,22 +241,20 @@ namespace FileLogger {
             UnityEngine.Debug.Log("Log file cleared!");
         }
 
-
         [Conditional("DEBUG_LOGGER")]
         public static void LogCall() {
             Log(
                 stackInfo => stackInfo.MethodSignature,
                 FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogCall),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.Timestamp),
-                Instance.indentLine,
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.ClassName),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.CallerClassName));
+                null);
+        }
+
+        [Conditional("DEBUG_LOGGER")]
+        public static void LogCall(object objectReference) {
+           Log(
+                stackInfo => stackInfo.MethodSignature,
+                FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogCall),
+                objectReference);
         }
 
         [Conditional("DEBUG_LOGGER")]
@@ -246,16 +266,7 @@ namespace FileLogger {
             Log(
                 stackInfo => message,
                 FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogResult),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.Timestamp),
-                Instance.indentLine,
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.ClassName),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.CallerClassName));
+                null);
         }
 
         /// <summary>
@@ -280,10 +291,7 @@ namespace FileLogger {
             Log(
                 stackInfo => message.ToString(),
                 Instance.enableLogStackTrace,
-                false,
-                false,
-                false,
-                false);
+                null);
         }
 
         [Conditional("DEBUG_LOGGER")]
@@ -298,16 +306,7 @@ namespace FileLogger {
             Log(
                 stackInfo => message,
                 FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogString),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.Timestamp),
-                Instance.indentLine,
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.ClassName),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.CallerClassName));
+                null);
         }
 
         /// Start Logger.
@@ -357,19 +356,26 @@ namespace FileLogger {
             return timestamp;
         }
 
+        /// <summary>
+        /// Base method used to create and save a log message.
+        /// </summary>
+        /// <param name="composeMessage"></param>
+        /// <param name="methodEnabled"></param>
+        /// <param name="showTimestamp"></param>
+        /// <param name="indentMessage"></param>
+        /// <param name="appendClassName"></param>
+        /// <param name="appendCallerClassName"></param>
+        /// <param name="objectReference"></param>
         private static void Log(
-            Func<StackInfo, string> composeMessage,
-            bool loggingEnabled,
-            bool showTimestamp,
-            bool indentMessage,
-            bool appendClassName,
-            bool appendCallerClassName) {
+            Func<FrameInfo, string> composeMessage,
+            bool methodEnabled,
+            object objectReference) {
 
-            if (loggingEnabled == false) return;
-            if (Instance.LoggingEnabled == false) return;
+            if (!methodEnabled) return;
+            if (!Instance.LoggingEnabled) return;
 
             // Get info from call stack.
-            var stackInfo = new StackInfo(3);
+            var stackInfo = new FrameInfo(3);
 
             // Filter by class name.
             if (!ClassInFilter(stackInfo.ClassName)) return;
@@ -380,30 +386,17 @@ namespace FileLogger {
             var outputMessage = new StringBuilder();
 
             // Add timestamp.
-            if (showTimestamp) {
-                outputMessage.Append(GetCurrentTimestamp());
-                outputMessage.Append(" ");
-            }
-
+            HandleShowTimestamp(outputMessage);
             // Indent message.
-            if (indentMessage) {
-                for (var i = 0; i < stackInfo.FrameCount; i++) {
-                    outputMessage.Append("| ");
-                }
-            }
-
-            // Add message if not empty.
+            HandleIndentMessage(stackInfo, outputMessage);
+            // Append message returned by callback.
             outputMessage.Append(composeMessage(stackInfo));
-
             // Append class name.
-            if (appendClassName) {
-                AppendClassName(outputMessage, stackInfo);
-            }
-
+            HandleAppendClassName(outputMessage, stackInfo);
+            // Append object GUID.
+            HandleAppendGUID(objectReference, outputMessage);
             // Append caller class name.
-            if (appendCallerClassName) {
-                AppendCallerClassName(outputMessage);
-            }
+            HandleAppendCallerClassName(outputMessage);
 
             // Add log message to the cache.
             Instance.logWriter.Add(
@@ -417,13 +410,67 @@ namespace FileLogger {
         }
 
         /// <summary>
+        /// Adds timestamp to the log message.
+        /// </summary>
+        /// <param name="showTimestamp"></param>
+        /// <param name="outputMessage"></param>
+        private static void HandleShowTimestamp(StringBuilder outputMessage) {
+            if (!FlagsHelper.IsSet(
+                Instance.AppendOptions,
+                AppendOptions.Timestamp)) return;
+
+            outputMessage.Append(GetCurrentTimestamp());
+            outputMessage.Append(" ");
+        }
+
+        /// <summary>
+        /// Indents log message.
+        /// </summary>
+        /// <param name="indentMessage"></param>
+        /// <param name="frameInfo"></param>
+        /// <param name="outputMessage"></param>
+        private static void HandleIndentMessage(
+            FrameInfo frameInfo,
+            StringBuilder outputMessage) {
+
+            if (!Instance.indentLine) return;
+
+            for (var i = 0; i < frameInfo.FrameCount; i++) {
+                outputMessage.Append("| ");
+            }
+        }
+
+        /// <summary>
+        /// Appends GUID of the object that called the Logger method.
+        /// </summary>
+        /// <param name="objectReference"></param>
+        /// <param name="outputMessage"></param>
+        private static void HandleAppendGUID(
+            object objectReference,
+            StringBuilder outputMessage) {
+
+            if (objectReference == null) return;
+
+            bool firstTime;
+            long objectID = Instance.ObjectIDGenerator.GetId(
+                objectReference,
+                out firstTime);
+
+            outputMessage.Append(string.Format(" (GUID: {0})", objectID));
+        }
+
+        /// <summary>
         /// Helper method.
         /// Appends caller class name to the output message.
         /// </summary>
         /// <param name="outputMessage"></param>
-        private static void AppendCallerClassName(StringBuilder outputMessage) {
+        private static void HandleAppendCallerClassName(StringBuilder outputMessage) {
+            if (!FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.CallerClassName)) return;
+
             // Get info from call stack.
-            var callerStackInfo = new StackInfo(5);
+            var callerStackInfo = new FrameInfo(5);
 
             if (Instance.qualifiedClassName) {
                 // Append fully qualified caller class name.
@@ -441,19 +488,23 @@ namespace FileLogger {
         /// Appends class name to the output message.
         /// </summary>
         /// <param name="outputMessage"></param>
-        /// <param name="stackInfo"></param>
-        private static void AppendClassName(
+        /// <param name="frameInfo"></param>
+        private static void HandleAppendClassName(
             StringBuilder outputMessage,
-            StackInfo stackInfo) {
+            FrameInfo frameInfo) {
+
+            if (!FlagsHelper.IsSet(
+                Instance.AppendOptions,
+                AppendOptions.ClassName)) return;
 
             if (Instance.qualifiedClassName) {
                 // Append fully qualified class name.
                 outputMessage.Append(
-                    ", @ " + stackInfo.QualifiedClassName + "");
+                    ", @ " + frameInfo.QualifiedClassName + "");
             }
             else {
                 // Append class name.
-                outputMessage.Append(", @ " + stackInfo.ClassName + "");
+                outputMessage.Append(", @ " + frameInfo.ClassName + "");
             }
         }
 

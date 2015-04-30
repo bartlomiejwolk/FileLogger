@@ -53,7 +53,7 @@ Short API Reference
 - LogStackTrace()
 - ClearLogFile()
 
-In the `object objectReference` argument put `this` keyword to have object GUID displayed in the log messages.
+In the `object objectReference` argument put `this` keyword to have object GUID displayed in the log message.
 
 
 Help

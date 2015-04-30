@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Text;
 using AnimationPathAnimator;
 using FileLogger;
@@ -98,6 +99,8 @@ namespace FileLogger {
         [SerializeField]
         private List<string> methodFilter = new List<string>();
 
+        private ObjectIDGenerator objectIDGenerator;
+
         #endregion
 
         /// \todo Rename to addTimestamp.
@@ -143,6 +146,22 @@ namespace FileLogger {
             get { return loggingEnabled; }
             set { loggingEnabled = value; }
         }
+
+        /// <summary>
+        /// Generates and remembers GUID of all objects that call logger passing "this" param.
+        /// </summary>
+        private ObjectIDGenerator ObjectIDGenerator {
+            get {
+                if (objectIDGenerator != null) {
+                    return objectIDGenerator;
+                }
+
+                objectIDGenerator = new ObjectIDGenerator();
+                return objectIDGenerator;
+            }
+            set { objectIDGenerator = value; }
+        }
+
         #endregion
 
         #region UNITY MESSAGES
@@ -193,10 +212,13 @@ namespace FileLogger {
         private void Update() {
             // Handle "In-game Label" inspector option.
             //if (
-            //        loggingEnabled == true
+            //        methodEnabled == true
             //        && inGameLabel) {
             //    Logger.Instance.DisplayLabel();
             //}
+        }
+
+        private void Reset() {
         }
         #endregion
 
@@ -219,7 +241,6 @@ namespace FileLogger {
             UnityEngine.Debug.Log("Log file cleared!");
         }
 
-
         [Conditional("DEBUG_LOGGER")]
         public static void LogCall() {
             Log(
@@ -234,7 +255,26 @@ namespace FileLogger {
                     AppendOptions.ClassName),
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
-                    AppendOptions.CallerClassName));
+                    AppendOptions.CallerClassName),
+                null);
+        }
+
+        [Conditional("DEBUG_LOGGER")]
+        public static void LogCall(object objectReference) {
+           Log(
+                stackInfo => stackInfo.MethodSignature,
+                FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogCall),
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.Timestamp),
+                Instance.indentLine,
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.ClassName),
+                FlagsHelper.IsSet(
+                    Instance.AppendOptions,
+                    AppendOptions.CallerClassName),
+                objectReference);
         }
 
         [Conditional("DEBUG_LOGGER")]
@@ -255,7 +295,8 @@ namespace FileLogger {
                     AppendOptions.ClassName),
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
-                    AppendOptions.CallerClassName));
+                    AppendOptions.CallerClassName),
+                null);
         }
 
         /// <summary>
@@ -283,7 +324,8 @@ namespace FileLogger {
                 false,
                 false,
                 false,
-                false);
+                false,
+                null);
         }
 
         [Conditional("DEBUG_LOGGER")]
@@ -307,7 +349,8 @@ namespace FileLogger {
                     AppendOptions.ClassName),
                 FlagsHelper.IsSet(
                     Instance.AppendOptions,
-                    AppendOptions.CallerClassName));
+                    AppendOptions.CallerClassName),
+                null);
         }
 
         /// Start Logger.
@@ -359,14 +402,15 @@ namespace FileLogger {
 
         private static void Log(
             Func<StackInfo, string> composeMessage,
-            bool loggingEnabled,
+            bool methodEnabled,
             bool showTimestamp,
             bool indentMessage,
             bool appendClassName,
-            bool appendCallerClassName) {
+            bool appendCallerClassName,
+            object objectReference) {
 
-            if (loggingEnabled == false) return;
-            if (Instance.LoggingEnabled == false) return;
+            if (!methodEnabled) return;
+            if (!Instance.LoggingEnabled) return;
 
             // Get info from call stack.
             var stackInfo = new StackInfo(3);
@@ -398,6 +442,16 @@ namespace FileLogger {
             // Append class name.
             if (appendClassName) {
                 AppendClassName(outputMessage, stackInfo);
+            }
+
+            // Append object GUID.
+            // todo extract
+            if (objectReference != null) {
+                bool firstTime;
+                long objectID = Instance.ObjectIDGenerator.GetId(
+                    objectReference,
+                    out firstTime);
+                outputMessage.Append(string.Format(" (GUID: {0})", objectID));
             }
 
             // Append caller class name.

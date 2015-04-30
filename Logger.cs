@@ -328,6 +328,15 @@ namespace FileLogger {
             string format,
             params object[] paramList) {
 
+            LogString(format, null, paramList);
+        }
+
+        [Conditional("DEBUG_LOGGER")]
+        public static void LogString(
+            string format,
+            object objectReference,
+            params object[] paramList) {
+
             // Compose log message.
             var message = string.Format(format, paramList);
 
@@ -335,7 +344,7 @@ namespace FileLogger {
             Log(
                 stackInfo => message,
                 FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogString),
-                null);
+                objectReference);
         }
 
         /// Start Logger.

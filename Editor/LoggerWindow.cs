@@ -1,4 +1,9 @@
-﻿#define DEBUG_LOGGER
+﻿// Copyright (c) 2015 Bartłomiej Wołk (bartlomiejwolk@gmail.com)
+//  
+// This file is part of the AnimationPath Animator extension for Unity.
+// Licensed under the MIT license. See LICENSE file in the project root folder.
+
+#define DEBUG_LOGGER
 
 using UnityEditor;
 using UnityEngine;
@@ -10,11 +15,11 @@ namespace FileLogger {
         private Logger loggerInstance;
 
         public Logger LoggerInstance {
-            get { 
+            get {
                 if (loggerInstance == null) {
                     loggerInstance = FindObjectOfType<Logger>();
                     if (loggerInstance == null) {
-                        GameObject loggerGO = new GameObject();
+                        var loggerGO = new GameObject();
                         loggerGO.AddComponent<Logger>();
                         loggerInstance = loggerGO.GetComponent<Logger>();
                     }
@@ -25,8 +30,8 @@ namespace FileLogger {
 
         [MenuItem("Window/FileLogger")]
         public static void Init() {
-            LoggerWindow window =
-                (LoggerWindow)GetWindow(typeof(LoggerWindow));
+            var window =
+                (LoggerWindow) GetWindow(typeof (LoggerWindow));
             window.title = "Logger";
             window.minSize = new Vector2(100f, 60f);
         }
@@ -42,9 +47,6 @@ namespace FileLogger {
                     null,
                     () => LoggerInstance.LogWriter.Add("[PAUSE]", true),
                     () => Logger.StopLogging());
-                    //() => LoggerInstance.LogWriter.WriteAll(
-                    //    LoggerInstance.FilePath,
-                    //    false));
 
             // Draw -> button.
             if (GUILayout.Button("->", GUILayout.Width(30))) {
@@ -56,5 +58,7 @@ namespace FileLogger {
 
             Repaint();
         }
+
     }
+
 }

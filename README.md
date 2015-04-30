@@ -13,6 +13,7 @@ Features
 - Logging to a file and/or Unity console
 - Realtime logging
 - Logged messages contain additional metadata to help understand what's happening in the code
+- Log messages can display GUID of an object from logger method was called
 - Ability to customize displayed metadata
 - Ability to start/stop logging from inspector and from code
 - Multiple logging methods for different purposes
@@ -37,6 +38,22 @@ Quick Start
 - Stop play mode and check the _log.txt_ file in your project root folder.
 
 You can also check the _Echo To Console_ checkbox to see logged messages in the Unity console.
+
+Short API Reference
+-------------------
+
+- StartLogging()
+- StopLogging()
+- LogString(*string* format, *params object[]* paramList)
+- LogString(*string* format, *object* objectreference, *params object[]* paramList)
+- LogCall()
+- LogCall(*object* objectReference)
+- LogResult(*object* result)
+- LogResult(*object* result, *object* objectReference)
+- LogStackTrace()
+- ClearLogFile()
+
+In the `object objectReference` argument put `this` keyword to have object GUID displayed in the log messages.
 
 
 Help

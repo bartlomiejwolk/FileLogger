@@ -141,7 +141,7 @@ namespace FileLogger {
         private void DrawAppendDropdown() {
             Script.AppendOptions = (AppendOptions) EditorGUILayout.EnumMaskField(
                 new GUIContent(
-                    "Append",
+                    "Display",
                     ""),
                 Script.AppendOptions);
         }

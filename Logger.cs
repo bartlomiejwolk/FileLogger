@@ -36,14 +36,14 @@ namespace FileLogger {
         /// a single log line.
         /// </summary>
         [SerializeField]
-        public AppendOptions AppendOptions;
+        private AppendOptions appendOptions;
 
         /// <summary>
         /// Keeps info about Logger methods state (enabled/disabled).
         /// Disabled methods won't produce output.
         /// </summary>
         [SerializeField]
-        public EnabledMethods EnabledMethods;
+        private EnabledMethods enabledMethods;
 
         /// If append messages to the file or overwrite.
         [SerializeField]
@@ -160,6 +160,24 @@ namespace FileLogger {
                 return objectIDGenerator;
             }
             set { objectIDGenerator = value; }
+        }
+
+        /// <summary>
+        /// Allows specify what additional information will be included in
+        /// a single log line.
+        /// </summary>
+        public AppendOptions AppendOptions {
+            get { return appendOptions; }
+            set { appendOptions = value; }
+        }
+
+        /// <summary>
+        /// Keeps info about Logger methods state (enabled/disabled).
+        /// Disabled methods won't produce output.
+        /// </summary>
+        public EnabledMethods EnabledMethods {
+            get { return enabledMethods; }
+            set { enabledMethods = value; }
         }
 
         #endregion

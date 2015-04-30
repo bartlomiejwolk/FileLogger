@@ -3,7 +3,7 @@ using System;
 namespace FileLogger {
 
     /// <summary>
-    /// Options used to decide what info will be added to a single line in the
+    /// AppendOptions used to decide what info will be added to a single line in the
     /// log output.
     /// </summary>
     [Flags]

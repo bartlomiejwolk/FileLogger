@@ -32,11 +32,22 @@ namespace FileLogger {
 
         #endregion EVENTS
 
+        #region EVENT INVOCATORS
+
+        private void OnStateChanged() {
+            var handler = StateChanged;
+            if (handler != null) handler(this, EventArgs.Empty);
+        }
+
+        #endregion EVENT INVOCATORS
+
         #region FIELDS
 
         private static Logger instance;
 
-        /// If append messages to the file or overwrite.
+        /// <summary>
+        ///     If append messages to the file or overwrite.
+        /// </summary>
         [SerializeField]
         private bool append;
 
@@ -51,10 +62,10 @@ namespace FileLogger {
                                               | AppendOptions.MethodName
                                               | AppendOptions.CallerClassName;
 
-        /// Class filter.
-        /// 
-        /// List of classes that will be logged. \remark Empty list disables
-        /// class filtering.
+        /// <summary>
+        ///     List of classes that will be logged. Empty list disables
+        ///     class filtering.
+        /// </summary>
         [SerializeField]
         private List<string> classFilter = new List<string>();
 
@@ -73,27 +84,34 @@ namespace FileLogger {
         [SerializeField]
         private bool enableLogStackTrace = true;
 
-        /// Enable logging when in play mode.
+        /// <summary>
+        ///     Enable logging when in play mode.
+        /// </summary>
         [SerializeField]
 #pragma warning disable 649
             private bool enableOnPlay = true;
 
 #pragma warning restore 649
 
-        /// Output file name/path.
+        /// <summary>
+        ///     Output file name/path.
+        /// </summary>
         [SerializeField]
         private string filePath = "log.txt";
 
         [SerializeField]
         private bool indentLine = true;
 
-        /// Initial size of the cache array.
-        /// 
-        /// When this array fills-up, it'll be resized by the same amount.
+        /// <summary>
+        ///     Initial size of the cache array.
+        ///     When this array fills-up, it'll be resized by the same amount.
+        /// </summary>
         [SerializeField]
         private int initArraySize = 1000000;
 
-        // When false, no logging is done.
+        /// <summary>
+        ///     When false, no logging is done.
+        /// </summary>
         [SerializeField]
         private bool loggingEnabled;
 
@@ -102,22 +120,25 @@ namespace FileLogger {
 
         private LogWriter logWriter = new LogWriter();
 
-        /// Method filter.
-        /// 
-        /// List of methods that will be logged. \remark Empty list disables
-        /// method filtering.
+        /// <summary>
+        ///     List of methods that will be logged.
+        ///     Empty list disables method filtering.
+        /// </summary>
         [SerializeField]
         private List<string> methodFilter = new List<string>();
 
         private ObjectIDGenerator objectIDGenerator;
 
-        /// If true, display fully qualified class name.
+        /// <summary>
+        ///     If true, display fully qualified class name.
+        /// </summary>
         [SerializeField]
         private bool qualifiedClassName = true;
 
         #endregion FIELDS
 
         #region PROPERTIES
+
         public static Logger Instance {
             get {
                 if (instance == null) {
@@ -127,7 +148,8 @@ namespace FileLogger {
                         instance = singleton.AddComponent<Logger>();
                         singleton.name = "(singleton) Logger";
 
-                        //Tell unity not to destroy this object when loading a new scene!
+                        // Tell unity not to destroy this object when loading
+                        // a new scene!
                         DontDestroyOnLoad(instance.gameObject);
                     }
                 }
@@ -242,15 +264,6 @@ namespace FileLogger {
 
         #endregion UNITY MESSAGES
 
-        #region EVENT INVOCATORS
-
-        private void OnStateChanged() {
-            var handler = StateChanged;
-            if (handler != null) handler(this, EventArgs.Empty);
-        }
-
-        #endregion EVENT INVOCATORS
-
         #region METHODS
 
         [Conditional("DEBUG_LOGGER")]
@@ -338,7 +351,11 @@ namespace FileLogger {
                 objectReference);
         }
 
-        /// Start Logger.
+        /// <summary>
+        ///     Start Logger.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="append"></param>
         [Conditional("DEBUG_LOGGER")]
         public static void StartLogging(
             string filePath = "log.txt",
@@ -349,7 +366,9 @@ namespace FileLogger {
             Instance.LoggingEnabled = true;
         }
 
-        /// Stop Logger.
+        /// <summary>
+        ///     Stop Logger.
+        /// </summary>
         [Conditional("DEBUG_LOGGER")]
         public static void StopLogging() {
             Instance.LoggingEnabled = false;
@@ -388,10 +407,10 @@ namespace FileLogger {
             return true;
         }
 
-        /// Add timestamp to a single log message.
-        /// 
-        /// \return String with timestamp. \todo Make it static and put in some
-        /// utility class.
+        /// <summary>
+        ///     Add timestamp to a single log message.
+        /// </summary>
+        /// <returns></returns>
         private static string GetCurrentTimestamp() {
             var now = DateTime.Now;
             var timestamp =

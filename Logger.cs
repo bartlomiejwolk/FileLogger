@@ -39,6 +39,7 @@ namespace FileLogger {
         // todo rename to displayOptions
         private AppendOptions appendOptions = AppendOptions.Timestamp
                                               | AppendOptions.ClassName
+                                              | AppendOptions.MethodName
                                               | AppendOptions.CallerClassName;
 
         /// <summary>
@@ -105,11 +106,6 @@ namespace FileLogger {
         private List<string> methodFilter = new List<string>();
 
         private ObjectIDGenerator objectIDGenerator;
-
-        /// <summary>
-        /// If to append caller method name to the log message.
-        /// </summary>
-        private bool appendMethodName = true;
 
         #endregion
 
@@ -193,14 +189,6 @@ namespace FileLogger {
         public bool LogInRealTime {
             get { return logInRealTime; }
             set { logInRealTime = value; }
-        }
-
-        /// <summary>
-        /// If to append caller method name to the log message.
-        /// </summary>
-        public bool AppendMethodName {
-            get { return appendMethodName; }
-            set { appendMethodName = value; }
         }
 
         #endregion
@@ -477,7 +465,9 @@ namespace FileLogger {
             StringBuilder outputMessage,
             FrameInfo stackInfo) {
 
-            if (!Instance.AppendMethodName) return;
+            if (!FlagsHelper.IsSet(
+                Instance.AppendOptions,
+                AppendOptions.MethodName)) return;
 
             outputMessage.Append(string.Format(".{0}", stackInfo.MethodName));
         }

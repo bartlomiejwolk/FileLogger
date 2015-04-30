@@ -9,9 +9,10 @@ namespace FileLogger {
     [Flags]
     public enum AppendOptions {
 
-        Timestamp = 1,
-        ClassName = 2,
-        CallerClassName = 4
+        Timestamp = 0x0001,
+        ClassName = 0x0002,
+        MethodName = 0x0004,
+        CallerClassName = 0x0008
 
     }
 

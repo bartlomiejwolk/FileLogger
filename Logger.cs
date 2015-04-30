@@ -425,10 +425,7 @@ namespace FileLogger {
             var outputMessage = new StringBuilder();
 
             // Add timestamp.
-            if (showTimestamp) {
-                outputMessage.Append(GetCurrentTimestamp());
-                outputMessage.Append(" ");
-            }
+            HandleShowTimestamp(showTimestamp, outputMessage);
 
             // Indent message.
             HandleIndentMessage(indentMessage, stackInfo, outputMessage);
@@ -454,6 +451,16 @@ namespace FileLogger {
             if (Instance.logInRealTime) {
                 Instance.logWriter.WriteLast(Instance.filePath);
             }
+        }
+
+        private static void HandleShowTimestamp(
+            bool showTimestamp,
+            StringBuilder outputMessage) {
+
+            if (!showTimestamp) return;
+
+            outputMessage.Append(GetCurrentTimestamp());
+            outputMessage.Append(" ");
         }
 
         private static void HandleIndentMessage(

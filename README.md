@@ -5,7 +5,7 @@ FileLogger is a debug tool for Unity.
 
 Licensed under MIT license. See LICENSE file in the project root.
 
-![FileLogger](/Resources/cover_screenshot.png?raw=true "FileLogger Coverart")
+![FileLogger](/Resources/coverart.png?raw=true "FileLogger Coverart")
 
 Features
 --------

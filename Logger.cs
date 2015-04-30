@@ -36,6 +36,7 @@ namespace FileLogger {
         /// a single log line.
         /// </summary>
         [SerializeField]
+        // todo rename to displayOptions
         private AppendOptions appendOptions = AppendOptions.Timestamp
                                               | AppendOptions.ClassName
                                               | AppendOptions.CallerClassName;
@@ -104,6 +105,11 @@ namespace FileLogger {
         private List<string> methodFilter = new List<string>();
 
         private ObjectIDGenerator objectIDGenerator;
+
+        /// <summary>
+        /// If to append caller method name to the log message.
+        /// </summary>
+        private bool appendMethodName = true;
 
         #endregion
 
@@ -187,6 +193,14 @@ namespace FileLogger {
         public bool LogInRealTime {
             get { return logInRealTime; }
             set { logInRealTime = value; }
+        }
+
+        /// <summary>
+        /// If to append caller method name to the log message.
+        /// </summary>
+        public bool AppendMethodName {
+            get { return appendMethodName; }
+            set { appendMethodName = value; }
         }
 
         #endregion
@@ -436,6 +450,8 @@ namespace FileLogger {
             outputMessage.Append(composeMessage(stackInfo));
             // Append class name.
             HandleAppendClassName(outputMessage, stackInfo);
+            // Append caller method name.
+            HandleAppendMethodName(outputMessage, stackInfo);
             // Append object GUID.
             HandleAppendGUID(objectReference, outputMessage);
             // Append caller class name.
@@ -450,6 +466,20 @@ namespace FileLogger {
             if (Instance.LogInRealTime) {
                 Instance.logWriter.WriteLast(Instance.filePath);
             }
+        }
+
+        /// <summary>
+        /// Appends caller method name to the log message.
+        /// </summary>
+        /// <param name="outputMessage"></param>
+        /// <param name="stackInfo"></param>
+        private static void HandleAppendMethodName(
+            StringBuilder outputMessage,
+            FrameInfo stackInfo) {
+
+            if (!Instance.AppendMethodName) return;
+
+            outputMessage.Append(string.Format(".{0}", stackInfo.MethodName));
         }
 
         /// <summary>

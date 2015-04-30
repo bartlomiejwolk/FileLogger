@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#define DEBUG_LOGGER
+
+using UnityEngine;
 using System;
 using System.Collections;
 using UnityEditor;
@@ -122,7 +124,8 @@ namespace FileLogger {
                     Script.EnableOnPlay,
                     FireOnStateChangedEvent,
                     () => Script.LogWriter.Add("[PAUSE]", true),
-                    () => Script.LogWriter.WriteAll(Script.FilePath, false));
+                    //() => Script.LogWriter.WriteAll(Script.FilePath, false));
+                    () => Logger.StopLogging());
         }
 
         private void DrawOnEnableHelpBox() {

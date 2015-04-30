@@ -184,6 +184,11 @@ namespace FileLogger {
             set { enabledMethods = value; }
         }
 
+        public bool LogInRealTime {
+            get { return logInRealTime; }
+            set { logInRealTime = value; }
+        }
+
         #endregion
 
         #region UNITY MESSAGES
@@ -210,7 +215,7 @@ namespace FileLogger {
         // ReSharper disable once UnusedMember.Local
         private void OnDestroy() {
             // Don't write to file if 'logInRealTime' was selected.
-            if (logInRealTime) {
+            if (LogInRealTime) {
                 return;
             }
             // Write log to file when 'enableOnPlay' was selected.
@@ -431,7 +436,7 @@ namespace FileLogger {
                 Instance.echoToConsole);
 
             // Append message to the log file.
-            if (Instance.logInRealTime) {
+            if (Instance.LogInRealTime) {
                 Instance.logWriter.WriteLast(Instance.filePath);
             }
         }

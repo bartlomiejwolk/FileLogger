@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#define DEBUG_LOGGER
+
+using UnityEngine;
 using UnityEditor;
 using System;
 using System.Collections;
@@ -41,9 +43,10 @@ namespace FileLogger {
                     LoggerInstance.EnableOnPlay,
                     null,
                     () => LoggerInstance.LogWriter.Add("[PAUSE]", true),
-                    () => LoggerInstance.LogWriter.WriteAll(
-                        LoggerInstance.FilePath,
-                        false));
+                    () => Logger.StopLogging());
+                    //() => LoggerInstance.LogWriter.WriteAll(
+                    //    LoggerInstance.FilePath,
+                    //    false));
 
             // Draw -> button.
             if (GUILayout.Button("->", GUILayout.Width(30))) {

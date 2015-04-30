@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -79,7 +80,17 @@ namespace FileLogger {
             return result;
         }
 
-    }
+        /// <summary>
+        /// Returns variable name as string.
+        /// </summary>
+        /// <remarks>http://stackoverflow.com/a/729836/2964286</remarks>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        static string GetVariableName<T>(Expression<Func<T>> expression) {
+            return ((MemberExpression)expression.Body).Member.Name;
+        }
 
+    }
 
 }

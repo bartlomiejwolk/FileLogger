@@ -426,19 +426,14 @@ namespace FileLogger {
 
             // Add timestamp.
             HandleShowTimestamp(showTimestamp, outputMessage);
-
             // Indent message.
             HandleIndentMessage(indentMessage, stackInfo, outputMessage);
-
-            // Add message if not empty.
+            // Append message returned by callback.
             outputMessage.Append(composeMessage(stackInfo));
-
             // Append class name.
             HandleAppendClassName(outputMessage, stackInfo);
-
             // Append object GUID.
             HandleAppendGUID(objectReference, outputMessage);
-
             // Append caller class name.
             HandleAppendCallerClassName(outputMessage);
 

@@ -36,8 +36,10 @@ namespace FileLogger {
         /// a single log line.
         /// </summary>
         [SerializeField]
+        // todo rename to displayOptions
         private AppendOptions appendOptions = AppendOptions.Timestamp
                                               | AppendOptions.ClassName
+                                              | AppendOptions.MethodName
                                               | AppendOptions.CallerClassName;
 
         /// <summary>
@@ -436,6 +438,8 @@ namespace FileLogger {
             outputMessage.Append(composeMessage(stackInfo));
             // Append class name.
             HandleAppendClassName(outputMessage, stackInfo);
+            // Append caller method name.
+            HandleAppendMethodName(outputMessage, stackInfo);
             // Append object GUID.
             HandleAppendGUID(objectReference, outputMessage);
             // Append caller class name.
@@ -450,6 +454,22 @@ namespace FileLogger {
             if (Instance.LogInRealTime) {
                 Instance.logWriter.WriteLast(Instance.filePath);
             }
+        }
+
+        /// <summary>
+        /// Appends caller method name to the log message.
+        /// </summary>
+        /// <param name="outputMessage"></param>
+        /// <param name="stackInfo"></param>
+        private static void HandleAppendMethodName(
+            StringBuilder outputMessage,
+            FrameInfo stackInfo) {
+
+            if (!FlagsHelper.IsSet(
+                Instance.AppendOptions,
+                AppendOptions.MethodName)) return;
+
+            outputMessage.Append(string.Format(".{0}", stackInfo.MethodName));
         }
 
         /// <summary>

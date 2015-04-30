@@ -56,8 +56,7 @@ namespace FileLogger {
         ///     single log line.
         /// </summary>
         [SerializeField]
-        // todo rename to displayOptions
-        private AppendOptions appendOptions = AppendOptions.Timestamp
+        private AppendOptions displayOptions = AppendOptions.Timestamp
                                               | AppendOptions.ClassName
                                               | AppendOptions.MethodName
                                               | AppendOptions.CallerClassName;
@@ -166,9 +165,9 @@ namespace FileLogger {
         ///     Allows specify what additional information will be included in a
         ///     single log line.
         /// </summary>
-        public AppendOptions AppendOptions {
-            get { return appendOptions; }
-            set { appendOptions = value; }
+        public AppendOptions DisplayOptions {
+            get { return displayOptions; }
+            set { displayOptions = value; }
         }
 
         /// <summary>
@@ -426,7 +425,7 @@ namespace FileLogger {
         private static void HandleAppendCallerClassName(
             StringBuilder outputMessage) {
             if (!FlagsHelper.IsSet(
-                Instance.AppendOptions,
+                Instance.DisplayOptions,
                 AppendOptions.CallerClassName)) return;
 
             // Get info from call stack.
@@ -453,7 +452,7 @@ namespace FileLogger {
             FrameInfo frameInfo) {
 
             if (!FlagsHelper.IsSet(
-                Instance.AppendOptions,
+                Instance.DisplayOptions,
                 AppendOptions.ClassName)) return;
 
             if (Instance.qualifiedClassName) {
@@ -496,7 +495,7 @@ namespace FileLogger {
             FrameInfo stackInfo) {
 
             if (!FlagsHelper.IsSet(
-                Instance.AppendOptions,
+                Instance.DisplayOptions,
                 AppendOptions.MethodName)) return;
 
             outputMessage.Append(string.Format(".{0}", stackInfo.MethodName));
@@ -524,7 +523,7 @@ namespace FileLogger {
         /// <param name="outputMessage"></param>
         private static void HandleShowTimestamp(StringBuilder outputMessage) {
             if (!FlagsHelper.IsSet(
-                Instance.AppendOptions,
+                Instance.DisplayOptions,
                 AppendOptions.Timestamp)) return;
 
             outputMessage.Append(GetCurrentTimestamp());

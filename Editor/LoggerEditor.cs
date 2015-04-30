@@ -99,13 +99,13 @@ namespace FileLogger {
         #region INSPECTOR
 
         private void DrawAppendDropdown() {
-            Script.AppendOptions =
+            Script.DisplayOptions =
                 (AppendOptions) EditorGUILayout.EnumMaskField(
                     new GUIContent(
                         "Display",
                         "Additional info that should be attached to a single" +
                         "log message."),
-                    Script.AppendOptions);
+                    Script.DisplayOptions);
         }
 
         private void DrawClearLogFileButton() {

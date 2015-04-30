@@ -8,7 +8,7 @@ using System;
 namespace FileLogger {
 
     /// <summary>
-    ///     AppendOptions used to decide what info will be added to a single line in the
+    ///     displayOptions used to decide what info will be added to a single line in the
     ///     log output.
     /// </summary>
     [Flags]

@@ -1,9 +1,7 @@
 ﻿#define DEBUG_LOGGER
 
-using UnityEngine;
 using UnityEditor;
-using System;
-using System.Collections;
+using UnityEngine;
 
 namespace FileLogger {
 

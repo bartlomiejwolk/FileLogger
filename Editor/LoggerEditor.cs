@@ -1,11 +1,8 @@
 ﻿#define DEBUG_LOGGER
 
-using UnityEngine;
-using System;
-using System.Collections;
-using UnityEditor;
 using ATP.ReorderableList;
-using SyntaxTree.VisualStudio.Unity.Messaging;
+using UnityEditor;
+using UnityEngine;
 
 namespace FileLogger {
 

@@ -1,7 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
-using System;
+﻿using System;
 using System.IO;
+using UnityEngine;
 
 namespace FileLogger {
 

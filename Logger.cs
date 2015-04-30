@@ -6,9 +6,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using AnimationPathAnimator;
-using FileLogger;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 // ReSharper disable once CheckNamespace
 

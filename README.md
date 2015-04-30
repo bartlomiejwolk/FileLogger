@@ -44,12 +44,12 @@ Short API Reference
 
 - StartLogging()
 - StopLogging()
-- LogString(*string* format, *params object[]* paramList)
-- LogString(*string* format, *object* objectreference, *params object[]* paramList)
+- LogString(**string** format, **params object[]** paramList)
+- LogString(**string** format, **object** objectreference, **params object[]** paramList)
 - LogCall()
-- LogCall(*object* objectReference)
-- LogResult(*object* result)
-- LogResult(*object* result, *object* objectReference)
+- LogCall(**object** objectReference)
+- LogResult(**object** result)
+- LogResult(**object** result, **object** objectReference)
 - LogStackTrace()
 - ClearLogFile()
 

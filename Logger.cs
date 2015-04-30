@@ -401,6 +401,16 @@ namespace FileLogger {
         }
 
         // todo remove args. that can be read from class state
+        /// <summary>
+        /// Base method used to create and save a log message.
+        /// </summary>
+        /// <param name="composeMessage"></param>
+        /// <param name="methodEnabled"></param>
+        /// <param name="showTimestamp"></param>
+        /// <param name="indentMessage"></param>
+        /// <param name="appendClassName"></param>
+        /// <param name="appendCallerClassName"></param>
+        /// <param name="objectReference"></param>
         private static void Log(
             Func<StackInfo, string> composeMessage,
             bool methodEnabled,
@@ -448,6 +458,11 @@ namespace FileLogger {
             }
         }
 
+        /// <summary>
+        /// Adds timestamp to the log message.
+        /// </summary>
+        /// <param name="showTimestamp"></param>
+        /// <param name="outputMessage"></param>
         private static void HandleShowTimestamp(
             bool showTimestamp,
             StringBuilder outputMessage) {
@@ -458,6 +473,12 @@ namespace FileLogger {
             outputMessage.Append(" ");
         }
 
+        /// <summary>
+        /// Indents log message.
+        /// </summary>
+        /// <param name="indentMessage"></param>
+        /// <param name="stackInfo"></param>
+        /// <param name="outputMessage"></param>
         private static void HandleIndentMessage(
             bool indentMessage,
             StackInfo stackInfo,
@@ -470,6 +491,11 @@ namespace FileLogger {
             }
         }
 
+        /// <summary>
+        /// Appends GUID of the object that called the Logger method.
+        /// </summary>
+        /// <param name="objectReference"></param>
+        /// <param name="outputMessage"></param>
         private static void HandleAppendGUID(
             object objectReference,
             StringBuilder outputMessage) {

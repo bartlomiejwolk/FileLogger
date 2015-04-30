@@ -103,7 +103,8 @@ namespace FileLogger {
                 (AppendOptions) EditorGUILayout.EnumMaskField(
                     new GUIContent(
                         "Display",
-                        ""),
+                        "Additional info that should be attached to a single" +
+                        "log message."),
                     Script.AppendOptions);
         }
 
@@ -120,7 +121,6 @@ namespace FileLogger {
         }
 
         private void DrawEchoToConsoleToggle() {
-
             EditorGUILayout.PropertyField(
                 echoToConsole,
                 new GUIContent(
@@ -136,17 +136,16 @@ namespace FileLogger {
                         "Enabled Methods",
                         "Select Logger methods that should be active. Inactive "
                         +
-                        "methods won't product output."),
+                        "methods won't log anything."),
                     Script.EnabledMethods);
         }
 
         private void DrawEnableOnPlayToggle() {
-
             EditorGUILayout.PropertyField(
                 enableOnPlay,
                 new GUIContent(
                     "Enable On Play",
-                    "Start logger when entering play mode."));
+                    "Start logger on enter play mode."));
         }
 
         private void DrawFilePathField() {
@@ -172,7 +171,7 @@ namespace FileLogger {
                 indentLine,
                 new GUIContent(
                     "Indent On",
-                    ""));
+                    "Indent log messages accordingly to the call stack."));
         }
 
         private void DrawLogInRealTimeToggle() {

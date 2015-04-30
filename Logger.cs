@@ -190,6 +190,8 @@ namespace FileLogger {
             }
         }
 
+        public const string VERSION = "v0.1.0";
+
         #endregion PROPERTIES
 
         #region UNITY MESSAGES

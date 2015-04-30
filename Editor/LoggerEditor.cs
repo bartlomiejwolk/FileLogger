@@ -35,6 +35,7 @@ namespace FileLogger {
         public override void OnInspectorGUI() {
             serializedObject.Update();
 
+            DrawVersionNo();
             DrawFilePathField();
 
             EditorGUILayout.Space();
@@ -205,6 +206,9 @@ namespace FileLogger {
                     FireOnStateChangedEvent,
                     () => Script.LogWriter.Add("[PAUSE]", true),
                     () => Logger.StopLogging());
+        }
+        private void DrawVersionNo() {
+            EditorGUILayout.LabelField(Logger.VERSION);
         }
 
         #endregion INSPECTOR

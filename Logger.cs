@@ -431,11 +431,7 @@ namespace FileLogger {
             }
 
             // Indent message.
-            if (indentMessage) {
-                for (var i = 0; i < stackInfo.FrameCount; i++) {
-                    outputMessage.Append("| ");
-                }
-            }
+            HandleIndentMessage(indentMessage, stackInfo, outputMessage);
 
             // Add message if not empty.
             outputMessage.Append(composeMessage(stackInfo));
@@ -457,6 +453,18 @@ namespace FileLogger {
             // Append message to the log file.
             if (Instance.logInRealTime) {
                 Instance.logWriter.WriteLast(Instance.filePath);
+            }
+        }
+
+        private static void HandleIndentMessage(
+            bool indentMessage,
+            StackInfo stackInfo,
+            StringBuilder outputMessage) {
+
+            if (!indentMessage) return;
+
+            for (var i = 0; i < stackInfo.FrameCount; i++) {
+                outputMessage.Append("| ");
             }
         }
 

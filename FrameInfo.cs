@@ -1,22 +1,57 @@
 using System;
-using System.Reflection;
 using System.Diagnostics;
+using System.Reflection;
+using Debug = UnityEngine.Debug;
 
 namespace FileLogger {
 
     /// <summary>
-    /// Gets info about selected StackTrace frame.
-    /// StackTrace is created at construction time.
+    ///     Gets info about selected StackTrace frame. StackTrace is created at
+    ///     construction time.
     /// </summary>
     public class FrameInfo {
+        #region METHODS
+
+        public FrameInfo(int frameIndex) {
+            frame = stackTrace.GetFrame(frameIndex);
+
+            // Frame can be null.
+            try {
+                method = frame.GetMethod();
+                classType = method.DeclaringType;
+            }
+            catch (NullReferenceException e) {
+                Debug.LogWarning("Frame not found: " + e);
+            }
+        }
+
+        #endregion METHODS
+
         #region FIELDS
-        private StackTrace stackTrace = new StackTrace();
+
+        private Type classType;
         private StackFrame frame;
         private MethodBase method;
-        private Type classType;
-        #endregion
+        private StackTrace stackTrace = new StackTrace();
+
+        #endregion FIELDS
 
         #region PROPERTIES
+
+        public string ClassName {
+            get {
+                // Make sure that there's a frame to get the info from.
+                if (frame != null) {
+                    return classType.Name;
+                }
+                return "[Class info is not available]";
+            }
+        }
+
+        public int FrameCount {
+            get { return stackTrace.FrameCount; }
+        }
+
         public string MethodName {
             get {
                 if (frame != null) {
@@ -35,16 +70,6 @@ namespace FileLogger {
             }
         }
 
-        public string ClassName {
-            get {
-                // Make sure that there's a frame to get the info from.
-                if (frame != null) {
-                    return classType.Name;
-                }
-                return "[Class info is not available]";
-            }
-        }
-
         public string QualifiedClassName {
             get {
                 // Make sure that there's a frame to get the info from.
@@ -55,26 +80,7 @@ namespace FileLogger {
             }
         }
 
-        public int FrameCount {
-            get {
-                return stackTrace.FrameCount;
-            }
-        }
-        #endregion
-
-        #region METHODS
-        public FrameInfo(int frameIndex) {
-            frame = stackTrace.GetFrame(frameIndex);
-
-            // Frame can be null.
-            try {
-                method = frame.GetMethod();
-                classType = method.DeclaringType;
-            }
-            catch (NullReferenceException e) {
-                UnityEngine.Debug.LogWarning("Frame not found: " + e);
-            }
-        }
-        #endregion
+        #endregion PROPERTIES
     }
+
 }

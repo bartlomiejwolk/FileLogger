@@ -270,10 +270,7 @@ namespace FileLogger {
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogCall() {
-            Log(
-                stackInfo => stackInfo.MethodSignature,
-                FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogCall),
-                null);
+            LogCall(null);
         }
 
         [Conditional("DEBUG_LOGGER")]

@@ -36,14 +36,18 @@ namespace FileLogger {
         /// a single log line.
         /// </summary>
         [SerializeField]
-        private AppendOptions appendOptions;
+        private AppendOptions appendOptions = AppendOptions.Timestamp
+                                              | AppendOptions.ClassName
+                                              | AppendOptions.CallerClassName;
 
         /// <summary>
         /// Keeps info about Logger methods state (enabled/disabled).
         /// Disabled methods won't produce output.
         /// </summary>
         [SerializeField]
-        private EnabledMethods enabledMethods;
+        private EnabledMethods enabledMethods = EnabledMethods.LogString
+                                                | EnabledMethods.LogCall
+                                                | EnabledMethods.LogResult;
 
         /// If append messages to the file or overwrite.
         [SerializeField]
@@ -65,7 +69,7 @@ namespace FileLogger {
         /// Enable logging when in play mode.
         [SerializeField]
 #pragma warning disable 649
-            private bool enableOnPlay;
+            private bool enableOnPlay = true;
 #pragma warning restore 649
         /// Output file name/path.
         [SerializeField]

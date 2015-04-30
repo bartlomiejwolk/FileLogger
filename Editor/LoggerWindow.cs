@@ -23,7 +23,7 @@ namespace FileLogger {
             }
         }
 
-        [MenuItem("Window/mLogger")]
+        [MenuItem("Window/FileLogger")]
         public static void Init() {
             LoggerWindow window =
                 (LoggerWindow)EditorWindow.GetWindow(typeof(LoggerWindow));

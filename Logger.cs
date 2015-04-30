@@ -246,16 +246,6 @@ namespace FileLogger {
             Log(
                 stackInfo => stackInfo.MethodSignature,
                 FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogCall),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.Timestamp),
-                Instance.indentLine,
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.ClassName),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.CallerClassName),
                 null);
         }
 
@@ -264,16 +254,6 @@ namespace FileLogger {
            Log(
                 stackInfo => stackInfo.MethodSignature,
                 FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogCall),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.Timestamp),
-                Instance.indentLine,
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.ClassName),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.CallerClassName),
                 objectReference);
         }
 
@@ -286,16 +266,6 @@ namespace FileLogger {
             Log(
                 stackInfo => message,
                 FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogResult),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.Timestamp),
-                Instance.indentLine,
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.ClassName),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.CallerClassName),
                 null);
         }
 
@@ -321,10 +291,6 @@ namespace FileLogger {
             Log(
                 stackInfo => message.ToString(),
                 Instance.enableLogStackTrace,
-                false,
-                false,
-                false,
-                false,
                 null);
         }
 
@@ -340,16 +306,6 @@ namespace FileLogger {
             Log(
                 stackInfo => message,
                 FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogString),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.Timestamp),
-                Instance.indentLine,
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.ClassName),
-                FlagsHelper.IsSet(
-                    Instance.AppendOptions,
-                    AppendOptions.CallerClassName),
                 null);
         }
 
@@ -414,10 +370,6 @@ namespace FileLogger {
         private static void Log(
             Func<StackInfo, string> composeMessage,
             bool methodEnabled,
-            bool showTimestamp,
-            bool indentMessage,
-            bool appendClassName,
-            bool appendCallerClassName,
             object objectReference) {
 
             if (!methodEnabled) return;

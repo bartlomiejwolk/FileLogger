@@ -441,9 +441,7 @@ namespace FileLogger {
             outputMessage.Append(composeMessage(stackInfo));
 
             // Append class name.
-            if (appendClassName) {
-                AppendClassName(outputMessage, stackInfo);
-            }
+            HandleAppendClassName(outputMessage, stackInfo);
 
             // Append object GUID.
             HandleAppendGUID(objectReference, outputMessage);
@@ -506,9 +504,13 @@ namespace FileLogger {
         /// </summary>
         /// <param name="outputMessage"></param>
         /// <param name="stackInfo"></param>
-        private static void AppendClassName(
+        private static void HandleAppendClassName(
             StringBuilder outputMessage,
             StackInfo stackInfo) {
+
+            if (!FlagsHelper.IsSet(
+                Instance.AppendOptions,
+                AppendOptions.ClassName)) return;
 
             if (Instance.qualifiedClassName) {
                 // Append fully qualified class name.

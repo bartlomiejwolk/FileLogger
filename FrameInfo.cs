@@ -6,8 +6,6 @@
 using System;
 using System.Diagnostics;
 using System.Reflection;
-// todo remove
-using Debug = UnityEngine.Debug;
 
 namespace FileLogger {
 
@@ -27,7 +25,7 @@ namespace FileLogger {
                 classType = method.DeclaringType;
             }
             catch (NullReferenceException e) {
-                Debug.LogWarning("Frame not found: " + e);
+                UnityEngine.Debug.LogWarning("Frame not found: " + e);
             }
         }
 

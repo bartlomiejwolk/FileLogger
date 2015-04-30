@@ -10,7 +10,9 @@ namespace FileLogger {
 
         /// <summary>
         /// </summary>
-        /// <remarks>http://forum.unity3d.com/threads/assert-class-for-debugging.59010/</remarks>
+        /// <remarks>
+        ///     http: //forum.unity3d.com/threads/assert-class-for-debugging.59010/
+        /// </remarks>
         /// <param name="assertion"></param>
         /// <param name="assertString"></param>
         [Conditional("UNITY_EDITOR")]
@@ -29,13 +31,13 @@ namespace FileLogger {
                 if (Application.isPlaying) {
                     UnityEngine.Debug.Break();
                 }
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
                 if (EditorUtility.DisplayDialog(
                     "Assert!",
                     assertString + "\n" + assertInformation,
                     "Close")) {
                 }
-    #endif
+#endif
             }
         }
 
@@ -45,7 +47,10 @@ namespace FileLogger {
         /// <param name="b"></param>
         /// <param name="epsilon"></param>
         /// <returns></returns>
-        /// <remarks>http://stackoverflow.com/questions/3874627/floating-point-comparison-functions-for-c-sharp</remarks>
+        /// <remarks>
+        ///     http:
+        ///     //stackoverflow.com/questions/3874627/floating-point-comparison-functions-for-c-sharp
+        /// </remarks>
         public static bool FloatsEqual(float a, float b, float epsilon) {
             var absA = Math.Abs(a);
             var absB = Math.Abs(b);
@@ -56,8 +61,8 @@ namespace FileLogger {
                 return true;
             }
             if (a == 0 || b == 0) {
-                // a or b is zero or both are extremely close to it
-                // relative error is less meaningful here
+                // a or b is zero or both are extremely close to it relative
+                // error is less meaningful here
                 return diff < (epsilon * Single.MinValue);
             }
             // use relative error
@@ -80,6 +85,5 @@ namespace FileLogger {
         }
 
     }
-
 
 }

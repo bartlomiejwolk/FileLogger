@@ -64,19 +64,24 @@ namespace FileLogger {
 
             EditorGUILayout.Space();
 
+            GUILayout.Label("Logging Options", EditorStyles.boldLabel);
+
             DrawEnableOnPlayToggle();
             DrawLogInRealTimeToggle();
             DrawEchoToConsoleToggle();
 
             EditorGUILayout.Space();
 
+            GUILayout.Label("Message Options", EditorStyles.boldLabel);
+
             DrawIndentLineToggle();
             DrawFullyQualifiedNameToggle();
+            DrawAppendDropdown();
 
             EditorGUILayout.Space();
 
+            GUILayout.Label("Filters", EditorStyles.boldLabel);
             DrawEnabledMethodsDropdown();
-            DrawAppendDropdown();
 
             EditorGUILayout.Space();
 
@@ -151,11 +156,10 @@ namespace FileLogger {
         }
 
         private void DrawFullyQualifiedNameToggle() {
-
             EditorGUILayout.PropertyField(
                 qualifiedClassName,
                 new GUIContent(
-                    "Qualified Class Name",
+                    "Full Class Name",
                     "If enabled, class name will be fully qualified."));
         }
 

@@ -8,8 +8,7 @@ namespace FileLogger {
     /// Gets info about selected StackTrace frame.
     /// StackTrace is created at construction time.
     /// </summary>
-    // todo rename to FrameInfo
-    public class StackInfo {
+    public class FrameInfo {
         #region FIELDS
         private StackTrace stackTrace = new StackTrace();
         private StackFrame frame;
@@ -64,7 +63,7 @@ namespace FileLogger {
         #endregion
 
         #region METHODS
-        public StackInfo(int frameIndex) {
+        public FrameInfo(int frameIndex) {
             frame = stackTrace.GetFrame(frameIndex);
 
             // Frame can be null.

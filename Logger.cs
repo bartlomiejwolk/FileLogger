@@ -356,7 +356,6 @@ namespace FileLogger {
             return timestamp;
         }
 
-        // todo remove args. that can be read from class state
         /// <summary>
         /// Base method used to create and save a log message.
         /// </summary>
@@ -368,7 +367,7 @@ namespace FileLogger {
         /// <param name="appendCallerClassName"></param>
         /// <param name="objectReference"></param>
         private static void Log(
-            Func<StackInfo, string> composeMessage,
+            Func<FrameInfo, string> composeMessage,
             bool methodEnabled,
             object objectReference) {
 
@@ -376,7 +375,7 @@ namespace FileLogger {
             if (!Instance.LoggingEnabled) return;
 
             // Get info from call stack.
-            var stackInfo = new StackInfo(3);
+            var stackInfo = new FrameInfo(3);
 
             // Filter by class name.
             if (!ClassInFilter(stackInfo.ClassName)) return;
@@ -428,15 +427,15 @@ namespace FileLogger {
         /// Indents log message.
         /// </summary>
         /// <param name="indentMessage"></param>
-        /// <param name="stackInfo"></param>
+        /// <param name="frameInfo"></param>
         /// <param name="outputMessage"></param>
         private static void HandleIndentMessage(
-            StackInfo stackInfo,
+            FrameInfo frameInfo,
             StringBuilder outputMessage) {
 
             if (!Instance.indentLine) return;
 
-            for (var i = 0; i < stackInfo.FrameCount; i++) {
+            for (var i = 0; i < frameInfo.FrameCount; i++) {
                 outputMessage.Append("| ");
             }
         }
@@ -471,7 +470,7 @@ namespace FileLogger {
                     AppendOptions.CallerClassName)) return;
 
             // Get info from call stack.
-            var callerStackInfo = new StackInfo(5);
+            var callerStackInfo = new FrameInfo(5);
 
             if (Instance.qualifiedClassName) {
                 // Append fully qualified caller class name.
@@ -489,10 +488,10 @@ namespace FileLogger {
         /// Appends class name to the output message.
         /// </summary>
         /// <param name="outputMessage"></param>
-        /// <param name="stackInfo"></param>
+        /// <param name="frameInfo"></param>
         private static void HandleAppendClassName(
             StringBuilder outputMessage,
-            StackInfo stackInfo) {
+            FrameInfo frameInfo) {
 
             if (!FlagsHelper.IsSet(
                 Instance.AppendOptions,
@@ -501,11 +500,11 @@ namespace FileLogger {
             if (Instance.qualifiedClassName) {
                 // Append fully qualified class name.
                 outputMessage.Append(
-                    ", @ " + stackInfo.QualifiedClassName + "");
+                    ", @ " + frameInfo.QualifiedClassName + "");
             }
             else {
                 // Append class name.
-                outputMessage.Append(", @ " + stackInfo.ClassName + "");
+                outputMessage.Append(", @ " + frameInfo.ClassName + "");
             }
         }
 

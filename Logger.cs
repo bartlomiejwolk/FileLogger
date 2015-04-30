@@ -435,9 +435,9 @@ namespace FileLogger {
             var outputMessage = new StringBuilder();
 
             // Add timestamp.
-            HandleShowTimestamp(showTimestamp, outputMessage);
+            HandleShowTimestamp(outputMessage);
             // Indent message.
-            HandleIndentMessage(indentMessage, stackInfo, outputMessage);
+            HandleIndentMessage(stackInfo, outputMessage);
             // Append message returned by callback.
             outputMessage.Append(composeMessage(stackInfo));
             // Append class name.
@@ -463,11 +463,10 @@ namespace FileLogger {
         /// </summary>
         /// <param name="showTimestamp"></param>
         /// <param name="outputMessage"></param>
-        private static void HandleShowTimestamp(
-            bool showTimestamp,
-            StringBuilder outputMessage) {
-
-            if (!showTimestamp) return;
+        private static void HandleShowTimestamp(StringBuilder outputMessage) {
+            if (!FlagsHelper.IsSet(
+                Instance.AppendOptions,
+                AppendOptions.Timestamp)) return;
 
             outputMessage.Append(GetCurrentTimestamp());
             outputMessage.Append(" ");
@@ -480,11 +479,10 @@ namespace FileLogger {
         /// <param name="stackInfo"></param>
         /// <param name="outputMessage"></param>
         private static void HandleIndentMessage(
-            bool indentMessage,
             StackInfo stackInfo,
             StringBuilder outputMessage) {
 
-            if (!indentMessage) return;
+            if (!Instance.indentLine) return;
 
             for (var i = 0; i < stackInfo.FrameCount; i++) {
                 outputMessage.Append("| ");

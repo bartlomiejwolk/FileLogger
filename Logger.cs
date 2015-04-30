@@ -283,6 +283,11 @@ namespace FileLogger {
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogResult(object result) {
+            LogResult(result, null);
+        }
+
+        [Conditional("DEBUG_LOGGER")]
+        public static void LogResult(object result, object objectRererence) {
             // Compose log message.
             var message = string.Format("[RESULT: {0}]", result);
 
@@ -290,7 +295,7 @@ namespace FileLogger {
             Log(
                 stackInfo => message,
                 FlagsHelper.IsSet(Instance.EnabledMethods, EnabledMethods.LogResult),
-                null);
+                objectRererence);
         }
 
         /// <summary>

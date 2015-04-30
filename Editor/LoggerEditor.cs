@@ -16,19 +16,11 @@ namespace FileLogger {
 
         #region SERIALIZED PROPERTIES
         private SerializedProperty filePath;
-        private SerializedProperty initArraySize;
-        private SerializedProperty inGameLabel;
         private SerializedProperty logInRealTime;
         private SerializedProperty echoToConsole;
-        private SerializedProperty enableLogCall;
-        private SerializedProperty enableLogResult;
-        private SerializedProperty enableLogString;
         private SerializedProperty loggingEnabled;
         private SerializedProperty enableOnPlay;
-        private SerializedProperty appendClassName;
-        private SerializedProperty appendCallerClassName;
         private SerializedProperty qualifiedClassName;
-        private SerializedProperty showTimestamp;
         private SerializedProperty indentLine;
         private SerializedProperty classFilter;
         private SerializedProperty methodFilter;
@@ -39,21 +31,13 @@ namespace FileLogger {
             Script = (Logger) target;
 
             filePath = serializedObject.FindProperty("filePath");
-            initArraySize = serializedObject.FindProperty("initArraySize");
-            inGameLabel = serializedObject.FindProperty("inGameLabel");
             logInRealTime = serializedObject.FindProperty("logInRealTime");
             echoToConsole = serializedObject.FindProperty("echoToConsole");
-            enableLogCall = serializedObject.FindProperty("enableLogCall");
-            enableLogResult = serializedObject.FindProperty("enableLogResult");
-            enableLogString = serializedObject.FindProperty("enableLogString");
             loggingEnabled = serializedObject.FindProperty("loggingEnabled");
             enableOnPlay = serializedObject.FindProperty("enableOnPlay");
-            appendClassName = serializedObject.FindProperty("appendClassName");
-            appendCallerClassName =
                 serializedObject.FindProperty("appendCallerClassName");
             qualifiedClassName =
                 serializedObject.FindProperty("qualifiedClassName");
-            showTimestamp = serializedObject.FindProperty("showTimestamp");
             indentLine = serializedObject.FindProperty("indentLine");
             classFilter = serializedObject.FindProperty("classFilter");
             methodFilter = serializedObject.FindProperty("methodFilter");

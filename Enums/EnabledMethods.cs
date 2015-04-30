@@ -3,8 +3,8 @@ using System;
 namespace FileLogger {
 
     /// <summary>
-    /// Options used to decide which Logger methods will be active, ie. will
-    /// produce output.
+    ///     Options used to decide which Logger methods will be active, ie. will
+    ///     produce output.
     /// </summary>
     [Flags]
     public enum EnabledMethods {

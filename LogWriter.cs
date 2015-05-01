@@ -44,6 +44,7 @@ namespace FileLogger {
             set { loggedMessages = value; }
         }
 
+        // todo add docs
         public static event WriteEventHandler WriteEvent;
 
         /// Save log message to cache.
@@ -104,6 +105,18 @@ namespace FileLogger {
             var e = new EventArgs();
             OnWriteEvent(e);
         }
+
+        public void WriteSingle(string message, string filePath, bool append) {
+            // Create stream writer used to write log cache to file.
+            using (writer = new StreamWriter(filePath, append)) {
+                writer.WriteLine(message);
+            }
+
+            // Fire event.
+            var e = new EventArgs();
+            OnWriteEvent(e);
+        }
+
 
         protected void OnWriteEvent(EventArgs e) {
             if (WriteEvent != null) {

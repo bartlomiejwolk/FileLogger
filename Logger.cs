@@ -277,6 +277,11 @@ namespace FileLogger {
 
         // todo move to region
         void Logger_StateChanged(object sender, bool state) {
+            // There's no need to write cached messages since logging was made
+            // in real time.
+            if (Instance.LogInRealTime) return;
+
+            // Save messages to file on logger stop.
             if (!state) LogWriter.WriteAll(FilePath, false);
         }
 

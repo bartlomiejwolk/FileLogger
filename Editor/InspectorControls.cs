@@ -50,11 +50,8 @@ namespace FileLogger {
                 return newLoggingEnabledValue;
             }
 
-            // Play mode, logger enabled.
-            if (Application.isPlaying
-                && enableOnPlay
-                && oldLoggingEnabledValue) {
-
+            // Editor mode, logger enabled.
+            if (!Application.isPlaying && oldLoggingEnabledValue) {
                 var newLoggingEnabledValue = GUILayout.Toggle(
                     oldLoggingEnabledValue,
                     "Logging Enabled",
@@ -66,8 +63,8 @@ namespace FileLogger {
                         stateChangedCallback();
                     }
 
-                    if (pauseCallback != null) {
-                        pauseCallback();
+                    if (disableLoggerCallback != null) {
+                        disableLoggerCallback();
                     }
                 }
 
@@ -94,8 +91,11 @@ namespace FileLogger {
                 return newLoggingEnabledValue;
             }
 
-            // Editor mode, logger enabled.
-            if (!Application.isPlaying && oldLoggingEnabledValue) {
+            // Play mode, logger enabled.
+            if (Application.isPlaying
+                && enableOnPlay
+                && oldLoggingEnabledValue) {
+
                 var newLoggingEnabledValue = GUILayout.Toggle(
                     oldLoggingEnabledValue,
                     "Logging Enabled",
@@ -107,8 +107,8 @@ namespace FileLogger {
                         stateChangedCallback();
                     }
 
-                    if (disableLoggerCallback != null) {
-                        disableLoggerCallback();
+                    if (pauseCallback != null) {
+                        pauseCallback();
                     }
                 }
 

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace FileLogger {
@@ -272,8 +273,12 @@ namespace FileLogger {
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogCall(object objectReference) {
+            // Get info from call stack.
+            var stackInfo = new FrameInfo(3);
+
             Log(
-                stackInfo => stackInfo.MethodSignature,
+                stackInfo.MethodSignature,
+                stackInfo,
                 FlagsHelper.IsSet(
                     Instance.EnabledMethods,
                     EnabledMethods.LogCall),
@@ -290,9 +295,13 @@ namespace FileLogger {
             // Compose log message.
             var message = string.Format("[RESULT: {0}]", result);
 
+            // Get info from call stack.
+            var stackInfo = new FrameInfo(3);
+
             // Log message.
             Log(
-                stackInfo => message,
+                message,
+                stackInfo,
                 FlagsHelper.IsSet(
                     Instance.EnabledMethods,
                     EnabledMethods.LogResult),
@@ -318,8 +327,12 @@ namespace FileLogger {
                 message.Append("\n");
             }
 
+            // Get info from call stack.
+            var stackInfo = new FrameInfo(3);
+
             Log(
-                stackInfo => message.ToString(),
+                message.ToString(),
+                stackInfo,
                 Instance.enableLogStackTrace,
                 null);
         }
@@ -341,9 +354,13 @@ namespace FileLogger {
             // Compose log message.
             var message = string.Format(format, paramList);
 
+            // Get info from call stack.
+            var stackInfo = new FrameInfo(3);
+
             // Log message.
             Log(
-                stackInfo => message,
+                message,
+                stackInfo,
                 FlagsHelper.IsSet(
                     Instance.EnabledMethods,
                     EnabledMethods.LogString),
@@ -533,24 +550,22 @@ namespace FileLogger {
         /// <summary>
         ///     Base method used to create and save a log message.
         /// </summary>
-        /// <param name="composeMessage"></param>
+        /// <param name="message"></param>
         /// <param name="methodEnabled"></param>
         /// <param name="objectReference"></param>
         private static void Log(
-            Func<FrameInfo, string> composeMessage,
+            string message,
+            FrameInfo frameInfo,
             bool methodEnabled,
             object objectReference) {
 
             if (!methodEnabled) return;
             if (!Instance.LoggingEnabled) return;
 
-            // Get info from call stack.
-            var stackInfo = new FrameInfo(3);
-
             // Filter by class name.
-            if (!ClassInFilter(stackInfo.ClassName)) return;
+            if (!ClassInFilter(frameInfo.ClassName)) return;
             // Filter by method name.
-            if (!MethodInFilter(stackInfo.MethodName)) return;
+            if (!MethodInFilter(frameInfo.MethodName)) return;
 
             // Log message to write.
             var outputMessage = new StringBuilder();
@@ -558,13 +573,13 @@ namespace FileLogger {
             // Add timestamp.
             HandleShowTimestamp(outputMessage);
             // Indent message.
-            HandleIndentMessage(stackInfo, outputMessage);
+            HandleIndentMessage(frameInfo, outputMessage);
             // Append message returned by callback.
-            outputMessage.Append(composeMessage(stackInfo));
+            outputMessage.Append(message);
             // Append class name.
-            HandleAppendClassName(outputMessage, stackInfo);
+            HandleAppendClassName(outputMessage, frameInfo);
             // Append caller method name.
-            HandleAppendMethodName(outputMessage, stackInfo);
+            HandleAppendMethodName(outputMessage, frameInfo);
             // Append object GUID.
             HandleAppendGUID(objectReference, outputMessage);
             // Append caller class name.

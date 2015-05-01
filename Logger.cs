@@ -268,11 +268,16 @@ namespace FileLogger {
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogCall() {
-            LogCall(null);
+            DoLogCall(null);
         }
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogCall(object objectReference) {
+            DoLogCall(objectReference);
+        }
+
+        [Conditional("DEBUG_LOGGER")]
+        private static void DoLogCall(object objectReference) {
             // Get info from call stack.
             var stackInfo = new FrameInfo(3);
 
@@ -287,11 +292,15 @@ namespace FileLogger {
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogResult(object result) {
-            LogResult(result, null);
+            DoLogResult(result, null);
         }
 
         [Conditional("DEBUG_LOGGER")]
-        public static void LogResult(object result, object objectRererence) {
+        public static void LogResult(object result, object objectReference) {
+            DoLogResult(result, objectReference);
+        }
+
+        private static void DoLogResult(object result, object objectRererence) {
             // Compose log message.
             var message = string.Format("[RESULT: {0}]", result);
 
@@ -342,11 +351,19 @@ namespace FileLogger {
             string format,
             params object[] paramList) {
 
-            LogString(format, null, paramList);
+            DoLogString(format, null, paramList);
         }
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogString(
+            string format,
+            object objectReference,
+            params object[] paramList) {
+
+            DoLogString(format, objectReference, paramList);
+        }
+
+        public static void DoLogString(
             string format,
             object objectReference,
             params object[] paramList) {
@@ -399,6 +416,10 @@ namespace FileLogger {
                 Instance.append);
         }
 
+        /// <summary>
+        ///     Clear log file.
+        /// </summary>
+        [Conditional("DEBUG_LOGGER")]
         public void ClearLogFile() {
             StreamWriter writer;
             // Create stream writer used to write log cache to file.
@@ -446,7 +467,7 @@ namespace FileLogger {
                 AppendOptions.CallerClassName)) return;
 
             // Get info from call stack.
-            var callerStackInfo = new FrameInfo(5);
+            var callerStackInfo = new FrameInfo(6);
 
             if (Instance.qualifiedClassName) {
                 // Append fully qualified caller class name.

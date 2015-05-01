@@ -80,12 +80,12 @@ namespace FileLogger {
                     if (oldLoggingEnabledValue) {
                         return "Logging Enabled";
                     }
-                    return "Logging Paused";
+                    return "Logging Disabled";
                 case false:
                     if (oldLoggingEnabledValue) {
                         return "Logging Enabled";
                     }
-                    return "Logging Paused";
+                    return "Logging Disabled";
             }
 
             return "";

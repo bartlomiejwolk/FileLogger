@@ -25,7 +25,7 @@ namespace FileLogger {
                 classType = method.DeclaringType;
             }
             catch (NullReferenceException e) {
-                UnityEngine.Debug.LogWarning("Frame not found: " + e);
+                //UnityEngine.Debug.LogWarning("Frame not found: " + e);
             }
         }
 
@@ -48,7 +48,7 @@ namespace FileLogger {
                 if (frame != null) {
                     return classType.Name;
                 }
-                return "[Class info is not available]";
+                return "[Class info not available]";
             }
         }
 

@@ -44,9 +44,7 @@ namespace FileLogger {
                 InspectorControls.DrawStartStopButton(
                     LoggerInstance.LoggingEnabled,
                     LoggerInstance.EnableOnPlay,
-                    null,
-                    () => LoggerInstance.LogWriter.AddToCache("[PAUSE]", true),
-                    () => Logger.StopLogging());
+                    null);
 
             // Draw -> button.
             if (GUILayout.Button("->", GUILayout.Width(30))) {

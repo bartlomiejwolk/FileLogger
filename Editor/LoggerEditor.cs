@@ -202,10 +202,9 @@ namespace FileLogger {
                 InspectorControls.DrawStartStopButton(
                     Script.LoggingEnabled,
                     Script.EnableOnPlay,
-                    FireOnStateChangedEvent,
-                    () => Script.LogWriter.AddToCache("[PAUSE]", true),
-                    () => Logger.StopLogging());
+                    FireOnStateChangedEvent);
         }
+
         private void DrawVersionNo() {
             EditorGUILayout.LabelField(Logger.VERSION);
         }

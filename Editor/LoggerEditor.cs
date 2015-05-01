@@ -202,10 +202,9 @@ namespace FileLogger {
                 InspectorControls.DrawStartStopButton(
                     Script.LoggingEnabled,
                     Script.EnableOnPlay,
-                    FireOnStateChangedEvent,
-                    () => Script.LogWriter.Add("[PAUSE]", true),
-                    () => Logger.StopLogging());
+                    FireOnStateChangedEvent);
         }
+
         private void DrawVersionNo() {
             EditorGUILayout.LabelField(Logger.VERSION);
         }
@@ -221,11 +220,11 @@ namespace FileLogger {
             }
         }
 
-        private void FireOnStateChangedEvent() {
+        private void FireOnStateChangedEvent(bool newState) {
             Utilities.InvokeMethodWithReflection(
                 Script,
                 "OnStateChanged",
-                null);
+                new object[] { newState });
         }
 
         #endregion METHODS

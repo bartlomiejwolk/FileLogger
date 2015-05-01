@@ -44,9 +44,7 @@ namespace FileLogger {
                 InspectorControls.DrawStartStopButton(
                     LoggerInstance.LoggingEnabled,
                     LoggerInstance.EnableOnPlay,
-                    null,
-                    () => LoggerInstance.LogWriter.Add("[PAUSE]", true),
-                    () => Logger.StopLogging());
+                    FireOnStateChangedEvent);
 
             // Draw -> button.
             if (GUILayout.Button("->", GUILayout.Width(30))) {
@@ -57,6 +55,12 @@ namespace FileLogger {
             EditorGUILayout.EndHorizontal();
 
             Repaint();
+        }
+        private void FireOnStateChangedEvent(bool newState) {
+            Utilities.InvokeMethodWithReflection(
+                LoggerInstance,
+                "OnStateChanged",
+                new object[] { newState });
         }
 
     }

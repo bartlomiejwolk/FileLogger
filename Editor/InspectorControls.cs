@@ -10,112 +10,85 @@ namespace FileLogger {
 
     public static class InspectorControls {
 
-        /// <summary>
-        ///     Draws logger start/stop button. Button text depends on context.
-        /// </summary>
-        /// <param name="oldLoggingEnabledValue"></param>
-        /// <param name="enableOnPlay"></param>
-        /// <param name="stateChangedCallback">
-        ///     Callback executed on every state change.
-        /// </param>
-        /// <param name="pauseCallback">
-        ///     Callback executed only in play mode, when on logger pause.
-        /// </param>
-        /// <param name="disableLoggerCallback">
-        ///     Callback executed on logger disable.
-        /// </param>
-        /// <returns></returns>
         public static bool DrawStartStopButton(
+            // todo rename to loggerState
             bool oldLoggingEnabledValue,
             bool enableOnPlay,
-            Action stateChangedCallback,
-            Action pauseCallback,
-            Action disableLoggerCallback) {
+            Action<bool> stateChangedCallback) {
 
-            // Editor mode, logging disabled.
-            if (!Application.isPlaying && !oldLoggingEnabledValue) {
-                var newLoggingEnabledValue = GUILayout.Toggle(
+            var btnText = GetStartStopButtonText(
+                oldLoggingEnabledValue,
+                enableOnPlay);
+
+            // Draw button.
+            var btnState = GUILayout.Toggle(
                     oldLoggingEnabledValue,
-                    "Logging Disabled",
+                    btnText,
                     "Button");
 
-                // If value was changed..
-                if (newLoggingEnabledValue != oldLoggingEnabledValue) {
-                    // Execute callback.
-                    if (stateChangedCallback != null) {
-                        stateChangedCallback();
-                    }
+            // Execute callback.
+            if (btnState != oldLoggingEnabledValue) {
+                if (stateChangedCallback != null) {
+                    stateChangedCallback(btnState);
                 }
-
-                return newLoggingEnabledValue;
             }
 
-            // Play mode, logger enabled.
-            if (Application.isPlaying
-                && enableOnPlay
-                && oldLoggingEnabledValue) {
+            // Return button state.
+            return btnState == oldLoggingEnabledValue
+                ? oldLoggingEnabledValue
+                : !oldLoggingEnabledValue;
+        }
 
-                var newLoggingEnabledValue = GUILayout.Toggle(
-                    oldLoggingEnabledValue,
-                    "Logging Enabled",
-                    "Button");
+        private static string GetStartStopButtonText(
+            bool oldLoggingEnabledValue,
+            bool enableOnPlay) {
 
-                // If value was changed..
-                if (newLoggingEnabledValue != oldLoggingEnabledValue) {
-                    if (stateChangedCallback != null) {
-                        stateChangedCallback();
-                    }
-
-                    if (pauseCallback != null) {
-                        pauseCallback();
-                    }
-                }
-
-                return newLoggingEnabledValue;
+            switch (Application.isPlaying) {
+                // Play mode.
+                case true:
+                    return GetStartStopBtnTextForPlayMode(
+                        oldLoggingEnabledValue,
+                        enableOnPlay);
+                // Edit mode.
+                case false:
+                    return GetStartStopBtnTextForEditMode(
+                        oldLoggingEnabledValue);
             }
 
-            // Play mode, logging disabled.
-            if (Application.isPlaying
-                && enableOnPlay
-                && !oldLoggingEnabledValue) {
+            return "";
+        }
 
-                var newLoggingEnabledValue = GUILayout.Toggle(
-                    oldLoggingEnabledValue,
-                    "Logging Paused",
-                    "Button");
+        private static string GetStartStopBtnTextForEditMode(
+            bool oldLoggingEnabledValue) {
 
-                // If value was changed..
-                if (newLoggingEnabledValue != oldLoggingEnabledValue) {
-                    if (stateChangedCallback != null) {
-                        stateChangedCallback();
-                    }
-                }
-
-                return newLoggingEnabledValue;
+            switch (oldLoggingEnabledValue) {
+                case true:
+                    return "Logging Enabled";
+                case false:
+                    return "Logging Disabled";
             }
 
-            // Editor mode, logger enabled.
-            if (!Application.isPlaying && oldLoggingEnabledValue) {
-                var newLoggingEnabledValue = GUILayout.Toggle(
-                    oldLoggingEnabledValue,
-                    "Logging Enabled",
-                    "Button");
+            return "";
+        }
 
-                // If value was changed..
-                if (newLoggingEnabledValue != oldLoggingEnabledValue) {
-                    if (stateChangedCallback != null) {
-                        stateChangedCallback();
+        private static string GetStartStopBtnTextForPlayMode(
+            bool oldLoggingEnabledValue,
+            bool enableOnPlay) {
+
+            switch (enableOnPlay) {
+                case true:
+                    if (oldLoggingEnabledValue) {
+                        return "Logging Enabled";
                     }
-
-                    if (disableLoggerCallback != null) {
-                        disableLoggerCallback();
+                    return "Logging Paused";
+                case false:
+                    if (oldLoggingEnabledValue) {
+                        return "Logging Enabled";
                     }
-                }
-
-                return newLoggingEnabledValue;
+                    return "Logging Paused";
             }
 
-            return oldLoggingEnabledValue;
+            return "";
         }
 
     }

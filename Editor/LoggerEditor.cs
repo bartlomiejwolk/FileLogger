@@ -203,7 +203,7 @@ namespace FileLogger {
                     Script.LoggingEnabled,
                     Script.EnableOnPlay,
                     FireOnStateChangedEvent,
-                    () => Script.LogWriter.Add("[PAUSE]", true),
+                    () => Script.LogWriter.AddToCache("[PAUSE]", true),
                     () => Logger.StopLogging());
         }
         private void DrawVersionNo() {

@@ -45,7 +45,7 @@ namespace FileLogger {
                     LoggerInstance.LoggingEnabled,
                     LoggerInstance.EnableOnPlay,
                     null,
-                    () => LoggerInstance.LogWriter.Add("[PAUSE]", true),
+                    () => LoggerInstance.LogWriter.AddToCache("[PAUSE]", true),
                     () => Logger.StopLogging());
 
             // Draw -> button.

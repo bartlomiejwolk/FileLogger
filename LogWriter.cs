@@ -47,7 +47,7 @@ namespace FileLogger {
         public static event WriteEventHandler WriteEvent;
 
         /// Save log message to cache.
-        public void Add(string message, bool echoToConsole) {
+        public void AddToCache(string message, bool echoToConsole) {
             // Initialize array if not initialized already.
             if (
                 logCache == null ||

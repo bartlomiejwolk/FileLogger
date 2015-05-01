@@ -607,7 +607,7 @@ namespace FileLogger {
             HandleAppendCallerClassName(outputMessage);
 
             // Add log message to the cache.
-            Instance.logWriter.Add(
+            Instance.logWriter.AddToCache(
                 outputMessage.ToString(),
                 Instance.echoToConsole);
 

@@ -23,7 +23,7 @@ namespace FileLogger {
     ///     Comment out the DEBUG directive to disable all calls to this class. For
     ///     Editor classes you must define DEBUG directive explicitly.
     /// </remarks>
-    public sealed class Logger : MonoBehaviour {
+    public sealed class Logger : MonoBehaviour, ISerializationCallbackReceiver {
         #region EVENTS
 
         /// <summary>
@@ -270,15 +270,26 @@ namespace FileLogger {
         }
 
         private void OnEnable() {
+            UnityEngine.Debug.Log("OnEnable");
+            SubscribeToEvents();
+        }
+
+        // todo move to region
+        void Logger_StateChanged(object sender, bool state) {
+            if (!state) LogWriter.WriteAll(FilePath, false);
+        }
+
+        private void OnDisable() {
+            UnsubscribeFromEvents();
+        }
+
+        // todo move to region
+        private void SubscribeToEvents() {
             StateChanged += Logger_StateChanged;
         }
 
         // todo move to region
-        void Logger_StateChanged(object sender, bool loggingEnabled) {
-            if (loggingEnabled) LogWriter.WriteAll(FilePath, false);
-        }
-
-        private void OnDisable() {
+        private void UnsubscribeFromEvents() {
             StateChanged -= Logger_StateChanged;
         }
 
@@ -650,6 +661,18 @@ namespace FileLogger {
         }
 
         #endregion METHODS
+
+        // todo move to region
+        public void OnBeforeSerialize() {
+        }
+
+        // todo move to region
+        public void OnAfterDeserialize() {
+            UnityEngine.Debug.Log("OnAfterDeserialize");
+            UnsubscribeFromEvents();
+            SubscribeToEvents();
+        }
+
     }
 
 }

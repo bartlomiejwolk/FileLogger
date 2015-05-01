@@ -12,6 +12,7 @@ Features
 
 - Logging to a file and/or Unity console
 - Realtime logging
+- Logs thousands messages per frame
 - Logged messages contain additional metadata to help understand what's happening in the code
 - Log messages can display GUID of an object from logger method was called
 - Ability to customize displayed metadata

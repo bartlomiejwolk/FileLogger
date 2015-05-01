@@ -25,7 +25,6 @@ namespace FileLogger {
     [ExecuteInEditMode]
     public sealed class Logger : MonoBehaviour {
         #region EVENTS
-
         /// <summary>
         ///     Delegate for <c>StateChanged</c> event.
         /// </summary>
@@ -39,16 +38,6 @@ namespace FileLogger {
         public static event StateChangedEventHandler StateChanged;
 
         #endregion EVENTS
-
-        #region EVENT INVOCATORS
-
-        private void OnStateChanged(bool state) {
-            var handler = StateChanged;
-            if (handler != null) handler(this, state);
-        }
-
-        #endregion EVENT INVOCATORS
-
         #region FIELDS
 
         private static Logger instance;
@@ -275,8 +264,21 @@ namespace FileLogger {
             UnsubscribeFromEvents();
             SubscribeToEvents();
         }
+        private void OnDisable() {
+            UnsubscribeFromEvents();
+        }
+        #endregion UNITY MESSAGES
 
-        // todo move to region
+        #region EVENT INVOCATORS
+
+        private void OnStateChanged(bool state) {
+            var handler = StateChanged;
+            if (handler != null) handler(this, state);
+        }
+
+        #endregion EVENT INVOCATORS
+
+        #region EVENT HANDLERS
         void Logger_StateChanged(object sender, bool state) {
             // There's no need to write cached messages since logging was made
             // in real time.
@@ -285,26 +287,19 @@ namespace FileLogger {
             // Save messages to file on logger stop.
             if (!state) LogWriter.WriteAll(FilePath, false);
         }
+        #endregion
 
-        private void OnDisable() {
-            UnsubscribeFromEvents();
-        }
-
-        // todo move to region
-        private void SubscribeToEvents() {
-            UnityEngine.Debug.Log("SubscribeToEvents");
-            StateChanged += Logger_StateChanged;
-        }
-
-        // todo move to region
+        #region METHODS
         private void UnsubscribeFromEvents() {
             UnityEngine.Debug.Log("UnsubscribeFromEvents");
             StateChanged -= Logger_StateChanged;
         }
 
-        #endregion UNITY MESSAGES
+        private void SubscribeToEvents() {
+            UnityEngine.Debug.Log("SubscribeToEvents");
+            StateChanged += Logger_StateChanged;
+        }
 
-        #region METHODS
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogCall() {

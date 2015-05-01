@@ -253,6 +253,7 @@ namespace FileLogger {
             if (LogInRealTime) {
                 return;
             }
+
             // Write log to file when 'enableOnPlay' was selected.
             if (enableOnPlay) {
                 // Write single message to the file.
@@ -645,15 +646,22 @@ namespace FileLogger {
             // Append caller class name.
             HandleAppendCallerClassName(outputMessage);
 
+            // Append message to the log file.
+            if (Instance.LogInRealTime) {
+                Instance.logWriter.WriteSingle(
+                    outputMessage.ToString(),
+                    Instance.filePath,
+                    true);
+
+                // There's no need to write cached messages since logging was made
+                // in real time.
+                return;
+            }
+
             // Add log message to the cache.
             Instance.logWriter.AddToCache(
                 outputMessage.ToString(),
                 Instance.echoToConsole);
-
-            // Append message to the log file.
-            if (Instance.LogInRealTime) {
-                Instance.logWriter.WriteLast(Instance.filePath);
-            }
         }
 
         private static bool MethodInFilter(string methodName) {

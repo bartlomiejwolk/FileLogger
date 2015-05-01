@@ -56,6 +56,7 @@ namespace FileLogger {
             }
             // Cache message.
             logCache[logIdx] = message;
+            // todo this should be done in the Log()
             // Handle "Echo To Console" inspector option.
             if (echoToConsole) {
                 Debug.Log(message);

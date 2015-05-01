@@ -11,7 +11,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace FileLogger {
@@ -23,7 +22,8 @@ namespace FileLogger {
     ///     Comment out the DEBUG directive to disable all calls to this class. For
     ///     Editor classes you must define DEBUG directive explicitly.
     /// </remarks>
-    public sealed class Logger : MonoBehaviour, ISerializationCallbackReceiver {
+    [ExecuteInEditMode]
+    public sealed class Logger : MonoBehaviour {
         #region EVENTS
 
         /// <summary>
@@ -271,6 +271,7 @@ namespace FileLogger {
 
         private void OnEnable() {
             UnityEngine.Debug.Log("OnEnable");
+            UnsubscribeFromEvents();
             SubscribeToEvents();
         }
 
@@ -285,11 +286,13 @@ namespace FileLogger {
 
         // todo move to region
         private void SubscribeToEvents() {
+            UnityEngine.Debug.Log("SubscribeToEvents");
             StateChanged += Logger_StateChanged;
         }
 
         // todo move to region
         private void UnsubscribeFromEvents() {
+            UnityEngine.Debug.Log("UnsubscribeFromEvents");
             StateChanged -= Logger_StateChanged;
         }
 
@@ -661,17 +664,6 @@ namespace FileLogger {
         }
 
         #endregion METHODS
-
-        // todo move to region
-        public void OnBeforeSerialize() {
-        }
-
-        // todo move to region
-        public void OnAfterDeserialize() {
-            UnityEngine.Debug.Log("OnAfterDeserialize");
-            UnsubscribeFromEvents();
-            SubscribeToEvents();
-        }
 
     }
 

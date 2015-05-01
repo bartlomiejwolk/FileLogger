@@ -11,32 +11,31 @@ namespace FileLogger {
     public static class InspectorControls {
 
         public static bool DrawStartStopButton(
-            // todo rename to loggerState
-            bool oldLoggingEnabledValue,
+            bool loggerState,
             bool enableOnPlay,
             Action<bool> stateChangedCallback) {
 
             var btnText = GetStartStopButtonText(
-                oldLoggingEnabledValue,
+                loggerState,
                 enableOnPlay);
 
             // Draw button.
             var btnState = GUILayout.Toggle(
-                    oldLoggingEnabledValue,
+                    loggerState,
                     btnText,
                     "Button");
 
             // Execute callback.
-            if (btnState != oldLoggingEnabledValue) {
+            if (btnState != loggerState) {
                 if (stateChangedCallback != null) {
                     stateChangedCallback(btnState);
                 }
             }
 
             // Return button state.
-            return btnState == oldLoggingEnabledValue
-                ? oldLoggingEnabledValue
-                : !oldLoggingEnabledValue;
+            return btnState == loggerState
+                ? loggerState
+                : !loggerState;
         }
 
         private static string GetStartStopButtonText(

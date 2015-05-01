@@ -646,27 +646,35 @@ namespace FileLogger {
             // Append caller class name.
             HandleAppendCallerClassName(outputMessage);
 
-            // todo extract methods
-            if (Instance.EchoToConsole) {
-                UnityEngine.Debug.Log(outputMessage.ToString());
-            }
+            HandleEchoToConsole(outputMessage);
+            HandleLogInRealTime(outputMessage);
 
-            // Append message to the log file.
-            if (Instance.LogInRealTime) {
-                Instance.logWriter.WriteSingle(
-                    outputMessage.ToString(),
-                    Instance.filePath,
-                    true);
-
-                // There's no need to write cached messages since logging was made
-                // in real time.
-                return;
-            }
+            // There's no need to write cached messages since logging was made
+            // in real time.
+            if (Instance.LogInRealTime) return;
 
             // Add log message to the cache.
             Instance.logWriter.AddToCache(
                 outputMessage.ToString(),
                 Instance.EchoToConsole);
+        }
+
+        private static void HandleLogInRealTime(StringBuilder outputMessage) {
+
+// Append message to the log file.
+            if (Instance.LogInRealTime) {
+                Instance.logWriter.WriteSingle(
+                    outputMessage.ToString(),
+                    Instance.filePath,
+                    true);
+            }
+        }
+
+        private static void HandleEchoToConsole(StringBuilder outputMessage) {
+
+            if (Instance.EchoToConsole) {
+                UnityEngine.Debug.Log(outputMessage.ToString());
+            }
         }
 
         private static bool MethodInFilter(string methodName) {

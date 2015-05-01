@@ -220,11 +220,11 @@ namespace FileLogger {
             }
         }
 
-        private void FireOnStateChangedEvent() {
+        private void FireOnStateChangedEvent(bool newState) {
             Utilities.InvokeMethodWithReflection(
                 Script,
                 "OnStateChanged",
-                null);
+                new object[] { newState });
         }
 
         #endregion METHODS

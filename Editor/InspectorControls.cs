@@ -14,7 +14,7 @@ namespace FileLogger {
             // todo rename to loggerState
             bool oldLoggingEnabledValue,
             bool enableOnPlay,
-            Action stateChangedCallback) {
+            Action<bool> stateChangedCallback) {
 
             var btnText = GetStartStopButtonText(
                 oldLoggingEnabledValue,
@@ -29,7 +29,7 @@ namespace FileLogger {
             // Execute callback.
             if (btnState != oldLoggingEnabledValue) {
                 if (stateChangedCallback != null) {
-                    stateChangedCallback();
+                    stateChangedCallback(btnState);
                 }
             }
 

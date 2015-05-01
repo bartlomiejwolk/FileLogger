@@ -27,17 +27,24 @@ namespace FileLogger {
         #region EVENTS
 
         /// <summary>
+        ///     Delegate for <c>StateChanged</c> event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="state">If logging is enabled.</param>
+        public delegate void StateChangedEventHandler(object sender, bool state);
+
+        /// <summary>
         ///     Event called when logger is started, stopped, paused or reasumed.
         /// </summary>
-        public static event EventHandler StateChanged;
+        public static event StateChangedEventHandler StateChanged;
 
         #endregion EVENTS
 
         #region EVENT INVOCATORS
 
-        private void OnStateChanged() {
+        private void OnStateChanged(bool state) {
             var handler = StateChanged;
-            if (handler != null) handler(this, EventArgs.Empty);
+            if (handler != null) handler(this, state);
         }
 
         #endregion EVENT INVOCATORS
@@ -258,8 +265,21 @@ namespace FileLogger {
             if (enableOnPlay) {
                 loggingEnabled = true;
 
-                OnStateChanged();
+                OnStateChanged(true);
             }
+        }
+
+        private void OnEnable() {
+            StateChanged += Logger_StateChanged;
+        }
+
+        // todo move to region
+        void Logger_StateChanged(object sender, bool loggingEnabled) {
+            if (loggingEnabled) LogWriter.WriteAll(FilePath, false);
+        }
+
+        private void OnDisable() {
+            StateChanged -= Logger_StateChanged;
         }
 
         #endregion UNITY MESSAGES

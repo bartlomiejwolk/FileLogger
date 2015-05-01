@@ -213,6 +213,11 @@ namespace FileLogger {
             }
         }
 
+        public bool EchoToConsole {
+            get { return echoToConsole; }
+            set { echoToConsole = value; }
+        }
+
         public const string VERSION = "v0.1.0";
 
         #endregion PROPERTIES
@@ -641,6 +646,11 @@ namespace FileLogger {
             // Append caller class name.
             HandleAppendCallerClassName(outputMessage);
 
+            // todo extract methods
+            if (Instance.EchoToConsole) {
+                UnityEngine.Debug.Log(outputMessage.ToString());
+            }
+
             // Append message to the log file.
             if (Instance.LogInRealTime) {
                 Instance.logWriter.WriteSingle(
@@ -656,7 +666,7 @@ namespace FileLogger {
             // Add log message to the cache.
             Instance.logWriter.AddToCache(
                 outputMessage.ToString(),
-                Instance.echoToConsole);
+                Instance.EchoToConsole);
         }
 
         private static bool MethodInFilter(string methodName) {

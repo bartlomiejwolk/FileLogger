@@ -44,7 +44,9 @@ namespace FileLogger {
             set { loggedMessages = value; }
         }
 
-        // todo add docs
+        /// <summary>
+        ///     Event called on every write to the file.
+        /// </summary>
         public static event WriteEventHandler WriteEvent;
 
         /// Save log message to cache.
@@ -57,11 +59,7 @@ namespace FileLogger {
             }
             // Cache message.
             logCache[logIdx] = message;
-            // todo this should be done in the Log()
-            // Handle "Echo To Console" inspector option.
-            if (echoToConsole) {
-                Debug.Log(message);
-            }
+
             logIdx += 1;
             loggedMessages += 1;
             // Resize array when needed.

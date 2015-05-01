@@ -317,15 +317,17 @@ namespace FileLogger {
         }
 
         private static void DoLogCall(object objectReference) {
+            // Return if method is disabled.
+            if (!FlagsHelper.IsSet(
+                Instance.EnabledMethods,
+                EnabledMethods.LogCall)) return;
+
             // Get info from call stack.
             var stackInfo = new FrameInfo(3);
 
             Log(
                 stackInfo.MethodSignature,
                 stackInfo,
-                FlagsHelper.IsSet(
-                    Instance.EnabledMethods,
-                    EnabledMethods.LogCall),
                 objectReference);
         }
 
@@ -340,6 +342,11 @@ namespace FileLogger {
         }
 
         private static void DoLogResult(object result, object objectRererence) {
+            // Return if method is disabled.
+            if (!FlagsHelper.IsSet(
+                Instance.EnabledMethods,
+                EnabledMethods.LogResult)) return;
+
             // Compose log message.
             var message = string.Format("[RESULT: {0}]", result);
 
@@ -350,9 +357,6 @@ namespace FileLogger {
             Log(
                 message,
                 stackInfo,
-                FlagsHelper.IsSet(
-                    Instance.EnabledMethods,
-                    EnabledMethods.LogResult),
                 objectRererence);
         }
 
@@ -361,6 +365,8 @@ namespace FileLogger {
         /// </summary>
         [Conditional("DEBUG_LOGGER")]
         public static void LogStackTrace() {
+            if (!Instance.enableLogStackTrace) return;
+
             var stackTrace = new StackTrace();
             var message = new StringBuilder();
             for (var i = 1; i < stackTrace.FrameCount; i++) {
@@ -381,7 +387,6 @@ namespace FileLogger {
             Log(
                 message.ToString(),
                 stackInfo,
-                Instance.enableLogStackTrace,
                 null);
         }
 
@@ -407,6 +412,11 @@ namespace FileLogger {
             object objectReference,
             params object[] paramList) {
 
+            // Return if method is disabled.
+            if (!FlagsHelper.IsSet(
+                Instance.EnabledMethods,
+                EnabledMethods.LogString)) return;
+
             // Compose log message.
             var message = string.Format(format, paramList);
 
@@ -417,9 +427,6 @@ namespace FileLogger {
             Log(
                 message,
                 stackInfo,
-                FlagsHelper.IsSet(
-                    Instance.EnabledMethods,
-                    EnabledMethods.LogString),
                 objectReference);
         }
 
@@ -616,11 +623,8 @@ namespace FileLogger {
         private static void Log(
             string message,
             FrameInfo frameInfo,
-            bool methodEnabled,
             object objectReference) {
 
-            // todo this check should be executed inside each of the DoLog methods.
-            if (!methodEnabled) return;
             if (!Instance.LoggingEnabled) return;
 
             // Filter by class name.

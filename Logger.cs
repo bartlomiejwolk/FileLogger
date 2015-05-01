@@ -276,7 +276,6 @@ namespace FileLogger {
             DoLogCall(objectReference);
         }
 
-        [Conditional("DEBUG_LOGGER")]
         private static void DoLogCall(object objectReference) {
             // Get info from call stack.
             var stackInfo = new FrameInfo(3);
@@ -580,6 +579,7 @@ namespace FileLogger {
             bool methodEnabled,
             object objectReference) {
 
+            // todo this check should be executed inside each of the DoLog methods.
             if (!methodEnabled) return;
             if (!Instance.LoggingEnabled) return;
 

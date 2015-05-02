@@ -251,7 +251,7 @@ namespace FileLogger {
             // Write log to file when 'enableOnPlay' was selected.
             if (enableOnPlay) {
                 // Write single message to the file.
-                logWriter.WriteAll(filePath, append);
+                logWriter.WriteAll(FilePath, Append);
             }
         }
 
@@ -290,7 +290,7 @@ namespace FileLogger {
             if (Instance.LogInRealTime) return;
 
             // Save messages to file on logger stop.
-            if (!state) LogWriter.WriteAll(FilePath, false);
+            if (!state) LogWriter.WriteAll(FilePath, Append);
         }
         #endregion
 
@@ -458,8 +458,8 @@ namespace FileLogger {
 
             // Write single message to the file.
             Instance.logWriter.WriteAll(
-                Instance.filePath,
-                Instance.append);
+                Instance.FilePath,
+                Instance.Append);
         }
 
         /// <summary>

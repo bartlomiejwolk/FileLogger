@@ -192,6 +192,7 @@ namespace FileLogger {
             get { return filePath; }
         }
 
+        // todo OnStateChanged should be called from here
         public bool LoggingEnabled {
             get { return loggingEnabled; }
             set { loggingEnabled = value; }
@@ -253,23 +254,23 @@ namespace FileLogger {
         }
 
         private void OnDestroy() {
-            // Don't write to file if 'logInRealTime' was selected.
-            if (LogInRealTime) {
-                return;
-            }
+            // todo extract method
+            if (LogInRealTime) return;
+            if (!EnableOnPlay) return;
+            // Write only on exit play mode.
+            if (!Application.isPlaying) return;
 
-            // Write log to file when 'enableOnPlay' was selected.
-            if (enableOnPlay) {
-                // Write single message to the file.
-                logWriter.WriteAll(FilePath, Append);
-            }
+            // Write single message to the file.
+            logWriter.WriteAll(FilePath, Append);
         }
 
         private void Start() {
+            UnityEngine.Debug.Log("Start");
             HandleEnableOnPlay();
         }
         private void OnEnable() {
             UnityEngine.Debug.Log("OnEnable");
+            // todo remove unsubscribe
             UnsubscribeFromEvents();
             SubscribeToEvents();
         }
@@ -301,6 +302,7 @@ namespace FileLogger {
         #region METHODS
         private void HandleEnableOnPlay() {
             if (!enableOnPlay) return;
+            if (!Application.isPlaying) return;
 
             loggingEnabled = true;
             if (ClearOnPlay) ClearLogFile();

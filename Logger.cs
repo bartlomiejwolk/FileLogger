@@ -97,7 +97,7 @@ namespace FileLogger {
         ///     Output file name/path.
         /// </summary>
         [SerializeField]
-        private string filePath = "log.txt";
+        private string fileName = "log.txt";
 
         [SerializeField]
         private bool indentLine = true;
@@ -187,8 +187,8 @@ namespace FileLogger {
             get { return enableOnPlay; }
         }
 
-        public string FilePath {
-            get { return filePath; }
+        public string FileName {
+            get { return fileName; }
         }
 
         public bool LoggingEnabled {
@@ -269,7 +269,7 @@ namespace FileLogger {
             if (!EnableOnPlay) return;
 
             // Write single message to the file.
-            logWriter.WriteAll(FilePath, Append);
+            logWriter.WriteAll(FileName, Append);
         }
 
         private void Start() {
@@ -294,7 +294,7 @@ namespace FileLogger {
             if (Instance.LogInRealTime) return;
 
             // Save messages to file on logger stop.
-            if (!newState) LogWriter.WriteAll(FilePath, Append);
+            if (!newState) LogWriter.WriteAll(FileName, Append);
         }
         #endregion
 
@@ -303,7 +303,7 @@ namespace FileLogger {
             if (!enableOnPlay) return;
 
             loggingEnabled = true;
-            if (ClearOnPlay) LogWriter.ClearLogFile(FilePath);
+            if (ClearOnPlay) LogWriter.ClearLogFile(FileName);
         }
 
         [Conditional("DEBUG_LOGGER")]
@@ -434,14 +434,14 @@ namespace FileLogger {
         /// <summary>
         ///     Start Logger.
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="fileName"></param>
         /// <param name="append"></param>
         [Conditional("DEBUG_LOGGER")]
         public static void StartLogging(
-            string filePath = "log.txt",
+            string fileName = "log.txt",
             bool append = false) {
 
-            Instance.filePath = filePath;
+            Instance.fileName = fileName;
             Instance.append = append;
             Instance.LoggingEnabled = true;
         }
@@ -459,7 +459,7 @@ namespace FileLogger {
 
             // Write single message to the file.
             Instance.logWriter.WriteAll(
-                Instance.FilePath,
+                Instance.FileName,
                 Instance.Append);
         }
 
@@ -655,7 +655,7 @@ namespace FileLogger {
             if (Instance.LogInRealTime) {
                 Instance.logWriter.WriteSingle(
                     outputMessage.ToString(),
-                    Instance.filePath,
+                    Instance.fileName,
                     true);
             }
         }
@@ -667,7 +667,7 @@ namespace FileLogger {
         }
 
         public void ClearLogFile() {
-            LogWriter.ClearLogFile(FilePath);
+            LogWriter.ClearLogFile(FileName);
         }
 
         private static bool MethodInFilter(string methodName) {

@@ -21,7 +21,7 @@ namespace FileLogger {
         private SerializedProperty classFilter;
         private SerializedProperty echoToConsole;
         private SerializedProperty enableOnPlay;
-        private SerializedProperty filePath;
+        private SerializedProperty fileName;
         private SerializedProperty indentLine;
         private SerializedProperty loggingEnabled;
         private SerializedProperty logInRealTime;
@@ -84,7 +84,7 @@ namespace FileLogger {
         private void OnEnable() {
             Script = (Logger) target;
 
-            filePath = serializedObject.FindProperty("filePath");
+            fileName = serializedObject.FindProperty("fileName");
             logInRealTime = serializedObject.FindProperty("logInRealTime");
             echoToConsole = serializedObject.FindProperty("echoToConsole");
             loggingEnabled = serializedObject.FindProperty("loggingEnabled");
@@ -178,10 +178,10 @@ namespace FileLogger {
         private void DrawFilePathField() {
 
             EditorGUILayout.PropertyField(
-                filePath,
+                fileName,
                 new GUIContent(
-                    "File Path",
-                    "File path to save the generated log file."));
+                    "File Name",
+                    "File name for the generated log file."));
         }
 
         private void DrawFullyQualifiedNameToggle() {

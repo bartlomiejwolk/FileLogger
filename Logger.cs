@@ -400,8 +400,9 @@ namespace FileLogger {
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogString(
-            string format,
+            // todo make this a first arg. in other methods
             object objectReference,
+            string format,
             params object[] paramList) {
 
             DoLogString(format, objectReference, paramList);

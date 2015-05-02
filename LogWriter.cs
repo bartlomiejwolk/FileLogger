@@ -130,7 +130,7 @@ namespace FileLogger {
 
             // Create stream writer used to write log cache to file.
             using (writer = new StreamWriter(filePath, false)) {
-                writer.WriteLine("");
+                writer.WriteLine(String.Empty);
             }
 
             Debug.Log("Log file cleared!");

@@ -22,7 +22,6 @@ namespace FileLogger {
     ///     Comment out the DEBUG directive to disable all calls to this class. For
     ///     Editor classes you must define DEBUG directive explicitly.
     /// </remarks>
-    [ExecuteInEditMode]
     public sealed class Logger : MonoBehaviour {
 
         #region CONST
@@ -200,6 +199,7 @@ namespace FileLogger {
 
                 if (prevValue != value) {
                     OnStateChanged(value);
+                    HandleStateChange(value);
                 }
             }
         }
@@ -263,8 +263,6 @@ namespace FileLogger {
             // todo extract method
             if (LogInRealTime) return;
             if (!EnableOnPlay) return;
-            // Write only on exit play mode.
-            if (!Application.isPlaying) return;
 
             // Write single message to the file.
             logWriter.WriteAll(FilePath, Append);
@@ -275,14 +273,6 @@ namespace FileLogger {
             HandleEnableOnPlay();
         }
 
-        private void OnEnable() {
-            UnityEngine.Debug.Log("OnEnable");
-            SubscribeToEvents();
-        }
-
-        private void OnDisable() {
-            UnsubscribeFromEvents();
-        }
         #endregion UNITY MESSAGES
 
         #region EVENT INVOCATORS
@@ -295,35 +285,23 @@ namespace FileLogger {
         #endregion EVENT INVOCATORS
 
         #region EVENT HANDLERS
-        void Logger_StateChanged(object sender, bool state) {
+        void HandleStateChange(bool newState) {
             // There's no need to write cached messages since logging was made
             // in real time.
             if (Instance.LogInRealTime) return;
 
             // Save messages to file on logger stop.
-            if (!state) LogWriter.WriteAll(FilePath, Append);
+            if (!newState) LogWriter.WriteAll(FilePath, Append);
         }
         #endregion
 
         #region METHODS
         private void HandleEnableOnPlay() {
             if (!enableOnPlay) return;
-            if (!Application.isPlaying) return;
 
             loggingEnabled = true;
             if (ClearOnPlay) ClearLogFile();
         }
-
-        private void UnsubscribeFromEvents() {
-            UnityEngine.Debug.Log("UnsubscribeFromEvents");
-            StateChanged -= Logger_StateChanged;
-        }
-
-        private void SubscribeToEvents() {
-            UnityEngine.Debug.Log("SubscribeToEvents");
-            StateChanged += Logger_StateChanged;
-        }
-
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogCall() {
@@ -684,8 +662,7 @@ namespace FileLogger {
         }
 
         private static void HandleLogInRealTime(StringBuilder outputMessage) {
-
-// Append message to the log file.
+            // Append message to the log file.
             if (Instance.LogInRealTime) {
                 Instance.logWriter.WriteSingle(
                     outputMessage.ToString(),
@@ -695,22 +672,17 @@ namespace FileLogger {
         }
 
         private static void HandleEchoToConsole(StringBuilder outputMessage) {
-
             if (Instance.EchoToConsole) {
                 UnityEngine.Debug.Log(outputMessage.ToString());
             }
         }
 
         private static bool MethodInFilter(string methodName) {
-            if (Instance.methodFilter.Count != 0) {
-                // Return if method is not listed in the class filter. You can
-                // set class filter in the inspector.
-                if (Instance.methodFilter.Contains(methodName)) {
-                    return true;
-                }
-                return false;
-            }
-            return true;
+            // No methods were specified in the filter.
+            if (Instance.methodFilter.Count == 0) return true;
+
+            // Return false if method is not listed in the class filter.
+            return Instance.methodFilter.Contains(methodName);
         }
 
         #endregion METHODS

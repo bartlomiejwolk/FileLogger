@@ -46,9 +46,6 @@ namespace FileLogger {
 
             DrawEnableOnPlayToggle();
             DrawClearOnPlayToggle();
-
-            EditorGUILayout.Space();
-
             DrawLogInRealTimeToggle();
             DrawAppendToggle();
             DrawEchoToConsoleToggle();

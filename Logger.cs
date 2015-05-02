@@ -58,9 +58,9 @@ namespace FileLogger {
         /// </summary>
         [SerializeField]
         private AppendOptions displayOptions = AppendOptions.Timestamp
-                                              | AppendOptions.ClassName
+                                              | AppendOptions.CallerClassName
                                               | AppendOptions.MethodName
-                                              | AppendOptions.CallerClassName;
+                                              | AppendOptions.ParentClassName;
 
         /// <summary>
         ///     List of classes that will be logged. Empty list disables
@@ -496,7 +496,7 @@ namespace FileLogger {
             StringBuilder outputMessage) {
             if (!FlagsHelper.IsSet(
                 Instance.DisplayOptions,
-                AppendOptions.CallerClassName)) return;
+                AppendOptions.ParentClassName)) return;
 
             // Get info from call stack.
             var callerStackInfo = new FrameInfo(6);
@@ -523,7 +523,7 @@ namespace FileLogger {
 
             if (!FlagsHelper.IsSet(
                 Instance.DisplayOptions,
-                AppendOptions.ClassName)) return;
+                AppendOptions.CallerClassName)) return;
 
             if (Instance.qualifiedClassName) {
                 // Append fully qualified class name.

@@ -268,15 +268,6 @@ namespace FileLogger {
         private void Start() {
             HandleEnableOnPlay();
         }
-
-        private void HandleEnableOnPlay() {
-            if (!enableOnPlay) return;
-
-            loggingEnabled = true;
-            if (ClearOnPlay) ClearLogFile();
-            OnStateChanged(true);
-        }
-
         private void OnEnable() {
             UnityEngine.Debug.Log("OnEnable");
             UnsubscribeFromEvents();
@@ -308,6 +299,14 @@ namespace FileLogger {
         #endregion
 
         #region METHODS
+        private void HandleEnableOnPlay() {
+            if (!enableOnPlay) return;
+
+            loggingEnabled = true;
+            if (ClearOnPlay) ClearLogFile();
+            OnStateChanged(true);
+        }
+
         private void UnsubscribeFromEvents() {
             UnityEngine.Debug.Log("UnsubscribeFromEvents");
             StateChanged -= Logger_StateChanged;

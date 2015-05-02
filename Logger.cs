@@ -24,6 +24,11 @@ namespace FileLogger {
     /// </remarks>
     [ExecuteInEditMode]
     public sealed class Logger : MonoBehaviour {
+
+        #region CONST
+        public const string VERSION = "v0.1.0";
+        #endregion
+
         #region EVENTS
         /// <summary>
         ///     Delegate for <c>StateChanged</c> event.
@@ -131,6 +136,9 @@ namespace FileLogger {
         [SerializeField]
         private bool qualifiedClassName = true;
 
+        [SerializeField]
+        private bool clearOnPlay = true;
+
         #endregion FIELDS
 
         #region PROPERTIES
@@ -184,6 +192,7 @@ namespace FileLogger {
             get { return filePath; }
         }
 
+        // todo OnStateChanged should be called from here
         public bool LoggingEnabled {
             get { return loggingEnabled; }
             set { loggingEnabled = value; }
@@ -218,8 +227,10 @@ namespace FileLogger {
             set { echoToConsole = value; }
         }
 
-        public const string VERSION = "v0.1.0";
-
+        public bool ClearOnPlay {
+            get { return clearOnPlay; }
+            set { clearOnPlay = value; }
+        }
         #endregion PROPERTIES
 
         #region UNITY MESSAGES
@@ -243,32 +254,26 @@ namespace FileLogger {
         }
 
         private void OnDestroy() {
-            // Don't write to file if 'logInRealTime' was selected.
-            if (LogInRealTime) {
-                return;
-            }
+            // todo extract method
+            if (LogInRealTime) return;
+            if (!EnableOnPlay) return;
+            // Write only on exit play mode.
+            if (!Application.isPlaying) return;
 
-            // Write log to file when 'enableOnPlay' was selected.
-            if (enableOnPlay) {
-                // Write single message to the file.
-                logWriter.WriteAll(FilePath, Append);
-            }
+            // Write single message to the file.
+            logWriter.WriteAll(FilePath, Append);
         }
 
         private void Start() {
-            // Handle 'Enable On Play' inspector option.
-            if (enableOnPlay) {
-                loggingEnabled = true;
-
-                OnStateChanged(true);
-            }
+            UnityEngine.Debug.Log("Start");
+            HandleEnableOnPlay();
         }
 
         private void OnEnable() {
             UnityEngine.Debug.Log("OnEnable");
-            UnsubscribeFromEvents();
             SubscribeToEvents();
         }
+
         private void OnDisable() {
             UnsubscribeFromEvents();
         }
@@ -295,6 +300,15 @@ namespace FileLogger {
         #endregion
 
         #region METHODS
+        private void HandleEnableOnPlay() {
+            if (!enableOnPlay) return;
+            if (!Application.isPlaying) return;
+
+            loggingEnabled = true;
+            if (ClearOnPlay) ClearLogFile();
+            OnStateChanged(true);
+        }
+
         private void UnsubscribeFromEvents() {
             UnityEngine.Debug.Log("UnsubscribeFromEvents");
             StateChanged -= Logger_StateChanged;
@@ -465,11 +479,12 @@ namespace FileLogger {
         /// <summary>
         ///     Clear log file.
         /// </summary>
+        // todo move to LogWriter class
         [Conditional("DEBUG_LOGGER")]
         public void ClearLogFile() {
             StreamWriter writer;
             // Create stream writer used to write log cache to file.
-            using (writer = new StreamWriter(filePath, append)) {
+            using (writer = new StreamWriter(FilePath, false)) {
                 writer.WriteLine("");
             }
 

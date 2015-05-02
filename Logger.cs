@@ -70,7 +70,7 @@ namespace FileLogger {
         private List<string> classFilter = new List<string>();
 
         [SerializeField]
-        private bool echoToConsole;
+        private bool echoToConsole = true;
 
         /// <summary>
         ///     Keeps info about Logger methods state (enabled/disabled). Disabled
@@ -116,7 +116,7 @@ namespace FileLogger {
         private bool loggingEnabled;
 
         [SerializeField]
-        private bool logInRealTime;
+        private bool logInRealTime = true;
 
         private LogWriter logWriter = new LogWriter();
 

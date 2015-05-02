@@ -273,7 +273,6 @@ namespace FileLogger {
         }
 
         private void Start() {
-            UnityEngine.Debug.Log("Start");
             HandleEnableOnPlay();
         }
 

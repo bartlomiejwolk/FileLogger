@@ -62,9 +62,9 @@ namespace FileLogger {
 
             switch (oldLoggingEnabledValue) {
                 case true:
-                    return "Logging Enabled";
+                    return "Stop";
                 case false:
-                    return "Logging Disabled";
+                    return "Start";
             }
 
             return "";
@@ -77,14 +77,14 @@ namespace FileLogger {
             switch (enableOnPlay) {
                 case true:
                     if (oldLoggingEnabledValue) {
-                        return "Logging Enabled";
+                        return "Stop";
                     }
-                    return "Logging Disabled";
+                    return "Start";
                 case false:
                     if (oldLoggingEnabledValue) {
-                        return "Logging Enabled";
+                        return "Stop";
                     }
-                    return "Logging Disabled";
+                    return "Start";
             }
 
             return "";

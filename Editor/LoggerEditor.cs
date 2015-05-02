@@ -28,6 +28,7 @@ namespace FileLogger {
         private SerializedProperty methodFilter;
         private SerializedProperty qualifiedClassName;
         private SerializedProperty append;
+        private SerializedProperty clearOnPlay;
 
         #endregion SERIALIZED PROPERTIES
 
@@ -44,6 +45,10 @@ namespace FileLogger {
             GUILayout.Label("Logging Options", EditorStyles.boldLabel);
 
             DrawEnableOnPlayToggle();
+            DrawClearOnPlayToggle();
+
+            EditorGUILayout.Space();
+
             DrawLogInRealTimeToggle();
             DrawAppendToggle();
             DrawEchoToConsoleToggle();
@@ -80,6 +85,14 @@ namespace FileLogger {
             serializedObject.ApplyModifiedProperties();
         }
 
+        private void DrawClearOnPlayToggle() {
+            clearOnPlay.boolValue = EditorGUILayout.Toggle(
+                new GUIContent(
+                    "Clear On Play",
+                    "Clear log file on enter play mode."),
+                clearOnPlay.boolValue);
+        }
+
         private void OnEnable() {
             Script = (Logger) target;
 
@@ -95,6 +108,7 @@ namespace FileLogger {
             classFilter = serializedObject.FindProperty("classFilter");
             methodFilter = serializedObject.FindProperty("methodFilter");
             append = serializedObject.FindProperty("append");
+            clearOnPlay = serializedObject.FindProperty("clearOnPlay");
         }
 
         #endregion UNITY MESSAGES

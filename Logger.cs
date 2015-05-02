@@ -24,6 +24,11 @@ namespace FileLogger {
     /// </remarks>
     [ExecuteInEditMode]
     public sealed class Logger : MonoBehaviour {
+
+        #region CONST
+        public const string VERSION = "v0.1.0";
+        #endregion
+
         #region EVENTS
         /// <summary>
         ///     Delegate for <c>StateChanged</c> event.
@@ -131,6 +136,9 @@ namespace FileLogger {
         [SerializeField]
         private bool qualifiedClassName = true;
 
+        [SerializeField]
+        private bool clearOnPlay = true;
+
         #endregion FIELDS
 
         #region PROPERTIES
@@ -218,8 +226,10 @@ namespace FileLogger {
             set { echoToConsole = value; }
         }
 
-        public const string VERSION = "v0.1.0";
-
+        public bool ClearOnPlay {
+            get { return clearOnPlay; }
+            set { clearOnPlay = value; }
+        }
         #endregion PROPERTIES
 
         #region UNITY MESSAGES

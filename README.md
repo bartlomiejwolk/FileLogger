@@ -11,11 +11,12 @@ Features
 --------
 
 - Logging to a file and/or Unity console
+- Works in edit and in play mode
 - Realtime logging
 - Logged messages contain additional metadata to help understand what's happening in the code
 - Log messages can display GUID of an object from logger method was called
 - Ability to customize displayed metadata
-- Ability to start/stop logging from inspector and from code
+- Ability to start/stop logging from inspector and from script
 - Multiple logging methods for different purposes
 - Ability to enable/disable logging methods from inspector
 - Ability to run logger only for specified classes or methods

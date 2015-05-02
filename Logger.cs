@@ -268,12 +268,12 @@ namespace FileLogger {
             UnityEngine.Debug.Log("Start");
             HandleEnableOnPlay();
         }
+
         private void OnEnable() {
             UnityEngine.Debug.Log("OnEnable");
-            // todo remove unsubscribe
-            UnsubscribeFromEvents();
             SubscribeToEvents();
         }
+
         private void OnDisable() {
             UnsubscribeFromEvents();
         }

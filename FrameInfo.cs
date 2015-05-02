@@ -24,8 +24,7 @@ namespace FileLogger {
                 method = frame.GetMethod();
                 classType = method.DeclaringType;
             }
-            catch (NullReferenceException e) {
-                //UnityEngine.Debug.LogWarning("Frame not found: " + e);
+            catch (NullReferenceException) {
             }
         }
 

@@ -266,12 +266,15 @@ namespace FileLogger {
         }
 
         private void Start() {
-            // Handle 'Enable On Play' inspector option.
-            if (enableOnPlay) {
-                loggingEnabled = true;
+            HandleEnableOnPlay();
+        }
 
-                OnStateChanged(true);
-            }
+        private void HandleEnableOnPlay() {
+            if (!enableOnPlay) return;
+
+            loggingEnabled = true;
+            if (ClearOnPlay) ClearLogFile();
+            OnStateChanged(true);
         }
 
         private void OnEnable() {
@@ -475,11 +478,12 @@ namespace FileLogger {
         /// <summary>
         ///     Clear log file.
         /// </summary>
+        // todo move to LogWriter class
         [Conditional("DEBUG_LOGGER")]
         public void ClearLogFile() {
             StreamWriter writer;
             // Create stream writer used to write log cache to file.
-            using (writer = new StreamWriter(filePath, append)) {
+            using (writer = new StreamWriter(FilePath, false)) {
                 writer.WriteLine("");
             }
 

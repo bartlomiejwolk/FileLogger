@@ -122,6 +122,20 @@ namespace FileLogger {
             }
         }
 
+        /// <summary>
+        ///     Clear log file.
+        /// </summary>
+        public void ClearLogFile(string filePath) {
+            StreamWriter writer;
+
+            // Create stream writer used to write log cache to file.
+            using (writer = new StreamWriter(filePath, false)) {
+                writer.WriteLine("");
+            }
+
+            Debug.Log("Log file cleared!");
+        }
+
     }
 
 }

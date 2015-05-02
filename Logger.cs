@@ -304,7 +304,7 @@ namespace FileLogger {
             if (!enableOnPlay) return;
 
             loggingEnabled = true;
-            if (ClearOnPlay) ClearLogFile();
+            if (ClearOnPlay) LogWriter.ClearLogFile(FilePath);
         }
 
         [Conditional("DEBUG_LOGGER")]
@@ -461,21 +461,6 @@ namespace FileLogger {
             Instance.logWriter.WriteAll(
                 Instance.FilePath,
                 Instance.Append);
-        }
-
-        /// <summary>
-        ///     Clear log file.
-        /// </summary>
-        // todo move to LogWriter class
-        [Conditional("DEBUG_LOGGER")]
-        public void ClearLogFile() {
-            StreamWriter writer;
-            // Create stream writer used to write log cache to file.
-            using (writer = new StreamWriter(FilePath, false)) {
-                writer.WriteLine("");
-            }
-
-            UnityEngine.Debug.Log("Log file cleared!");
         }
 
         private static bool ClassInFilter(string className) {
@@ -681,6 +666,10 @@ namespace FileLogger {
             }
         }
 
+        public void ClearLogFile() {
+            LogWriter.ClearLogFile(FilePath);
+        }
+
         private static bool MethodInFilter(string methodName) {
             // No methods were specified in the filter.
             if (Instance.methodFilter.Count == 0) return true;
@@ -690,7 +679,6 @@ namespace FileLogger {
         }
 
         #endregion METHODS
-
     }
 
 }

@@ -260,7 +260,11 @@ namespace FileLogger {
         }
 
         private void OnDestroy() {
-            // todo extract method
+            HandleExitPlayMode();
+        }
+
+        private void HandleExitPlayMode() {
+
             if (LogInRealTime) return;
             if (!EnableOnPlay) return;
 

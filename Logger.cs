@@ -25,7 +25,6 @@ namespace FileLogger {
     [ExecuteInEditMode]
     public sealed class Logger : MonoBehaviour {
         #region EVENTS
-
         /// <summary>
         ///     Delegate for <c>StateChanged</c> event.
         /// </summary>
@@ -39,16 +38,6 @@ namespace FileLogger {
         public static event StateChangedEventHandler StateChanged;
 
         #endregion EVENTS
-
-        #region EVENT INVOCATORS
-
-        private void OnStateChanged(bool state) {
-            var handler = StateChanged;
-            if (handler != null) handler(this, state);
-        }
-
-        #endregion EVENT INVOCATORS
-
         #region FIELDS
 
         private static Logger instance;
@@ -224,6 +213,11 @@ namespace FileLogger {
             }
         }
 
+        public bool EchoToConsole {
+            get { return echoToConsole; }
+            set { echoToConsole = value; }
+        }
+
         public const string VERSION = "v0.1.0";
 
         #endregion PROPERTIES
@@ -253,10 +247,11 @@ namespace FileLogger {
             if (LogInRealTime) {
                 return;
             }
+
             // Write log to file when 'enableOnPlay' was selected.
             if (enableOnPlay) {
                 // Write single message to the file.
-                logWriter.WriteAll(filePath, append);
+                logWriter.WriteAll(FilePath, Append);
             }
         }
 
@@ -274,31 +269,42 @@ namespace FileLogger {
             UnsubscribeFromEvents();
             SubscribeToEvents();
         }
-
-        // todo move to region
-        void Logger_StateChanged(object sender, bool state) {
-            if (!state) LogWriter.WriteAll(FilePath, false);
-        }
-
         private void OnDisable() {
             UnsubscribeFromEvents();
         }
+        #endregion UNITY MESSAGES
 
-        // todo move to region
-        private void SubscribeToEvents() {
-            UnityEngine.Debug.Log("SubscribeToEvents");
-            StateChanged += Logger_StateChanged;
+        #region EVENT INVOCATORS
+
+        private void OnStateChanged(bool state) {
+            var handler = StateChanged;
+            if (handler != null) handler(this, state);
         }
 
-        // todo move to region
+        #endregion EVENT INVOCATORS
+
+        #region EVENT HANDLERS
+        void Logger_StateChanged(object sender, bool state) {
+            // There's no need to write cached messages since logging was made
+            // in real time.
+            if (Instance.LogInRealTime) return;
+
+            // Save messages to file on logger stop.
+            if (!state) LogWriter.WriteAll(FilePath, Append);
+        }
+        #endregion
+
+        #region METHODS
         private void UnsubscribeFromEvents() {
             UnityEngine.Debug.Log("UnsubscribeFromEvents");
             StateChanged -= Logger_StateChanged;
         }
 
-        #endregion UNITY MESSAGES
+        private void SubscribeToEvents() {
+            UnityEngine.Debug.Log("SubscribeToEvents");
+            StateChanged += Logger_StateChanged;
+        }
 
-        #region METHODS
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogCall() {
@@ -311,15 +317,17 @@ namespace FileLogger {
         }
 
         private static void DoLogCall(object objectReference) {
+            // Return if method is disabled.
+            if (!FlagsHelper.IsSet(
+                Instance.EnabledMethods,
+                EnabledMethods.LogCall)) return;
+
             // Get info from call stack.
             var stackInfo = new FrameInfo(3);
 
             Log(
                 stackInfo.MethodSignature,
                 stackInfo,
-                FlagsHelper.IsSet(
-                    Instance.EnabledMethods,
-                    EnabledMethods.LogCall),
                 objectReference);
         }
 
@@ -334,6 +342,11 @@ namespace FileLogger {
         }
 
         private static void DoLogResult(object result, object objectRererence) {
+            // Return if method is disabled.
+            if (!FlagsHelper.IsSet(
+                Instance.EnabledMethods,
+                EnabledMethods.LogResult)) return;
+
             // Compose log message.
             var message = string.Format("[RESULT: {0}]", result);
 
@@ -344,9 +357,6 @@ namespace FileLogger {
             Log(
                 message,
                 stackInfo,
-                FlagsHelper.IsSet(
-                    Instance.EnabledMethods,
-                    EnabledMethods.LogResult),
                 objectRererence);
         }
 
@@ -355,6 +365,8 @@ namespace FileLogger {
         /// </summary>
         [Conditional("DEBUG_LOGGER")]
         public static void LogStackTrace() {
+            if (!Instance.enableLogStackTrace) return;
+
             var stackTrace = new StackTrace();
             var message = new StringBuilder();
             for (var i = 1; i < stackTrace.FrameCount; i++) {
@@ -375,7 +387,6 @@ namespace FileLogger {
             Log(
                 message.ToString(),
                 stackInfo,
-                Instance.enableLogStackTrace,
                 null);
         }
 
@@ -401,6 +412,11 @@ namespace FileLogger {
             object objectReference,
             params object[] paramList) {
 
+            // Return if method is disabled.
+            if (!FlagsHelper.IsSet(
+                Instance.EnabledMethods,
+                EnabledMethods.LogString)) return;
+
             // Compose log message.
             var message = string.Format(format, paramList);
 
@@ -411,9 +427,6 @@ namespace FileLogger {
             Log(
                 message,
                 stackInfo,
-                FlagsHelper.IsSet(
-                    Instance.EnabledMethods,
-                    EnabledMethods.LogString),
                 objectReference);
         }
 
@@ -445,8 +458,8 @@ namespace FileLogger {
 
             // Write single message to the file.
             Instance.logWriter.WriteAll(
-                Instance.filePath,
-                Instance.append);
+                Instance.FilePath,
+                Instance.Append);
         }
 
         /// <summary>
@@ -610,11 +623,8 @@ namespace FileLogger {
         private static void Log(
             string message,
             FrameInfo frameInfo,
-            bool methodEnabled,
             object objectReference) {
 
-            // todo this check should be executed inside each of the DoLog methods.
-            if (!methodEnabled) return;
             if (!Instance.LoggingEnabled) return;
 
             // Filter by class name.
@@ -640,14 +650,34 @@ namespace FileLogger {
             // Append caller class name.
             HandleAppendCallerClassName(outputMessage);
 
+            HandleEchoToConsole(outputMessage);
+            HandleLogInRealTime(outputMessage);
+
+            // There's no need to write cached messages since logging was made
+            // in real time.
+            if (Instance.LogInRealTime) return;
+
             // Add log message to the cache.
             Instance.logWriter.AddToCache(
                 outputMessage.ToString(),
-                Instance.echoToConsole);
+                Instance.EchoToConsole);
+        }
 
-            // Append message to the log file.
+        private static void HandleLogInRealTime(StringBuilder outputMessage) {
+
+// Append message to the log file.
             if (Instance.LogInRealTime) {
-                Instance.logWriter.WriteLast(Instance.filePath);
+                Instance.logWriter.WriteSingle(
+                    outputMessage.ToString(),
+                    Instance.filePath,
+                    true);
+            }
+        }
+
+        private static void HandleEchoToConsole(StringBuilder outputMessage) {
+
+            if (Instance.EchoToConsole) {
+                UnityEngine.Debug.Log(outputMessage.ToString());
             }
         }
 

@@ -44,6 +44,9 @@ namespace FileLogger {
             set { loggedMessages = value; }
         }
 
+        /// <summary>
+        ///     Event called on every write to the file.
+        /// </summary>
         public static event WriteEventHandler WriteEvent;
 
         /// Save log message to cache.
@@ -56,11 +59,7 @@ namespace FileLogger {
             }
             // Cache message.
             logCache[logIdx] = message;
-            // todo this should be done in the Log()
-            // Handle "Echo To Console" inspector option.
-            if (echoToConsole) {
-                Debug.Log(message);
-            }
+
             logIdx += 1;
             loggedMessages += 1;
             // Resize array when needed.
@@ -104,6 +103,18 @@ namespace FileLogger {
             var e = new EventArgs();
             OnWriteEvent(e);
         }
+
+        public void WriteSingle(string message, string filePath, bool append) {
+            // Create stream writer used to write log cache to file.
+            using (writer = new StreamWriter(filePath, append)) {
+                writer.WriteLine(message);
+            }
+
+            // Fire event.
+            var e = new EventArgs();
+            OnWriteEvent(e);
+        }
+
 
         protected void OnWriteEvent(EventArgs e) {
             if (WriteEvent != null) {

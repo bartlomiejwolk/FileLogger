@@ -27,6 +27,7 @@ namespace FileLogger {
         private SerializedProperty logInRealTime;
         private SerializedProperty methodFilter;
         private SerializedProperty qualifiedClassName;
+        private SerializedProperty append;
 
         #endregion SERIALIZED PROPERTIES
 
@@ -44,6 +45,7 @@ namespace FileLogger {
 
             DrawEnableOnPlayToggle();
             DrawLogInRealTimeToggle();
+            DrawAppendToggle();
             DrawEchoToConsoleToggle();
 
             EditorGUILayout.Space();
@@ -92,6 +94,7 @@ namespace FileLogger {
             indentLine = serializedObject.FindProperty("indentLine");
             classFilter = serializedObject.FindProperty("classFilter");
             methodFilter = serializedObject.FindProperty("methodFilter");
+            append = serializedObject.FindProperty("append");
         }
 
         #endregion UNITY MESSAGES
@@ -106,6 +109,20 @@ namespace FileLogger {
                         "Additional info that should be attached to a single" +
                         "log message."),
                     Script.DisplayOptions);
+        }
+
+        private void DrawAppendToggle() {
+            var disabled = logInRealTime.boolValue ? true : false;
+
+            EditorGUI.BeginDisabledGroup(disabled);
+
+            append.boolValue = EditorGUILayout.Toggle(
+                new GUIContent(
+                    "Always Append",
+                    "Always append messages to the log file."),
+                append.boolValue);
+
+            EditorGUI.EndDisabledGroup();
         }
 
         private void DrawClearLogFileButton() {

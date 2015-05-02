@@ -84,15 +84,6 @@ namespace FileLogger {
             // Save changes
             serializedObject.ApplyModifiedProperties();
         }
-
-        private void DrawClearOnPlayToggle() {
-            clearOnPlay.boolValue = EditorGUILayout.Toggle(
-                new GUIContent(
-                    "Clear On Play",
-                    "Clear log file on enter play mode."),
-                clearOnPlay.boolValue);
-        }
-
         private void OnEnable() {
             Script = (Logger) target;
 
@@ -114,6 +105,14 @@ namespace FileLogger {
         #endregion UNITY MESSAGES
 
         #region INSPECTOR
+        private void DrawClearOnPlayToggle() {
+            clearOnPlay.boolValue = EditorGUILayout.Toggle(
+                new GUIContent(
+                    "Clear On Play",
+                    "Clear log file on enter play mode."),
+                clearOnPlay.boolValue);
+        }
+
 
         private void DrawAppendDropdown() {
             Script.DisplayOptions =
@@ -227,7 +226,13 @@ namespace FileLogger {
                 "Example: OnEnable",
                 UnityEditor.MessageType.Info);
         }
+        private void DrawVersionNo() {
+            EditorGUILayout.LabelField(Logger.VERSION);
+        }
 
+        #endregion INSPECTOR
+
+        #region METHODS
         private void HandleDrawingStartStopButton() {
             loggingEnabled.boolValue =
                 InspectorControls.DrawStartStopButton(
@@ -236,13 +241,6 @@ namespace FileLogger {
                     null);
         }
 
-        private void DrawVersionNo() {
-            EditorGUILayout.LabelField(Logger.VERSION);
-        }
-
-        #endregion INSPECTOR
-
-        #region METHODS
 
         [MenuItem("Component/FileLogger")]
         private static void AddLoggerComponent() {

@@ -233,7 +233,7 @@ namespace FileLogger {
                 InspectorControls.DrawStartStopButton(
                     Script.LoggingEnabled,
                     Script.EnableOnPlay,
-                    FireOnStateChangedEvent);
+                    null);
         }
 
         private void DrawVersionNo() {
@@ -249,13 +249,6 @@ namespace FileLogger {
             if (Selection.activeGameObject != null) {
                 Selection.activeGameObject.AddComponent(typeof (Logger));
             }
-        }
-
-        private void FireOnStateChangedEvent(bool newState) {
-            Utilities.InvokeMethodWithReflection(
-                Script,
-                "OnStateChanged",
-                new object[] { newState });
         }
 
         #endregion METHODS

@@ -192,10 +192,16 @@ namespace FileLogger {
             get { return filePath; }
         }
 
-        // todo OnStateChanged should be called from here
         public bool LoggingEnabled {
             get { return loggingEnabled; }
-            set { loggingEnabled = value; }
+            set {
+                var prevValue = loggingEnabled;
+                loggingEnabled = value;
+
+                if (prevValue != value) {
+                    OnStateChanged(value);
+                }
+            }
         }
 
         public bool LogInRealTime {
@@ -306,7 +312,6 @@ namespace FileLogger {
 
             loggingEnabled = true;
             if (ClearOnPlay) ClearLogFile();
-            OnStateChanged(true);
         }
 
         private void UnsubscribeFromEvents() {

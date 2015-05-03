@@ -337,11 +337,11 @@ namespace FileLogger {
         }
 
         [Conditional("DEBUG_LOGGER")]
-        public static void LogResult(object result, object objectReference) {
+        public static void LogResult(object objectReference, object result) {
             DoLogResult(result, objectReference);
         }
 
-        private static void DoLogResult(object result, object objectRererence) {
+        private static void DoLogResult(object objectRererence, object result) {
             // Return if method is disabled.
             if (!FlagsHelper.IsSet(
                 Instance.EnabledMethods,
@@ -370,7 +370,6 @@ namespace FileLogger {
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogString(
-            // todo make this a first arg. in other methods
             object objectReference,
             string format,
             params object[] paramList) {
@@ -378,7 +377,7 @@ namespace FileLogger {
             DoLogString(format, objectReference, paramList);
         }
 
-        public static void DoLogString(
+        private static void DoLogString(
             string format,
             object objectReference,
             params object[] paramList) {

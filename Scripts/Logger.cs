@@ -58,9 +58,9 @@ namespace FileLogger {
         /// </summary>
         [SerializeField]
         private AppendOptions displayOptions = AppendOptions.Timestamp
-                                              | AppendOptions.ClassName
+                                              | AppendOptions.CallerClassName
                                               | AppendOptions.MethodName
-                                              | AppendOptions.CallerClassName;
+                                              | AppendOptions.ParentClassName;
 
         /// <summary>
         ///     List of classes that will be logged. Empty list disables
@@ -70,7 +70,7 @@ namespace FileLogger {
         private List<string> classFilter = new List<string>();
 
         [SerializeField]
-        private bool echoToConsole;
+        private bool echoToConsole = true;
 
         /// <summary>
         ///     Keeps info about Logger methods state (enabled/disabled). Disabled
@@ -97,7 +97,7 @@ namespace FileLogger {
         ///     Output file name/path.
         /// </summary>
         [SerializeField]
-        private string filePath = "log.txt";
+        private string fileName = "log.txt";
 
         [SerializeField]
         private bool indentLine = true;
@@ -116,7 +116,7 @@ namespace FileLogger {
         private bool loggingEnabled;
 
         [SerializeField]
-        private bool logInRealTime;
+        private bool logInRealTime = true;
 
         private LogWriter logWriter = new LogWriter();
 
@@ -187,8 +187,8 @@ namespace FileLogger {
             get { return enableOnPlay; }
         }
 
-        public string FilePath {
-            get { return filePath; }
+        public string FileName {
+            get { return fileName; }
         }
 
         public bool LoggingEnabled {
@@ -269,11 +269,10 @@ namespace FileLogger {
             if (!EnableOnPlay) return;
 
             // Write single message to the file.
-            logWriter.WriteAll(FilePath, Append);
+            logWriter.WriteAll(FileName, Append);
         }
 
         private void Start() {
-            UnityEngine.Debug.Log("Start");
             HandleEnableOnPlay();
         }
 
@@ -295,7 +294,7 @@ namespace FileLogger {
             if (Instance.LogInRealTime) return;
 
             // Save messages to file on logger stop.
-            if (!newState) LogWriter.WriteAll(FilePath, Append);
+            if (!newState) LogWriter.WriteAll(FileName, Append);
         }
         #endregion
 
@@ -304,7 +303,7 @@ namespace FileLogger {
             if (!enableOnPlay) return;
 
             loggingEnabled = true;
-            if (ClearOnPlay) LogWriter.ClearLogFile(FilePath);
+            if (ClearOnPlay) LogWriter.ClearLogFile(FileName);
         }
 
         [Conditional("DEBUG_LOGGER")]
@@ -338,11 +337,11 @@ namespace FileLogger {
         }
 
         [Conditional("DEBUG_LOGGER")]
-        public static void LogResult(object result, object objectReference) {
+        public static void LogResult(object objectReference, object result) {
             DoLogResult(result, objectReference);
         }
 
-        private static void DoLogResult(object result, object objectRererence) {
+        private static void DoLogResult(object objectRererence, object result) {
             // Return if method is disabled.
             if (!FlagsHelper.IsSet(
                 Instance.EnabledMethods,
@@ -361,36 +360,6 @@ namespace FileLogger {
                 objectRererence);
         }
 
-        /// <summary>
-        ///     Logs stack trace.
-        /// </summary>
-        [Conditional("DEBUG_LOGGER")]
-        public static void LogStackTrace() {
-            if (!Instance.enableLogStackTrace) return;
-
-            var stackTrace = new StackTrace();
-            var message = new StringBuilder();
-            for (var i = 1; i < stackTrace.FrameCount; i++) {
-                var stackFrame = stackTrace.GetFrame(i);
-                for (var j = 0; j < i; j++) {
-                    message.Append("| ");
-                }
-                message.Append(stackFrame.GetMethod());
-                if (i == stackTrace.FrameCount - 1) {
-                    break;
-                }
-                message.Append("\n");
-            }
-
-            // Get info from call stack.
-            var stackInfo = new FrameInfo(3);
-
-            Log(
-                message.ToString(),
-                stackInfo,
-                null);
-        }
-
         [Conditional("DEBUG_LOGGER")]
         public static void LogString(
             string format,
@@ -401,14 +370,14 @@ namespace FileLogger {
 
         [Conditional("DEBUG_LOGGER")]
         public static void LogString(
-            string format,
             object objectReference,
+            string format,
             params object[] paramList) {
 
             DoLogString(format, objectReference, paramList);
         }
 
-        public static void DoLogString(
+        private static void DoLogString(
             string format,
             object objectReference,
             params object[] paramList) {
@@ -434,14 +403,14 @@ namespace FileLogger {
         /// <summary>
         ///     Start Logger.
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="fileName"></param>
         /// <param name="append"></param>
         [Conditional("DEBUG_LOGGER")]
         public static void StartLogging(
-            string filePath = "log.txt",
+            string fileName = "log.txt",
             bool append = false) {
 
-            Instance.filePath = filePath;
+            Instance.fileName = fileName;
             Instance.append = append;
             Instance.LoggingEnabled = true;
         }
@@ -459,7 +428,7 @@ namespace FileLogger {
 
             // Write single message to the file.
             Instance.logWriter.WriteAll(
-                Instance.FilePath,
+                Instance.FileName,
                 Instance.Append);
         }
 
@@ -497,7 +466,7 @@ namespace FileLogger {
             StringBuilder outputMessage) {
             if (!FlagsHelper.IsSet(
                 Instance.DisplayOptions,
-                AppendOptions.CallerClassName)) return;
+                AppendOptions.ParentClassName)) return;
 
             // Get info from call stack.
             var callerStackInfo = new FrameInfo(6);
@@ -524,7 +493,7 @@ namespace FileLogger {
 
             if (!FlagsHelper.IsSet(
                 Instance.DisplayOptions,
-                AppendOptions.ClassName)) return;
+                AppendOptions.CallerClassName)) return;
 
             if (Instance.qualifiedClassName) {
                 // Append fully qualified class name.
@@ -655,7 +624,7 @@ namespace FileLogger {
             if (Instance.LogInRealTime) {
                 Instance.logWriter.WriteSingle(
                     outputMessage.ToString(),
-                    Instance.filePath,
+                    Instance.fileName,
                     true);
             }
         }
@@ -667,7 +636,7 @@ namespace FileLogger {
         }
 
         public void ClearLogFile() {
-            LogWriter.ClearLogFile(FilePath);
+            LogWriter.ClearLogFile(FileName);
         }
 
         private static bool MethodInFilter(string methodName) {

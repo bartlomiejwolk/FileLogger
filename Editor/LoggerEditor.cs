@@ -21,7 +21,7 @@ namespace FileLogger {
         private SerializedProperty classFilter;
         private SerializedProperty echoToConsole;
         private SerializedProperty enableOnPlay;
-        private SerializedProperty filePath;
+        private SerializedProperty fileName;
         private SerializedProperty indentLine;
         private SerializedProperty loggingEnabled;
         private SerializedProperty logInRealTime;
@@ -46,9 +46,6 @@ namespace FileLogger {
 
             DrawEnableOnPlayToggle();
             DrawClearOnPlayToggle();
-
-            EditorGUILayout.Space();
-
             DrawLogInRealTimeToggle();
             DrawAppendToggle();
             DrawEchoToConsoleToggle();
@@ -84,19 +81,10 @@ namespace FileLogger {
             // Save changes
             serializedObject.ApplyModifiedProperties();
         }
-
-        private void DrawClearOnPlayToggle() {
-            clearOnPlay.boolValue = EditorGUILayout.Toggle(
-                new GUIContent(
-                    "Clear On Play",
-                    "Clear log file on enter play mode."),
-                clearOnPlay.boolValue);
-        }
-
         private void OnEnable() {
             Script = (Logger) target;
 
-            filePath = serializedObject.FindProperty("filePath");
+            fileName = serializedObject.FindProperty("fileName");
             logInRealTime = serializedObject.FindProperty("logInRealTime");
             echoToConsole = serializedObject.FindProperty("echoToConsole");
             loggingEnabled = serializedObject.FindProperty("loggingEnabled");
@@ -114,6 +102,14 @@ namespace FileLogger {
         #endregion UNITY MESSAGES
 
         #region INSPECTOR
+        private void DrawClearOnPlayToggle() {
+            clearOnPlay.boolValue = EditorGUILayout.Toggle(
+                new GUIContent(
+                    "Clear On Play",
+                    "Clear log file on enter play mode."),
+                clearOnPlay.boolValue);
+        }
+
 
         private void DrawAppendDropdown() {
             Script.DisplayOptions =
@@ -182,10 +178,10 @@ namespace FileLogger {
         private void DrawFilePathField() {
 
             EditorGUILayout.PropertyField(
-                filePath,
+                fileName,
                 new GUIContent(
-                    "File Path",
-                    "File path to save the generated log file."));
+                    "File Name",
+                    "File name for the generated log file."));
         }
 
         private void DrawFullyQualifiedNameToggle() {
@@ -227,7 +223,13 @@ namespace FileLogger {
                 "Example: OnEnable",
                 UnityEditor.MessageType.Info);
         }
+        private void DrawVersionNo() {
+            EditorGUILayout.LabelField(Logger.VERSION);
+        }
 
+        #endregion INSPECTOR
+
+        #region METHODS
         private void HandleDrawingStartStopButton() {
             loggingEnabled.boolValue =
                 InspectorControls.DrawStartStopButton(
@@ -236,13 +238,6 @@ namespace FileLogger {
                     null);
         }
 
-        private void DrawVersionNo() {
-            EditorGUILayout.LabelField(Logger.VERSION);
-        }
-
-        #endregion INSPECTOR
-
-        #region METHODS
 
         [MenuItem("Component/FileLogger")]
         private static void AddLoggerComponent() {

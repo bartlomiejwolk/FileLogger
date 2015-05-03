@@ -360,36 +360,6 @@ namespace FileLogger {
                 objectRererence);
         }
 
-        /// <summary>
-        ///     Logs stack trace.
-        /// </summary>
-        [Conditional("DEBUG_LOGGER")]
-        public static void LogStack() {
-            if (!Instance.enableLogStackTrace) return;
-
-            var stackTrace = new StackTrace();
-            var message = new StringBuilder();
-            for (var i = 1; i < stackTrace.FrameCount; i++) {
-                var stackFrame = stackTrace.GetFrame(i);
-                for (var j = 0; j < i; j++) {
-                    message.Append("| ");
-                }
-                message.Append(stackFrame.GetMethod());
-                if (i == stackTrace.FrameCount - 1) {
-                    break;
-                }
-                message.Append("\n");
-            }
-
-            // Get info from call stack.
-            var stackInfo = new FrameInfo(3);
-
-            Log(
-                message.ToString(),
-                stackInfo,
-                null);
-        }
-
         [Conditional("DEBUG_LOGGER")]
         public static void LogString(
             string format,

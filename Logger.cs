@@ -364,7 +364,7 @@ namespace FileLogger {
         ///     Logs stack trace.
         /// </summary>
         [Conditional("DEBUG_LOGGER")]
-        public static void LogStackTrace() {
+        public static void LogStack() {
             if (!Instance.enableLogStackTrace) return;
 
             var stackTrace = new StackTrace();

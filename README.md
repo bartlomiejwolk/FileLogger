@@ -1,7 +1,7 @@
 README
 ======
 
-FileLogger is a debug tool for Unity.
+FileLogger is a logging tool for Unity.
 
 Licensed under MIT license. See LICENSE file in the project root.
 
@@ -14,16 +14,14 @@ Features
 - Works in edit and in play mode
 - Realtime logging
 - Logged messages contain additional metadata to help understand what's happening in the code
-- Log messages can display GUID of an object from logger method was called
+- Log messages can display GUID of an object from which logger method was called
 - Ability to customize displayed metadata
 - Ability to start/stop logging from inspector and from script
-- Multiple logging methods for different purposes
-- Ability to enable/disable logging methods from inspector
 - Ability to run logger only for specified classes or methods
 - Output messages are formated to be easy to read
 - Options to customize logger behavior
-- Additional window to control logger event when logger game object is not selected
-- [API reference](../../wiki/API-Reference "FileLogger API Reference").
+- Additional window to control logger even when logger game object is not selected
+- [API reference](../../wiki/API-Reference "FileLogger API Reference")
 
 See [Feature Overview](http://bartlomiejwolk.github.io/filelogger/ "FileLogger Feature Overview")
 

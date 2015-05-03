@@ -32,38 +32,9 @@
 <p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/DFcXjG2.png" alt="File name"></p>
 
 <h2>
-<a id="open-log-file-in-external-log-viewer" class="anchor" href="#open-log-file-in-external-log-viewer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Open log file in external log viewer</h2>
-
-<p>Use an external log viewer, like the free <em>LogExpert</em>, to search, filter and highlight data the way you want.</p>
-
-<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/L2mNkZg.png" alt="External log viewer"></p>
-
-<h2>
 <a id="log-in-real-time" class="anchor" href="#log-in-real-time" aria-hidden="true"><span class="octicon octicon-link"></span></a>Log in Real Time</h2>
 
 <p>Watch messages as they appear in real time. It's best to use with second monitor.</p>
-
-<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/t3WtqFq.png" alt="Real time logging - LogExpert"></p>
-
-<p>Works also in Unity Console window.</p>
-
-<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/VmcFIk0.png" alt="Real time logging - Unity Console"></p>
-
-<h2>
-<a id="message-nesting" class="anchor" href="#message-nesting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Message nesting</h2>
-
-<p>Logged messages can be nested to reflect their position in the call tree.</p>
-
-<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/NjbTEnW.png" alt="Nesting"></p>
-
-<h2>
-<a id="display-objects-guid" class="anchor" href="#display-objects-guid" aria-hidden="true"><span class="octicon octicon-link"></span></a>Display objects GUID</h2>
-
-<p>Each message can have attached an object GUID of the object that called the log method. </p>
-
-<p>If you have two calls with identical GUID, you can be sure that they were called from the same object. It's very usefull if you have in the scene more than one instance of the same object.</p>
-
-<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/pjjIhfe.png" alt="GUID"></p>
 
 <h2>
 <a id="place-message-into-context" class="anchor" href="#place-message-into-context" aria-hidden="true"><span class="octicon octicon-link"></span></a>Place message into context</h2>
@@ -73,11 +44,9 @@
 <p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/jVLE6CE.png" alt="Class info"></p>
 
 <h2>
-<a id="configure-what-to-display-in-log-messages" class="anchor" href="#configure-what-to-display-in-log-messages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configure what to display in log messages</h2>
+<a id="logging-methods-specific-to-your-needs" class="anchor" href="#logging-methods-specific-to-your-needs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Logging methods specific to your needs</h2>
 
-<p>You can disable information that you don't need in order to have cleaner view on the logged data.</p>
-
-<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/1umBYYW.png" alt="Inspector options"></p>
+<p>There're four different log methods to use. <strong>LogCall()</strong> allows you to easily track the execution path, <strong>LogString()</strong> outputs user defined text and <strong>LogResult()</strong> allows for quick logging value of a variable.</p>
 
 <h2>
 <a id="filter-what-to-log" class="anchor" href="#filter-what-to-log" aria-hidden="true"><span class="octicon octicon-link"></span></a>Filter what to log</h2>
@@ -89,9 +58,40 @@
 <p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/uyOtR4Y.png" alt="Filtering"></p>
 
 <h2>
-<a id="logging-methods-specific-to-your-needs" class="anchor" href="#logging-methods-specific-to-your-needs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Logging methods specific to your needs</h2>
+<a id="message-nesting" class="anchor" href="#message-nesting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Message nesting</h2>
 
-<p>There're four different log methods to use. <strong>LogCall()</strong> allows you to easily track the execution path, <strong>LogString()</strong> outputs user defined text, <strong>LogResult()</strong> allows for quick logging value of a variable and finally, <strong>LogStack()</strong> prints a formatted call stack.</p>
+<p>Logged messages can be nested to reflect their position in the call tree.</p>
+
+<h2>
+<a id="display-objects-guid" class="anchor" href="#display-objects-guid" aria-hidden="true"><span class="octicon octicon-link"></span></a>Display objects GUID</h2>
+
+<p>Each message can have attached an object GUID of the object that called the log method. </p>
+
+<p>If you have two calls with identical GUID, you can be sure that they were called from the same object. It's very usefull if you have in the scene more than one instance of the same object.</p>
+
+<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/pjjIhfe.png" alt="GUID"></p>
+
+<h2>
+<a id="configure-what-to-display-in-log-messages" class="anchor" href="#configure-what-to-display-in-log-messages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configure what to display in log messages</h2>
+
+<p>You can disable information that you don't need in order to have cleaner view on the logged data.</p>
+
+<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/1umBYYW.png" alt="Inspector options"></p>
+
+<h2>
+<a id="open-log-file-in-external-log-viewer" class="anchor" href="#open-log-file-in-external-log-viewer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Open log file in external log viewer</h2>
+
+<p>Use an external log viewer, like the free <em>LogExpert</em>, to search, filter and highlight data the way you want.</p>
+
+<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/L2mNkZg.png" alt="External log viewer"></p>
+
+<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/t3WtqFq.png" alt="Real time logging - LogExpert"></p>
+
+<p>Works also in Unity Console window.</p>
+
+<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/VmcFIk0.png" alt="Real time logging - Unity Console"></p>
+
+<p><img src="http://img.prntscr.com/img?url=http://i.imgur.com/NjbTEnW.png" alt="Nesting"></p>
 
 <h2>
 <a id="separate-window-for-easy-access" class="anchor" href="#separate-window-for-easy-access" aria-hidden="true"><span class="octicon octicon-link"></span></a>Separate window for easy access</h2>

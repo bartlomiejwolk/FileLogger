@@ -5,7 +5,7 @@ FileLogger is a debug tool for Unity.
 
 Licensed under MIT license. See LICENSE file in the project root.
 
-![FileLogger](/Resources/coverart.png?raw=true "FileLogger Coverart")
+![FileLogger](/Resources/coverart.png?raw=true)
 
 Features
 --------
@@ -23,39 +23,19 @@ Features
 - Output messages are formated to be easy to read
 - Options to customize logger behavior
 - Additional window to control logger event when logger game object is not selected
-- Quick Start tutorial on youtube.
-- [API reference](http://filelogger.airtime-productions.com "Online API").
+- [API reference](../../wiki/API-Reference "FileLogger API Reference").
 
-See [video teaser](https://youtu.be/wS1hQ5641zQ "AnimationPath Animator Unity 5 Extension Teaser ")
+See [Feature Overview](http://bartlomiejwolk.github.io/filelogger/ "FileLogger Feature Overview")
 
 Quick Start
 ------------------
 
 - Clone repository (or extract [zip package](https://github.com/bartlomiejwolk/filelogger/archive/master.zip)) to any location in `Assets` folder.
-- Go to _Components -> FileLogger_ to add FileLogger component to a game object.
-- Go to _Window -> FileLogger_ to open logger control window.
-- In your code, call one of the FileLogger methods, eg. `Logger.LogString("test")`. Remember to include `using FileLogger;` at the top of the file.
+- In your code, call one of the FileLogger [methods](../../wiki/API-Reference ), eg. `Logger.LogString("test")`. Remember to include `#define DEBUG_LOGGER` and `using FileLogger;` at the top of the source code file.
 - Run your game (by default logger will start logging in play mode).
-- Stop play mode and check the _log.txt_ file in your project root folder.
+- Exit play mode and check the _log.txt_ file in your project root folder.
 
-You can also check the _Echo To Console_ checkbox to see logged messages in the Unity console.
-
-Short API Reference
--------------------
-
-- StartLogging()
-- StopLogging()
-- LogString(**string** format, **params object[]** paramList)
-- LogString(**string** format, **object** objectreference, **params object[]** paramList)
-- LogCall()
-- LogCall(**object** objectReference)
-- LogResult(**object** result)
-- LogResult(**object** result, **object** objectReference)
-- LogStackTrace()
-- ClearLogFile()
-
-In the `object objectReference` argument put `this` keyword to have object GUID displayed in the log message.
-
+See more detailed [QuickStart Tutorial](../../wiki/QuickStart Tutorial) in the project wiki.
 
 Help
 -----

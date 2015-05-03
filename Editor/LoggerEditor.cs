@@ -1,184 +1,252 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
-using UnityEditor;
+﻿// Copyright (c) 2015 Bartłomiej Wołk (bartlomiejwolk@gmail.com)
+//  
+// This file is part of the FileLogger extension for Unity.
+// Licensed under the MIT license. See LICENSE file in the project root folder.
+
+#define DEBUG_LOGGER
+
 using ATP.ReorderableList;
+using UnityEditor;
+using UnityEngine;
 
-namespace ATP.LoggingTools {
+namespace FileLogger {
 
-	[CustomEditor(typeof(Logger))]
-	public class LoggerEditor : GameComponentEditor {
+    [CustomEditor(typeof (Logger))]
+    public class LoggerEditor : Editor {
 
-		private SerializedProperty filePath;
-		private SerializedProperty initArraySize;
-		private SerializedProperty inGameLabel;
-		private SerializedProperty logInRealTime;
-		private SerializedProperty echoToConsole;
-		private SerializedProperty enableLogCall;
-		private SerializedProperty enableLogResult;
-		private SerializedProperty enableLogString;
-		private SerializedProperty loggingEnabled;
-		private SerializedProperty enableOnPlay;
-		private SerializedProperty appendClassName;
-		private SerializedProperty appendCallerClassName;
-		private SerializedProperty fullyQualifiedClassName;
-		private SerializedProperty showTimestamp;
-		private SerializedProperty indentMessage;
-		private SerializedProperty classFilter;
-		private SerializedProperty methodFilter;
+        private Logger Script { get; set; }
 
-		public override void OnEnable() {
-			base.OnEnable();
+        #region SERIALIZED PROPERTIES
 
-			filePath = serializedObject.FindProperty("filePath");
-            initArraySize = serializedObject.FindProperty("initArraySize");
-            inGameLabel = serializedObject.FindProperty("inGameLabel");
+        private SerializedProperty classFilter;
+        private SerializedProperty echoToConsole;
+        private SerializedProperty enableOnPlay;
+        private SerializedProperty fileName;
+        private SerializedProperty indentLine;
+        private SerializedProperty loggingEnabled;
+        private SerializedProperty logInRealTime;
+        private SerializedProperty methodFilter;
+        private SerializedProperty qualifiedClassName;
+        private SerializedProperty append;
+        private SerializedProperty clearOnPlay;
+
+        #endregion SERIALIZED PROPERTIES
+
+        #region UNITY MESSAGES
+
+        public override void OnInspectorGUI() {
+            serializedObject.Update();
+
+            DrawVersionNo();
+            DrawFilePathField();
+
+            EditorGUILayout.Space();
+
+            GUILayout.Label("Logging Options", EditorStyles.boldLabel);
+
+            DrawEnableOnPlayToggle();
+            DrawClearOnPlayToggle();
+            DrawLogInRealTimeToggle();
+            DrawAppendToggle();
+            DrawEchoToConsoleToggle();
+
+            EditorGUILayout.Space();
+
+            GUILayout.Label("Message Options", EditorStyles.boldLabel);
+
+            DrawIndentLineToggle();
+            DrawFullyQualifiedNameToggle();
+            DrawAppendDropdown();
+
+            EditorGUILayout.Space();
+
+            GUILayout.Label("Filters", EditorStyles.boldLabel);
+            DrawEnabledMethodsDropdown();
+
+            EditorGUILayout.Space();
+
+            DrawMyClassHelpBox();
+            ReorderableListGUI.Title("Class Filter");
+            ReorderableListGUI.ListField(classFilter);
+
+            DrawOnEnableHelpBox();
+            ReorderableListGUI.Title("Method Filter");
+            ReorderableListGUI.ListField(methodFilter);
+
+            EditorGUILayout.BeginHorizontal();
+            HandleDrawingStartStopButton();
+            DrawClearLogFileButton();
+            EditorGUILayout.EndHorizontal();
+
+            // Save changes
+            serializedObject.ApplyModifiedProperties();
+        }
+        private void OnEnable() {
+            Script = (Logger) target;
+
+            fileName = serializedObject.FindProperty("fileName");
             logInRealTime = serializedObject.FindProperty("logInRealTime");
-			echoToConsole = serializedObject.FindProperty("echoToConsole");
-            enableLogCall = serializedObject.FindProperty("enableLogCall");
-            enableLogResult = serializedObject.FindProperty("enableLogResult");
-            enableLogString = serializedObject.FindProperty("enableLogString");
-			loggingEnabled = serializedObject.FindProperty("loggingEnabled");
+            echoToConsole = serializedObject.FindProperty("echoToConsole");
+            loggingEnabled = serializedObject.FindProperty("loggingEnabled");
             enableOnPlay = serializedObject.FindProperty("enableOnPlay");
-            appendClassName = serializedObject.FindProperty("appendClassName");
-			appendCallerClassName =
-				serializedObject.FindProperty("appendCallerClassName");
-            fullyQualifiedClassName =
-                serializedObject.FindProperty("fullyQualifiedClassName");
-			showTimestamp = serializedObject.FindProperty("showTimestamp");
-			indentMessage = serializedObject.FindProperty("indentMessage");
+            serializedObject.FindProperty("appendCallerClassName");
+            qualifiedClassName =
+                serializedObject.FindProperty("qualifiedClassName");
+            indentLine = serializedObject.FindProperty("indentLine");
             classFilter = serializedObject.FindProperty("classFilter");
             methodFilter = serializedObject.FindProperty("methodFilter");
-		}
+            append = serializedObject.FindProperty("append");
+            clearOnPlay = serializedObject.FindProperty("clearOnPlay");
+        }
 
-		public override void OnInspectorGUI() {
-			base.OnInspectorGUI();
-			Logger script = (Logger)target;
-			serializedObject.Update();
+        #endregion UNITY MESSAGES
 
-            // TODO Set longer label width.
+        #region INSPECTOR
+        private void DrawClearOnPlayToggle() {
+            clearOnPlay.boolValue = EditorGUILayout.Toggle(
+                new GUIContent(
+                    "Clear On Play",
+                    "Clear log file on enter play mode."),
+                clearOnPlay.boolValue);
+        }
 
-            EditorGUILayout.PropertyField(
-                    filePath,
+
+        private void DrawAppendDropdown() {
+            Script.DisplayOptions =
+                (AppendOptions) EditorGUILayout.EnumMaskField(
                     new GUIContent(
-                        "File Path",
-                        "File path to save the generated log file."));
+                        "Display",
+                        "Additional info that should be attached to a single" +
+                        "log message."),
+                    Script.DisplayOptions);
+        }
 
-            EditorGUILayout.Space();
+        private void DrawAppendToggle() {
+            var disabled = logInRealTime.boolValue ? true : false;
 
-            //EditorGUILayout.PropertyField(
-            //        initArraySize,
-            //        new GUIContent(
-            //            "Array Size",
-            //            "Initial and expand size of the log cache array.")); 
-            EditorGUILayout.PropertyField(
-                    enableOnPlay,
-                    new GUIContent(
-                        "Enable On Play",
-                        "Start logger when entering play mode."));
-            //EditorGUILayout.PropertyField(
-            //        inGameLabel,
-            //        new GUIContent(
-            //            "In-game Label",
-            //            "Display in-game label with current number of " +
-            //            "cached logs."));
-            EditorGUILayout.PropertyField(
-                    logInRealTime,
-                    new GUIContent(
-                        "Log In Real Time",
-                        "Each log message will be written to the file " +
-                        "in real time instead of when logging stops."));
+            EditorGUI.BeginDisabledGroup(disabled);
 
-            EditorGUILayout.PropertyField(
-                    echoToConsole,
-                    new GUIContent(
-                        "Echo To Console",
-                        "Echo logged messages also to the Unity's console. " +
-                        "It can be really slow."));
+            append.boolValue = EditorGUILayout.Toggle(
+                new GUIContent(
+                    "Always Append",
+                    "Always append messages to the log file."),
+                append.boolValue);
 
-            EditorGUILayout.Space();
+            EditorGUI.EndDisabledGroup();
+        }
 
-            EditorGUILayout.PropertyField(
-                    enableLogCall,
-                    new GUIContent(
-                        "Enable LogCall()",
-                        ""));
-            EditorGUILayout.PropertyField(
-                    enableLogResult,
-                    new GUIContent(
-                        "Enable LogResult()",
-                        ""));
-            EditorGUILayout.PropertyField(
-                    enableLogString,
-                    new GUIContent(
-                        "Enable LogString()",
-                        ""));
+        private void DrawClearLogFileButton() {
+            // Don't allow reseting log file while logging.
+            if (Script.LoggingEnabled) return;
 
-            EditorGUILayout.Space();
+            if (GUILayout.Button(
+                "Clear Log File",
+                GUILayout.Width(100))) {
 
-
-            EditorGUILayout.PropertyField(
-                    indentMessage,
-                    new GUIContent(
-                        "Indent On",
-                        ""));
-            EditorGUILayout.PropertyField(
-                    showTimestamp,
-                    new GUIContent(
-                        "Add Timestamp",
-                        ""));
-            EditorGUILayout.PropertyField(
-                    appendClassName,
-                    new GUIContent(
-                        "Append Class Name",
-                        "Append class name to every log message."));
-            EditorGUILayout.PropertyField(
-                    appendCallerClassName,
-                    new GUIContent(
-                        "Append Caller Name",
-                        "Append caller class name to every log message."));
-            EditorGUILayout.PropertyField(
-                    fullyQualifiedClassName,
-                    new GUIContent(
-                        "Qualified Class Name",
-                        "If enabled, class name will be fully qualified."));
-
-            EditorGUILayout.Space();
-
-			EditorGUILayout.HelpBox(
-					"Example: MyClass",
-					UnityEditor.MessageType.Info);
-			ReorderableListGUI.Title("Class Filter");
-			ReorderableListGUI.ListField(classFilter);
-			EditorGUILayout.HelpBox(
-					"Example: OnEnable",
-					UnityEditor.MessageType.Info);
-			ReorderableListGUI.Title("Method Filter");
-			ReorderableListGUI.ListField(methodFilter);
-
-			if (loggingEnabled.boolValue == false) {
-                if (GUILayout.Button("Start Logging")) {
-                    loggingEnabled.boolValue = true;
-                }
-			}
-            else if (Application.isPlaying && enableOnPlay.boolValue) {
-                if (GUILayout.Button("Pause Logging")) {
-                    loggingEnabled.boolValue = false;
-                    script.LogCache.Add("[PAUSE]", true);
-                }
+                Script.ClearLogFile();
             }
-			else {
-				if (GUILayout.Button("Stop Logging")) {
-					loggingEnabled.boolValue = false;
-                    script.LogCache.WriteAll(script.FilePath, false);
-				}
-			}
+        }
 
-			// Save changes
-			serializedObject.ApplyModifiedProperties();
-			if (GUI.changed) {
-				EditorUtility.SetDirty(script);
-			}
-		}
-	}
+        private void DrawEchoToConsoleToggle() {
+            EditorGUILayout.PropertyField(
+                echoToConsole,
+                new GUIContent(
+                    "Echo To Console",
+                    "Echo logged messages also to the Unity's console. " +
+                    "It can be really slow."));
+        }
+
+        private void DrawEnabledMethodsDropdown() {
+            Script.EnabledMethods =
+                (EnabledMethods) EditorGUILayout.EnumMaskField(
+                    new GUIContent(
+                        "Enabled Methods",
+                        "Select Logger methods that should be active. Inactive "
+                        +
+                        "methods won't log anything."),
+                    Script.EnabledMethods);
+        }
+
+        private void DrawEnableOnPlayToggle() {
+            EditorGUILayout.PropertyField(
+                enableOnPlay,
+                new GUIContent(
+                    "Enable On Play",
+                    "Start logger on enter play mode."));
+        }
+
+        private void DrawFilePathField() {
+
+            EditorGUILayout.PropertyField(
+                fileName,
+                new GUIContent(
+                    "File Name",
+                    "File name for the generated log file."));
+        }
+
+        private void DrawFullyQualifiedNameToggle() {
+            EditorGUILayout.PropertyField(
+                qualifiedClassName,
+                new GUIContent(
+                    "Full Class Name",
+                    "If enabled, class name will be fully qualified."));
+        }
+
+        private void DrawIndentLineToggle() {
+
+            EditorGUILayout.PropertyField(
+                indentLine,
+                new GUIContent(
+                    "Indent On",
+                    "Indent log messages accordingly to the call stack."));
+        }
+
+        private void DrawLogInRealTimeToggle() {
+
+            EditorGUILayout.PropertyField(
+                logInRealTime,
+                new GUIContent(
+                    "Log In Real Time",
+                    "Each log message will be written to the file " +
+                    "in real time instead of when logging stops."));
+        }
+
+        private void DrawMyClassHelpBox() {
+
+            EditorGUILayout.HelpBox(
+                "Example: MyClass",
+                UnityEditor.MessageType.Info);
+        }
+
+        private void DrawOnEnableHelpBox() {
+            EditorGUILayout.HelpBox(
+                "Example: OnEnable",
+                UnityEditor.MessageType.Info);
+        }
+        private void DrawVersionNo() {
+            EditorGUILayout.LabelField(Logger.VERSION);
+        }
+
+        #endregion INSPECTOR
+
+        #region METHODS
+        private void HandleDrawingStartStopButton() {
+            loggingEnabled.boolValue =
+                InspectorControls.DrawStartStopButton(
+                    Script.LoggingEnabled,
+                    Script.EnableOnPlay,
+                    null);
+        }
+
+
+        [MenuItem("Component/FileLogger")]
+        private static void AddLoggerComponent() {
+            if (Selection.activeGameObject != null) {
+                Selection.activeGameObject.AddComponent(typeof (Logger));
+            }
+        }
+
+        #endregion METHODS
+    }
+
 }

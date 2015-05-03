@@ -1,21 +1,25 @@
-﻿using UnityEngine;
+﻿// Copyright (c) 2015 Bartłomiej Wołk (bartlomiejwolk@gmail.com)
+//  
+// This file is part of the FileLogger extension for Unity.
+// Licensed under the MIT license. See LICENSE file in the project root folder.
+
+#define DEBUG_LOGGER
+
 using UnityEditor;
-using System;
-using System.Collections;
+using UnityEngine;
 
-namespace ATP.LoggingTools {
+namespace FileLogger {
 
-	public class LoggerWindow : EditorWindow {
+    public class LoggerWindow : EditorWindow {
 
         private Logger loggerInstance;
 
         public Logger LoggerInstance {
-            get { 
+            get {
                 if (loggerInstance == null) {
                     loggerInstance = FindObjectOfType<Logger>();
                     if (loggerInstance == null) {
-                        GameObject loggerGO = new GameObject();
-                        // TODO Name this new GO "Logger".
+                        var loggerGO = new GameObject();
                         loggerGO.AddComponent<Logger>();
                         loggerInstance = loggerGO.GetComponent<Logger>();
                     }
@@ -24,48 +28,35 @@ namespace ATP.LoggingTools {
             }
         }
 
-        [MenuItem("Debug/Logger")]
+        [MenuItem("Window/FileLogger")]
         public static void Init() {
-            LoggerWindow window =
-                (LoggerWindow)EditorWindow.GetWindow(typeof(LoggerWindow));
+            var window =
+                (LoggerWindow) GetWindow(typeof (LoggerWindow));
             window.title = "Logger";
             window.minSize = new Vector2(100f, 60f);
         }
 
         private void OnGUI() {
-			EditorGUILayout.BeginHorizontal();
-			if (LoggerInstance.LoggingEnabled == false) {
-                if (GUILayout.Button("Start Logging")) {
-                    LoggerInstance.LoggingEnabled = true;
-                }
-			}
-            else if (Application.isPlaying == true
-                    && LoggerInstance.EnableOnPlay == true) {
-                if (GUILayout.Button("Pause Logging")) {
-                    LoggerInstance.LoggingEnabled = false;
-                    LoggerInstance.LogCache.Add("[PAUSE]", true);
-                }
+            EditorGUILayout.BeginHorizontal();
+
+            // Draw Start/Stop button.
+            LoggerInstance.LoggingEnabled =
+                InspectorControls.DrawStartStopButton(
+                    LoggerInstance.LoggingEnabled,
+                    LoggerInstance.EnableOnPlay,
+                    null);
+
+            // Draw -> button.
+            if (GUILayout.Button("->", GUILayout.Width(30))) {
+                EditorGUIUtility.PingObject(LoggerInstance);
+                Selection.activeGameObject = LoggerInstance.gameObject;
             }
-            else if (Application.isPlaying == true
-                    && LoggerInstance.EnableOnPlay == true
-                    && LoggerInstance.LoggingEnabled == false) {
-                if (GUILayout.Button("Continue Logging")) {
-                    LoggerInstance.LoggingEnabled = true;
-                }
-            }
-			else {
-				if (GUILayout.Button("Stop Logging")) {
-					LoggerInstance.LoggingEnabled = false;
-                    LoggerInstance.LogCache.WriteAll(
-                            LoggerInstance.FilePath,
-                            false);
-				}
-			}
-			if (GUILayout.Button("->", GUILayout.Width(30))) {
-				EditorGUIUtility.PingObject(LoggerInstance);
-				Selection.activeGameObject = LoggerInstance.gameObject;
-			}
-			EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.EndHorizontal();
+
+            Repaint();
         }
-	}
+
+    }
+
 }

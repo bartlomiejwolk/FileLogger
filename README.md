@@ -43,7 +43,7 @@ Just create an issue and I'll do my best to help.
 Contributions
 ------------
 
-Pull requests, ideas, questions and any feedback at all are welcome.
+Pull requests, ideas, questions or any feedback at all are welcome.
 
 Versioning
 ----------

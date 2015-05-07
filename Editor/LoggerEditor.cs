@@ -102,6 +102,14 @@ namespace FileLogger {
         #endregion UNITY MESSAGES
 
         #region INSPECTOR
+        private void HandleDrawingStartStopButton() {
+            loggingEnabled.boolValue =
+                InspectorControls.DrawStartStopButton(
+                    Script.LoggingEnabled,
+                    Script.EnableOnPlay,
+                    null);
+        }
+
         private void DrawClearOnPlayToggle() {
             clearOnPlay.boolValue = EditorGUILayout.Toggle(
                 new GUIContent(
@@ -230,15 +238,6 @@ namespace FileLogger {
         #endregion INSPECTOR
 
         #region METHODS
-        private void HandleDrawingStartStopButton() {
-            loggingEnabled.boolValue =
-                InspectorControls.DrawStartStopButton(
-                    Script.LoggingEnabled,
-                    Script.EnableOnPlay,
-                    null);
-        }
-
-
         [MenuItem("Component/FileLogger")]
         private static void AddLoggerComponent() {
             if (Selection.activeGameObject != null) {

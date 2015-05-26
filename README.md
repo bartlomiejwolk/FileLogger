@@ -22,8 +22,11 @@ Features
 - Options to customize logger behavior
 - Additional window to control logger even when logger game object is not selected
 
-[Feature Overview](http://bartlomiejwolk.github.io/filelogger/ "FileLogger Feature Overview")   
-[API reference](../../wiki/API-Reference "FileLogger API Reference")
+Resources
+---
+* [Feature Overview](http://bartlomiejwolk.github.io/filelogger/ "FileLogger Feature Overview")   
+* [Blog Post](https://bartlomiejwolk.wordpress.com/2015/02/27/logger/)   
+* [API Reference](../../wiki/API-Reference "FileLogger API Reference")
 
 Quick Start
 ------------------

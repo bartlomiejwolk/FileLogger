@@ -24,7 +24,7 @@ Features
 
 Resources
 ---
-* [Feature Overview](http://bartlomiejwolk.github.io/filelogger/ "FileLogger Feature Overview")   
+* [Feature Overview](http://bartlomiejwolk.github.io/FileLogger/ "FileLogger Feature Overview")   
 * [Blog Post](https://bartlomiejwolk.wordpress.com/2015/02/27/logger/)   
 * [API Reference](../../wiki/API-Reference "FileLogger API Reference")
 

@@ -1,30 +1,34 @@
-﻿// Copyright (c) 2015 Bartlomiej Wolk (bartlomiejwolk@gmail.com)
+﻿// Copyright (c) 2015 Bartłomiej Wołk (bartlomiejwolk@gmail.com)
 //  
 // This file is part of the FileLogger extension for Unity.
 // Licensed under the MIT license. See LICENSE file in the project root folder.
 
-#define DEBUG_LOGGER
+#define FILELOGGER
 
 using UnityEditor;
 using UnityEngine;
 
-namespace FileLogger {
+namespace FileLoggerTool.Editor {
 
-    public class LoggerWindow : EditorWindow {
+    public class LoggerWindow : EditorWindow
+    {
+        private const string _loggerGoName = "FileLogger";
+        private FileLogger _fileLoggerInstance;
 
-        private Logger loggerInstance;
-
-        public Logger LoggerInstance {
+        public FileLogger FileLoggerInstance {
             get {
-                if (loggerInstance == null) {
-                    loggerInstance = FindObjectOfType<Logger>();
-                    if (loggerInstance == null) {
-                        var loggerGO = new GameObject();
-                        loggerGO.AddComponent<Logger>();
-                        loggerInstance = loggerGO.GetComponent<Logger>();
+                if (_fileLoggerInstance == null) {
+                    _fileLoggerInstance = FindObjectOfType<FileLogger>();
+                    if (_fileLoggerInstance == null) {
+                        var loggerGo = new GameObject
+                        {
+                            name = _loggerGoName
+                        };
+                        loggerGo.AddComponent<FileLogger>();
+                        _fileLoggerInstance = loggerGo.GetComponent<FileLogger>();
                     }
                 }
-                return loggerInstance;
+                return _fileLoggerInstance;
             }
         }
 
@@ -32,7 +36,7 @@ namespace FileLogger {
         public static void Init() {
             var window =
                 (LoggerWindow) GetWindow(typeof (LoggerWindow));
-            window.title = "Logger";
+            window.titleContent = new GUIContent("FileLogger");
             window.minSize = new Vector2(100f, 60f);
         }
 
@@ -40,16 +44,16 @@ namespace FileLogger {
             EditorGUILayout.BeginHorizontal();
 
             // Draw Start/Stop button.
-            LoggerInstance.LoggingEnabled =
+            FileLoggerInstance.LoggingEnabled =
                 InspectorControls.DrawStartStopButton(
-                    LoggerInstance.LoggingEnabled,
-                    LoggerInstance.EnableOnPlay,
+                    FileLoggerInstance.LoggingEnabled,
+                    FileLoggerInstance.EnableOnPlay,
                     null);
 
             // Draw -> button.
             if (GUILayout.Button("->", GUILayout.Width(30))) {
-                EditorGUIUtility.PingObject(LoggerInstance);
-                Selection.activeGameObject = LoggerInstance.gameObject;
+                EditorGUIUtility.PingObject(FileLoggerInstance);
+                Selection.activeGameObject = FileLoggerInstance.gameObject;
             }
 
             EditorGUILayout.EndHorizontal();

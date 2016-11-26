@@ -1,4 +1,4 @@
-﻿namespace FileLoggerTool.Include
+namespace FileLoggerTool.Enums
 {
     /// <summary>
     ///     Helper class for logical bitwise combination setting of Enums with the Flag attribute.

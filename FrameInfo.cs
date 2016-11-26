@@ -7,7 +7,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace FileLoggerTool.Scripts
+namespace FileLoggerTool
 {
     /// <summary>
     ///     Gets info about selected StackTrace frame. StackTrace is created at

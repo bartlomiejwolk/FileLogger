@@ -9,7 +9,7 @@ using System;
 using System.IO;
 using UnityEngine;
 
-namespace FileLoggerTool.Scripts
+namespace FileLoggerTool
 {
     /// Holds and writes to file logged messages.
     public class LogWriter

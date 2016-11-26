@@ -21,9 +21,12 @@ Features
 - Output messages are formated to be easy to read
 - Options to customize logger behavior
 - Additional window to control logger even when logger game object is not selected
-- [API reference](../../wiki/API-Reference "FileLogger API Reference")
 
-See [Feature Overview](http://bartlomiejwolk.github.io/filelogger/ "FileLogger Feature Overview")
+Resources
+---
+* [Feature Overview](http://bartlomiejwolk.github.io/FileLogger/ "FileLogger Feature Overview")   
+* [Blog Post](https://bartlomiejwolk.wordpress.com/2015/02/27/logger/)   
+* [API Reference](../../wiki/API-Reference "FileLogger API Reference")
 
 Quick Start
 ------------------
@@ -43,7 +46,7 @@ Just create an issue and I'll do my best to help.
 Contributions
 ------------
 
-Pull requests, ideas, questions and any feedback at all are welcome.
+Pull requests, ideas, questions or any feedback at all are welcome.
 
 Versioning
 ----------

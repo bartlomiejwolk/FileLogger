@@ -13,7 +13,7 @@ using Debug = UnityEngine.Debug;
 
 #endif
 
-namespace FileLoggerTool.Scripts
+namespace FileLoggerTool
 {
     public static class Utilities
     {

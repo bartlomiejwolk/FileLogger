@@ -1,34 +1,40 @@
-﻿// Copyright (c) 2015 Bartlomiej Wolk (bartlomiejwolk@gmail.com)
+﻿// Copyright (c) 2015 Bartłomiej Wołk (bartlomiejwolk@gmail.com)
 //  
 // This file is part of the FileLogger extension for Unity.
 // Licensed under the MIT license. See LICENSE file in the project root folder.
 
-#define DEBUG_LOGGER
+#define FILELOGGER
 
-using ATP.ReorderableList;
+using FileLoggerTool.Enums;
+using FileLoggerTool.Include.ReorderableList.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace FileLogger {
+namespace FileLoggerTool.Editor {
 
-    [CustomEditor(typeof (Logger))]
-    public class LoggerEditor : Editor {
+    // todo rename to FileLoggerEditor
+    [CustomEditor(typeof (FileLogger))]
+    public class LoggerEditor : UnityEditor.Editor {
 
-        private Logger Script { get; set; }
+        private FileLogger Script { get; set; }
 
         #region SERIALIZED PROPERTIES
 
-        private SerializedProperty classFilter;
-        private SerializedProperty echoToConsole;
-        private SerializedProperty enableOnPlay;
-        private SerializedProperty fileName;
-        private SerializedProperty indentLine;
-        private SerializedProperty loggingEnabled;
-        private SerializedProperty logInRealTime;
-        private SerializedProperty methodFilter;
-        private SerializedProperty qualifiedClassName;
-        private SerializedProperty append;
-        private SerializedProperty clearOnPlay;
+        private SerializedProperty _classFilter;
+        private SerializedProperty _echoToConsole;
+        private SerializedProperty _logUnityMessages;
+        private SerializedProperty _enableOnPlay;
+        private SerializedProperty _fileName;
+        private SerializedProperty _indentLine;
+        private SerializedProperty _loggingEnabled;
+        private SerializedProperty _writeToFile;
+        private SerializedProperty _logInRealTime;
+        private SerializedProperty _methodFilter;
+        private SerializedProperty _qualifiedClassName;
+        private SerializedProperty _append;
+        private SerializedProperty _clearOnPlay;
+        private SerializedProperty _classFilterType;
+        private SerializedProperty _methodFilterType;
 
         #endregion SERIALIZED PROPERTIES
 
@@ -45,10 +51,12 @@ namespace FileLogger {
             GUILayout.Label("Logging Options", EditorStyles.boldLabel);
 
             DrawEnableOnPlayToggle();
+            DrawWriteToFileToggle();
             DrawClearOnPlayToggle();
-            DrawLogInRealTimeToggle();
+            DrawWriteInRealTimeToggle();
             DrawAppendToggle();
             DrawEchoToConsoleToggle();
+            DrawLogUnityMessagesToggle();
 
             EditorGUILayout.Space();
 
@@ -59,55 +67,77 @@ namespace FileLogger {
             DrawAppendDropdown();
 
             EditorGUILayout.Space();
-
-            GUILayout.Label("Filters", EditorStyles.boldLabel);
+            
+            GUILayout.Label("Filter Settings", EditorStyles.boldLabel);
             DrawEnabledMethodsDropdown();
+            DrawEnabledMessageCategoriesDropdown();
 
             EditorGUILayout.Space();
 
-            DrawMyClassHelpBox();
+            GUILayout.Label("Class Filter", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_classFilterType);
+            DrawClassFilterHelpBox();
             ReorderableListGUI.Title("Class Filter");
-            ReorderableListGUI.ListField(classFilter);
+            ReorderableListGUI.ListField(_classFilter);
 
-            DrawOnEnableHelpBox();
+            GUILayout.Label("Method Filter", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_methodFilterType);
+            DrawMethodFilterHelpBox();
             ReorderableListGUI.Title("Method Filter");
-            ReorderableListGUI.ListField(methodFilter);
+            ReorderableListGUI.ListField(_methodFilter);
 
             EditorGUILayout.BeginHorizontal();
             HandleDrawingStartStopButton();
             DrawClearLogFileButton();
             EditorGUILayout.EndHorizontal();
 
-            // Save changes
+            // save changes
             serializedObject.ApplyModifiedProperties();
         }
-        private void OnEnable() {
-            Script = (Logger) target;
 
-            fileName = serializedObject.FindProperty("fileName");
-            logInRealTime = serializedObject.FindProperty("logInRealTime");
-            echoToConsole = serializedObject.FindProperty("echoToConsole");
-            loggingEnabled = serializedObject.FindProperty("loggingEnabled");
-            enableOnPlay = serializedObject.FindProperty("enableOnPlay");
-            serializedObject.FindProperty("appendCallerClassName");
-            qualifiedClassName =
-                serializedObject.FindProperty("qualifiedClassName");
-            indentLine = serializedObject.FindProperty("indentLine");
-            classFilter = serializedObject.FindProperty("classFilter");
-            methodFilter = serializedObject.FindProperty("methodFilter");
-            append = serializedObject.FindProperty("append");
-            clearOnPlay = serializedObject.FindProperty("clearOnPlay");
+        private void OnEnable() {
+            Script = (FileLogger) target;
+
+            _fileName = serializedObject.FindProperty("_fileName");
+            _writeToFile = serializedObject.FindProperty("_writeToFile");
+            _logInRealTime = serializedObject.FindProperty("_writeInRealTime");
+            _echoToConsole = serializedObject.FindProperty("_echoToConsole");
+            _logUnityMessages = serializedObject.FindProperty("_logUnityMessages");
+            _loggingEnabled = serializedObject.FindProperty("_loggingEnabled");
+            _enableOnPlay = serializedObject.FindProperty("_enableOnPlay");
+            serializedObject.FindProperty("_appendCallerClassName");
+            _qualifiedClassName =
+                serializedObject.FindProperty("_qualifiedClassName");
+            _indentLine = serializedObject.FindProperty("_indentLine");
+            _classFilter = serializedObject.FindProperty("_classFilter");
+            _methodFilter = serializedObject.FindProperty("_methodFilter");
+            _append = serializedObject.FindProperty("_append");
+            _clearOnPlay = serializedObject.FindProperty("_clearOnPlay");
+            _classFilterType = serializedObject.FindProperty("_classFilterType");
+            _methodFilterType = serializedObject.FindProperty("_methodFilterType");
         }
 
         #endregion UNITY MESSAGES
 
         #region INSPECTOR
+        private void HandleDrawingStartStopButton() {
+            _loggingEnabled.boolValue =
+                InspectorControls.DrawStartStopButton(
+                    Script.LoggingEnabled,
+                    Script.EnableOnPlay,
+                    null);
+        }
+
         private void DrawClearOnPlayToggle() {
-            clearOnPlay.boolValue = EditorGUILayout.Toggle(
-                new GUIContent(
-                    "Clear On Play",
-                    "Clear log file on enter play mode."),
-                clearOnPlay.boolValue);
+            EditorGUI.BeginDisabledGroup(!_writeToFile.boolValue);
+
+            _clearOnPlay.boolValue = EditorGUILayout.Toggle(
+            new GUIContent(
+                "Clear On Play",
+                "Clear log file on enter play mode."),
+            _clearOnPlay.boolValue);
+
+            EditorGUI.EndDisabledGroup();
         }
 
 
@@ -122,15 +152,13 @@ namespace FileLogger {
         }
 
         private void DrawAppendToggle() {
-            var disabled = logInRealTime.boolValue ? true : false;
+            EditorGUI.BeginDisabledGroup(_logInRealTime.boolValue);
 
-            EditorGUI.BeginDisabledGroup(disabled);
-
-            append.boolValue = EditorGUILayout.Toggle(
+            _append.boolValue = EditorGUILayout.Toggle(
                 new GUIContent(
                     "Always Append",
                     "Always append messages to the log file."),
-                append.boolValue);
+                _append.boolValue);
 
             EditorGUI.EndDisabledGroup();
         }
@@ -149,11 +177,31 @@ namespace FileLogger {
 
         private void DrawEchoToConsoleToggle() {
             EditorGUILayout.PropertyField(
-                echoToConsole,
+                _echoToConsole,
                 new GUIContent(
                     "Echo To Console",
                     "Echo logged messages also to the Unity's console. " +
                     "It can be really slow."));
+        }
+
+        private void DrawLogUnityMessagesToggle()
+        {
+            // any message logged by FileLogger to the console would then
+            // be received by Application.logMessagesReceived and logged again and again..
+            if (_echoToConsole.boolValue)
+            {
+                _logUnityMessages.boolValue = false;
+            }
+
+            EditorGUI.BeginDisabledGroup(_echoToConsole.boolValue);
+
+            EditorGUILayout.PropertyField(
+                _logUnityMessages,
+                new GUIContent(
+                    "Log Unity Messages",
+                    "Log Unity log messages. If true, Echo to Console option will be disabled. "));
+
+            EditorGUI.EndDisabledGroup();
         }
 
         private void DrawEnabledMethodsDropdown() {
@@ -167,9 +215,16 @@ namespace FileLogger {
                     Script.EnabledMethods);
         }
 
+        private void DrawEnabledMessageCategoriesDropdown()
+        {
+            var desc = new GUIContent("Message Categories", "Only messages that belong to selected categories will be logged.");
+            Script.EnabledMessageCategories = (MessageCategories) EditorGUILayout.EnumMaskField(
+                desc, Script.EnabledMessageCategories);
+        }
+
         private void DrawEnableOnPlayToggle() {
             EditorGUILayout.PropertyField(
-                enableOnPlay,
+                _enableOnPlay,
                 new GUIContent(
                     "Enable On Play",
                     "Start logger on enter play mode."));
@@ -178,7 +233,7 @@ namespace FileLogger {
         private void DrawFilePathField() {
 
             EditorGUILayout.PropertyField(
-                fileName,
+                _fileName,
                 new GUIContent(
                     "File Name",
                     "File name for the generated log file."));
@@ -186,7 +241,7 @@ namespace FileLogger {
 
         private void DrawFullyQualifiedNameToggle() {
             EditorGUILayout.PropertyField(
-                qualifiedClassName,
+                _qualifiedClassName,
                 new GUIContent(
                     "Full Class Name",
                     "If enabled, class name will be fully qualified."));
@@ -195,54 +250,57 @@ namespace FileLogger {
         private void DrawIndentLineToggle() {
 
             EditorGUILayout.PropertyField(
-                indentLine,
+                _indentLine,
                 new GUIContent(
                     "Indent On",
                     "Indent log messages accordingly to the call stack."));
         }
 
-        private void DrawLogInRealTimeToggle() {
-
+        private void DrawWriteToFileToggle()
+        {
             EditorGUILayout.PropertyField(
-                logInRealTime,
+                _writeToFile,
                 new GUIContent(
-                    "Log In Real Time",
-                    "Each log message will be written to the file " +
-                    "in real time instead of when logging stops."));
+                    "Write To File",
+                    "If disabled, logger won't do any operations on a file."));
         }
 
-        private void DrawMyClassHelpBox() {
+        private void DrawWriteInRealTimeToggle() {
+            EditorGUI.BeginDisabledGroup(!_writeToFile.boolValue);
+
+            EditorGUILayout.PropertyField(
+                    _logInRealTime,
+                    new GUIContent(
+                        "Write In Real Time",
+                        "Each log message will be written to the file " +
+                        "in real time instead of when logging stops."));
+
+            EditorGUI.EndDisabledGroup();
+        }
+
+        private void DrawClassFilterHelpBox() {
 
             EditorGUILayout.HelpBox(
                 "Example: MyClass",
                 UnityEditor.MessageType.Info);
         }
 
-        private void DrawOnEnableHelpBox() {
+        private void DrawMethodFilterHelpBox() {
             EditorGUILayout.HelpBox(
                 "Example: OnEnable",
                 UnityEditor.MessageType.Info);
         }
         private void DrawVersionNo() {
-            EditorGUILayout.LabelField(Logger.VERSION);
+            EditorGUILayout.LabelField(FileLogger.Version);
         }
 
         #endregion INSPECTOR
 
         #region METHODS
-        private void HandleDrawingStartStopButton() {
-            loggingEnabled.boolValue =
-                InspectorControls.DrawStartStopButton(
-                    Script.LoggingEnabled,
-                    Script.EnableOnPlay,
-                    null);
-        }
-
-
         [MenuItem("Component/FileLogger")]
         private static void AddLoggerComponent() {
             if (Selection.activeGameObject != null) {
-                Selection.activeGameObject.AddComponent(typeof (Logger));
+                Selection.activeGameObject.AddComponent(typeof (FileLogger));
             }
         }
 
